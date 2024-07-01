@@ -8,77 +8,122 @@
 module.exports = {
   root: true,
   parserOptions: {
-    ecmaVersion: "latest",
-    sourceType: "module",
+    ecmaVersion: 'latest',
+    sourceType: 'module',
     ecmaFeatures: {
-      jsx: true,
-    },
+      jsx: true
+    }
   },
   env: {
     browser: true,
     commonjs: true,
-    es6: true,
+    es6: true
   },
-  ignorePatterns: ["!**/.server", "!**/.client"],
+  ignorePatterns: ['!**/.server', '!**/.client'],
 
   // Base config
-  extends: ["eslint:recommended"],
+  extends: ['eslint:recommended', 'plugin:prettier/recommended'],
+  rules: {
+    'prettier/prettier': [
+      'error',
+      {
+        singleQuote: true,
+        endOfLine: 'auto'
+      }
+    ]
+  },
 
   overrides: [
     // React
     {
-      files: ["**/*.{js,jsx,ts,tsx}"],
-      plugins: ["react", "jsx-a11y"],
+      files: ['**/*.{js,jsx,ts,tsx}'],
+      plugins: ['react', 'jsx-a11y'],
       extends: [
-        "plugin:react/recommended",
-        "plugin:react/jsx-runtime",
-        "plugin:react-hooks/recommended",
-        "plugin:jsx-a11y/recommended",
+        'plugin:react/recommended',
+        'plugin:react/jsx-runtime',
+        'plugin:react-hooks/recommended',
+        'plugin:jsx-a11y/recommended'
       ],
       settings: {
         react: {
-          version: "detect",
+          version: 'detect'
         },
-        formComponents: ["Form"],
+        formComponents: ['Form'],
         linkComponents: [
-          { name: "Link", linkAttribute: "to" },
-          { name: "NavLink", linkAttribute: "to" },
+          { name: 'Link', linkAttribute: 'to' },
+          { name: 'NavLink', linkAttribute: 'to' }
         ],
-        "import/resolver": {
-          typescript: {},
-        },
-      },
+        'import/resolver': {
+          typescript: {}
+        }
+      }
     },
 
     // Typescript
     {
-      files: ["**/*.{ts,tsx}"],
-      plugins: ["@typescript-eslint", "import"],
-      parser: "@typescript-eslint/parser",
+      files: ['**/*.{ts,tsx}'],
+      plugins: [
+        '@typescript-eslint',
+        'unused-imports',
+        'tailwindcss',
+        'simple-import-sort'
+      ],
+      parser: '@typescript-eslint/parser',
       settings: {
-        "import/internal-regex": "^~/",
-        "import/resolver": {
+        'import/internal-regex': '^~/',
+        'import/resolver': {
           node: {
-            extensions: [".ts", ".tsx"],
+            extensions: ['.ts', '.tsx']
           },
           typescript: {
-            alwaysTryTypes: true,
-          },
-        },
+            alwaysTryTypes: true
+          }
+        }
       },
       extends: [
-        "plugin:@typescript-eslint/recommended",
-        "plugin:import/recommended",
-        "plugin:import/typescript",
+        'plugin:@typescript-eslint/recommended',
+        'plugin:import/typescript',
+        'plugin:import/recommended',
+        'plugin:tailwindcss/recommended',
+        'plugin:prettier/recommended'
       ],
+      rules: {
+        'prettier/prettier': [
+          'error',
+          {
+            singleQuote: true,
+            endOfLine: 'auto'
+          }
+        ],
+        'max-params': ['error', 3], // Limit the number of parameters in a function to use object instead
+        'max-lines-per-function': 'off', // ['error', 70],
+        'react/react-in-jsx-scope': 'off',
+        'react/destructuring-assignment': 'off', // Vscode doesn't support automatically destructuring, it's a pain to add a new variable
+        'react/require-default-props': 'off', // Allow non-defined react props as undefined
+        '@typescript-eslint/comma-dangle': 'off', // Avoid conflict rule between Eslint and Prettier
+        '@typescript-eslint/consistent-type-imports': 'error', // Ensure `import type` is used when it's necessary
+        'import/prefer-default-export': 'off', // Named export is easier to refactor automatically
+        'simple-import-sort/imports': 'error', // Import configuration for `eslint-plugin-simple-import-sort`
+        'simple-import-sort/exports': 'error', // Export configuration for `eslint-plugin-simple-import-sort`
+        '@typescript-eslint/no-unused-vars': 'off',
+        'unused-imports/no-unused-imports': 'error',
+        'unused-imports/no-unused-vars': [
+          'error',
+          {
+            argsIgnorePattern: '^_',
+            varsIgnorePattern: '^_',
+            caughtErrorsIgnorePattern: '^_'
+          }
+        ]
+      }
     },
 
     // Node
     {
-      files: [".eslintrc.cjs"],
+      files: ['.eslintrc.cjs'],
       env: {
-        node: true,
-      },
-    },
-  ],
-};
+        node: true
+      }
+    }
+  ]
+}

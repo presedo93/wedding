@@ -1,12 +1,15 @@
+import './tailwind.css'
+
+import { NextUIProvider } from '@nextui-org/react'
 import {
   Links,
   Meta,
   Outlet,
   Scripts,
-  ScrollRestoration,
-} from "@remix-run/react";
-import { NextUIProvider } from "@nextui-org/react";
-import "./tailwind.css";
+  ScrollRestoration
+} from '@remix-run/react'
+
+import { NavBar } from '~/components'
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -25,9 +28,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
         </NextUIProvider>
       </body>
     </html>
-  );
+  )
 }
 
 export default function App() {
-  return <Outlet />;
+  return (
+    <div className="min-h-screen bg-gray-100">
+      <NavBar />
+      <Outlet />
+    </div>
+  )
 }

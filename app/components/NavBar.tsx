@@ -10,7 +10,7 @@ import { NavLink } from '@remix-run/react'
 import { BarsIcon } from '~/icons'
 
 export const NavBar = () => (
-  <div className="mt-6 flex w-11/12 flex-row items-center justify-between rounded-xl bg-gray-200 px-4 py-2">
+  <div className="relative z-10 mt-6 flex w-11/12 flex-row items-center justify-between rounded-xl bg-gray-400 px-4 py-2">
     <NavLink to={'/'}>
       <div className="flex flex-row items-baseline gap-1">
         <h1 className="font-mono text-4xl font-bold italic">L</h1>

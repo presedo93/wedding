@@ -1,5 +1,6 @@
+// NOTE: This icon may not be needed.
 export const BarsIcon = () => (
-  <svg fill="none" viewBox="0 0 24 24" className="size-8 stroke-black stroke-1">
+  <svg fill="none" viewBox="0 0 24 24" className="size-6 stroke-black stroke-1">
     <path
       strokeLinecap="round"
       strokeLinejoin="round"

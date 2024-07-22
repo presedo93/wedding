@@ -9,7 +9,7 @@ import {
   ScrollRestoration
 } from '@remix-run/react'
 
-import { NavBar } from '~/components'
+import { NavBar } from '@/components'
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -36,9 +36,11 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <div className="flex min-h-screen flex-col items-center bg-gray-100">
+    <>
       <NavBar />
-      <Outlet />
-    </div>
+      <div className="m-auto min-h-screen max-w-screen-xl">
+        <Outlet />
+      </div>
+    </>
   )
 }

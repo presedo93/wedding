@@ -1,2 +1,1 @@
-export * from './CoverPicture'
-export * from './NavBar'
+export * from './nav-bar'

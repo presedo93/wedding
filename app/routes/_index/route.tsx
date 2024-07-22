@@ -1,6 +1,6 @@
 import type { MetaFunction } from '@remix-run/node'
 
-import { CoverPicture } from '~/components'
+import { CoverPicture } from './cover-picture'
 
 export const meta: MetaFunction = () => {
   return [
@@ -13,7 +13,7 @@ export default function Index() {
   return (
     <div className="flex flex-col items-center">
       <CoverPicture />
-      <h1>Home</h1>
+      <div className="h-[1000px]" />
     </div>
   )
 }

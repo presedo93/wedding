@@ -1,5 +1,6 @@
-node_modules
+# UI
+node_modules/
 
-/.cache
-/build
+.cache/
+build/
 .env

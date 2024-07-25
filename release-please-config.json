@@ -5,9 +5,11 @@
   "separate-pull-requests": true,
   "packages": {
     "front": {
+      "component": "front",
       "release-type": "node"
     },
     "back": {
+      "component": "back",
       "release-type": "go"
     }
   },

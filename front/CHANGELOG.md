@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/presedo93/wedding/compare/front@v0.2.0...front@v0.3.0) (2024-10-22)
+
+
+### Features
+
+* **front:** integrate LogTo context and auth methods ([#9](https://github.com/presedo93/wedding/issues/9)) ([23c198f](https://github.com/presedo93/wedding/commit/23c198f240aa07389bc050bcb1f30903f293c320))
+
 ## [0.2.0](https://github.com/presedo93/wedding/compare/front-v0.1.0...front@v0.2.0) (2024-09-16)
 
 

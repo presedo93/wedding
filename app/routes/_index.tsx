@@ -1,5 +1,6 @@
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
-import { Button } from "~/components/ui/button";
+import { CoverPics, EventTimeline, SecButtons } from "~/components";
+import { FullLogo } from "~/components/logos/full-logo";
 import { logto } from "~/service/auth.server";
 
 export const meta: MetaFunction = () => {
@@ -20,9 +21,14 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function Index() {
   return (
-    <div className="flex h-screen items-center justify-center">
-      <span className="font-bold">Hello World!</span>
-      <Button className="ml-4">Click me!</Button>
+    <div className="flex flex-col items-center bg-slate-200">
+      <FullLogo className="size-24" />
+      <CoverPics />
+      <div className="h-8" />
+      <EventTimeline />
+      <div className="h-8" />
+      <SecButtons />
+      <div className="h-12" />
     </div>
   );
 }

@@ -16,6 +16,7 @@ export default {
           "Segoe UI Symbol",
           "Noto Color Emoji",
         ],
+        playwrite: ["playwrite", "sans-serif"],
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -25,5 +26,6 @@ export default {
       colors: {},
     },
   },
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;

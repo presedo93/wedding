@@ -33,7 +33,7 @@ const AnimatedSeparator = () => (
 );
 
 const RoundedImage = ({ src }: { src: string }) => (
-  <motion.div className="rounded-full border border-black">
+  <motion.div className="my-4 rounded-full border border-black">
     <img src={src} alt="" className="size-36 rounded-full p-2" />
   </motion.div>
 );

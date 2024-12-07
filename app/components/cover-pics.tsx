@@ -1,49 +1,48 @@
-import { motion, AnimatePresence } from "motion/react";
+import { AnimatePresence, motion } from "motion/react";
 import { useEffect, useState } from "react";
 
-const duration = 8;
-const images = [
+const IMAGE_URLS = [
   "/images/covers/0.jpg",
   "/images/covers/1.jpg",
   "/images/covers/2.jpg",
 ];
 
+const TIME = 4;
+const OFFSET = 70;
+const MID = Math.floor(IMAGE_URLS.length / 2);
+
 export const CoverPics = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [pos, setPos] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % images.length);
-    }, duration * 1000);
+      setPos((pos + 1) % IMAGE_URLS.length);
+    }, TIME * 1000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [pos]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0, translateY: -100 }}
-      animate={{ opacity: 1, translateY: 0 }}
-      transition={{ duration: 2.5 }}
-      className="flex flex-col"
-    >
-      <AnimatePresence mode="wait">
-        <motion.img
-          key={images[currentIndex]}
-          src={images[currentIndex]}
-          layoutId="cover"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          className="h-auto w-full rounded-lg shadow shadow-slate-700"
-        />
+    <div className="flex h-96 w-11/12 items-center overflow-hidden rounded-md bg-slate-300">
+      <AnimatePresence>
+        <motion.div
+          className="flex size-full flex-row items-center justify-center"
+          initial={{ x: `${OFFSET}%` }}
+          animate={{ x: `${-(pos - MID) * OFFSET}%` }}
+          transition={{ duration: 2, ease: "easeInOut" }}
+        >
+          {IMAGE_URLS.map((src, idx) => (
+            <motion.img
+              key={src}
+              src={src}
+              initial={{ scale: idx === pos ? 0.8 : 1 }}
+              animate={{ scale: idx === pos ? 1 : 0.8 }}
+              transition={{ duration: 2, ease: "easeInOut" }}
+              className="h-5/6 rounded-lg object-cover"
+            />
+          ))}
+        </motion.div>
       </AnimatePresence>
-      <motion.div
-        key={images[currentIndex]}
-        className="mt-1 h-0.5 w-full self-center rounded-full bg-slate-700 opacity-75"
-        initial={{ width: "0%" }}
-        animate={{ width: "90%" }}
-        transition={{ duration, ease: "linear" }}
-      />
-    </motion.div>
+    </div>
   );
 };

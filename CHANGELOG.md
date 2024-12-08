@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.1.0](https://github.com/presedo93/wedding/compare/v1.0.0...v1.1.0) (2024-12-07)
+
+
+### Features
+
+* animate cover pictures ([312c31c](https://github.com/presedo93/wedding/commit/312c31c915d1ed3a26bc0f98a208f74767e25df7))
+* create count down component ([94aee1e](https://github.com/presedo93/wedding/commit/94aee1e1ca70e0d2e1e43e6254196a6440a44079))
+
 ## 1.0.0 (2024-12-04)
 
 

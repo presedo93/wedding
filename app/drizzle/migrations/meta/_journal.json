@@ -8,6 +8,13 @@
       "when": 1732044406512,
       "tag": "0000_initial_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1734132141135,
+      "tag": "0001_tan_sleeper",
+      "breakpoints": true
     }
   ]
 }

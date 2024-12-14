@@ -22,7 +22,7 @@ export const guests = t.pgTable("guests", {
     .references(() => users.id, { onDelete: "cascade" }),
   name: t.varchar().notNull(),
   phone: t.varchar(),
-  allergies: t.varchar().array().default([]),
+  allergies: t.varchar().array().notNull().default([]),
   isVegetarian: t.boolean().notNull(),
   needsTransport: t.boolean().notNull(),
   ...timestamps,

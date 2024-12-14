@@ -1,0 +1,1 @@
+ALTER TABLE "guests" ALTER COLUMN "allergies" SET NOT NULL;

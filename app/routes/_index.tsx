@@ -1,4 +1,5 @@
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
+import { useLoaderData } from "@remix-run/react";
 import { CoverPics, EventTimeline, SecButtons } from "~/components";
 import { CountDown } from "~/components/count-down";
 import { FullLogo } from "~/components/logos/full-logo";
@@ -21,6 +22,8 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default function Index() {
+  const { auth } = useLoaderData<LoaderResponse>();
+
   return (
     <div className="flex flex-col items-center bg-slate-200">
       <FullLogo className="size-32" />
@@ -30,7 +33,7 @@ export default function Index() {
       <div className="h-8" />
       <EventTimeline />
       <div className="h-8" />
-      <SecButtons />
+      <SecButtons isAuth={auth} />
       <div className="h-12" />
     </div>
   );

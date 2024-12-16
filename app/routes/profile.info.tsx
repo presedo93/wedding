@@ -5,6 +5,8 @@ import { Button } from "~/components/ui/button";
 import { db, Guest, guestsTable } from "~/drizzle";
 import { eq } from "drizzle-orm";
 import { logto } from "~/service/auth.server";
+import { Reorder } from "motion/react";
+import { useState } from "react";
 
 type Loader = {
   readonly guests: Guest[];
@@ -26,14 +28,19 @@ export const loader: LoaderFunction = async ({ request }) => {
 
 export default function Guests() {
   const { guests } = useLoaderData<Loader>();
+  const [guestsList, setGuestsList] = useState(guests);
 
   return (
     <>
       <h3 className="mt-6 text-xl font-medium underline decoration-2 underline-offset-4">
-        Acompanantes
+        Acompañantes
       </h3>
       <div className="my-2 flex flex-col items-center justify-center">
-        {guests.length ? <GuestsList guests={guests} /> : <NoGuests />}
+        {guests.length ? (
+          <GuestsList guests={guestsList} onReorder={setGuestsList} />
+        ) : (
+          <NoGuests />
+        )}
       </div>
       <Link className="flex w-full justify-center" to={"/profile/new-guest"}>
         <Button className="w-2/3 min-w-min">Nuevo acompanante</Button>
@@ -42,8 +49,25 @@ export default function Guests() {
   );
 }
 
-const GuestsList = ({ guests }: { guests: Guest[] }) => {
-  return guests.map((g, i) => <GuestCard guest={g} key={i} />);
+const GuestsList = ({
+  guests,
+  onReorder,
+}: {
+  guests: Guest[];
+  onReorder: React.Dispatch<React.SetStateAction<Guest[]>>;
+}) => {
+  return (
+    <Reorder.Group
+      axis="y"
+      values={guests}
+      onReorder={onReorder}
+      className="w-full"
+    >
+      {guests.map((g) => (
+        <GuestCard guest={g} key={g.id} />
+      ))}
+    </Reorder.Group>
+  );
 };
 
 const NoGuests = () => (

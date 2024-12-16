@@ -4,3 +4,4 @@ export * from "./event-timeline";
 export * from "./guest-card";
 export * from "./todo-item";
 export * from "./field";
+export * from "./errors";

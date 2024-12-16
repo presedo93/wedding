@@ -1,31 +1,31 @@
 import { LoaderFunction } from "@remix-run/node";
 import { Link, redirect, useLoaderData } from "@remix-run/react";
-import { GuestCard } from "~/components";
+import { Errors, GuestCard } from "~/components";
 import { Button } from "~/components/ui/button";
-import { db, Guest, guests } from "~/drizzle";
+import { db, Guest, guestsTable } from "~/drizzle";
 import { eq } from "drizzle-orm";
 import { logto } from "~/service/auth.server";
 
 type Loader = {
-  readonly userGuests: Guest[];
+  readonly guests: Guest[];
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const context = await logto.getContext({ getAccessToken: false })(request);
+  const context = await logto.getContext({})(request);
 
   if (!context.isAuthenticated) {
     return redirect("/auth/sign-in");
   }
 
-  const userGuests = await db.query.guests.findMany({
-    where: eq(guests.userId, context.claims!.sub),
+  const guests = await db.query.guestsTable.findMany({
+    where: eq(guestsTable.userId, context.claims!.sub),
   });
 
-  return { userGuests } as Loader;
+  return { guests } as Loader;
 };
 
 export default function Guests() {
-  const { userGuests } = useLoaderData<Loader>();
+  const { guests } = useLoaderData<Loader>();
 
   return (
     <>
@@ -33,7 +33,7 @@ export default function Guests() {
         Acompanantes
       </h3>
       <div className="my-2 flex flex-col items-center justify-center">
-        {userGuests.length ? <GuestsList guests={userGuests} /> : <NoGuests />}
+        {guests.length ? <GuestsList guests={guests} /> : <NoGuests />}
       </div>
       <Link className="flex w-full justify-center" to={"/profile/new-guest"}>
         <Button className="w-2/3 min-w-min">Nuevo acompanante</Button>
@@ -47,9 +47,12 @@ const GuestsList = ({ guests }: { guests: Guest[] }) => {
 };
 
 const NoGuests = () => (
-  <span className="my-6 text-sm">No has anadido ningun acompanate aun!</span>
+  <div className="my-6 text-center text-sm">
+    <p>No has añadido ningun acompañante aún!</p>
+    <p className="text-slate-500">(Recuerda añadirte a ti también)</p>
+  </div>
 );
 
-// export function ErrorBoundary() {
-//   return <Errors />;
-// }
+export function ErrorBoundary() {
+  return <Errors />;
+}

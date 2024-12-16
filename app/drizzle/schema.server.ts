@@ -15,7 +15,7 @@ export const users = t.pgTable("users", {
   ...timestamps,
 });
 
-export const guests = t.pgTable("guests", {
+export const guestsTable = t.pgTable("guests", {
   id: t.serial().primaryKey(),
   userId: t
     .varchar({ length: 12 })

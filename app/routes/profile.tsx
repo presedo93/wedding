@@ -4,7 +4,7 @@ import { Link, Outlet, redirect, useLoaderData } from "@remix-run/react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
-import { TodoItem } from "~/components";
+import { Errors, TodoItem } from "~/components";
 import { db, User, users } from "~/drizzle";
 import { logto } from "~/service/auth.server";
 
@@ -72,3 +72,7 @@ const ProfileCard = ({ user }: { user: User }) => (
     </p>
   </div>
 );
+
+export function ErrorBoundary() {
+  return <Errors />;
+}

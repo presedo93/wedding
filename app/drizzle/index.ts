@@ -8,9 +8,9 @@ export const db = drizzle({
 });
 
 export type User = typeof schema.users.$inferSelect;
-export type Guest = typeof schema.guests.$inferSelect;
+export type Guest = typeof schema.guestsTable.$inferSelect;
 
 export type UserInsert = typeof schema.users.$inferInsert;
-export type GuestInsert = typeof schema.guests.$inferInsert;
+export type GuestInsert = typeof schema.guestsTable.$inferInsert;
 
 export * from "./schema.server";

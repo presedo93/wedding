@@ -1,5 +1,5 @@
 import { Form } from "@remix-run/react";
-import { Bus, Phone, Salad, Trash2, WheatOff } from "lucide-react";
+import { Bus, Salad, Trash2, WheatOff } from "lucide-react";
 import { Guest } from "~/drizzle";
 
 interface Props {
@@ -9,14 +9,15 @@ interface Props {
 export function GuestCard({ guest }: Props) {
   return (
     <div className="my-1 flex w-full flex-row gap-1 rounded-md bg-slate-400 py-1 pl-6 shadow shadow-slate-500">
-      <div className="flex w-5/6 flex-col gap-[0.5px]">
-        <h2 className="text-xl font-semibold">{guest.name}</h2>
-        {guest.phone && (
-          <p className="flex flex-row items-center gap-2 text-sm italic text-slate-700">
-            <Phone className="size-4" />
-            {guest.phone}
-          </p>
-        )}
+      <div className="flex w-5/6 flex-col gap-1">
+        <div className="flex flex-row items-baseline gap-2">
+          <h2 className="text-xl font-semibold">{guest.name}</h2>
+          {guest.phone && (
+            <p className="flex flex-row items-center gap-1 text-sm italic text-slate-700">
+              ({guest.phone})
+            </p>
+          )}
+        </div>
         {guest.allergies?.length > 0 && (
           <p className="flex flex-row items-center gap-2 text-sm italic text-slate-700">
             <WheatOff className="size-4" />

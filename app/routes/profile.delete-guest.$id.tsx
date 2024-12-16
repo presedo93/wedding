@@ -1,6 +1,6 @@
 import { ActionFunctionArgs, redirect } from "@remix-run/node";
 import { eq } from "drizzle-orm";
-import { db, guests } from "~/drizzle";
+import { db, guestsTable } from "~/drizzle";
 import { logto } from "~/service/auth.server";
 
 export const action = async ({ request, params }: ActionFunctionArgs) => {
@@ -10,6 +10,6 @@ export const action = async ({ request, params }: ActionFunctionArgs) => {
     return redirect("/auth/sign-in");
   }
 
-  await db.delete(guests).where(eq(guests.id, Number(params.id)));
+  await db.delete(guestsTable).where(eq(guestsTable.id, Number(params.id)));
   return redirect("/profile/info");
 };

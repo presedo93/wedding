@@ -4,10 +4,10 @@ import { ActionFunctionArgs, redirect } from "@remix-run/node";
 import { Form, Link, useActionData } from "@remix-run/react";
 import * as zod from "zod";
 
-import { Field, FieldError } from "~/components";
+import { Errors, Field, FieldError } from "~/components";
 import { InputConform, CheckboxConform } from "~/components/conform";
 import { Button, Label } from "~/components/ui";
-import { db, guests } from "~/drizzle";
+import { db, guestsTable } from "~/drizzle";
 import { logto } from "~/service/auth.server";
 
 export const schema = zod.object({
@@ -115,7 +115,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   const userId = context.claims?.sub;
-  await db.insert(guests).values({ userId, ...submission.value });
+  await db.insert(guestsTable).values({ userId, ...submission.value });
 
   return redirect("/profile/info");
 };
+
+export function ErrorBoundary() {
+  return <Errors />;
+}

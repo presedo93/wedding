@@ -13,8 +13,16 @@
       "idx": 1,
       "version": "7",
       "when": 1734132141135,
-      "tag": "0001_tan_sleeper",
+      "tag": "0001_notnull_allergies",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1734372020009,
+      "tag": "0002_delete_user_table",
       "breakpoints": true
     }
   ]
 }
+

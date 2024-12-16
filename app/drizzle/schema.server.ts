@@ -6,20 +6,9 @@ const timestamps = {
   deletedAt: t.timestamp({ withTimezone: true }),
 };
 
-export const users = t.pgTable("users", {
-  id: t.varchar({ length: 12 }).primaryKey(),
-  name: t.varchar().notNull(),
-  phone: t.varchar().notNull(),
-  email: t.varchar().notNull(),
-  pictureUrl: t.varchar(),
-  ...timestamps,
-});
-
 export const guestsTable = t.pgTable("guests", {
   id: t.serial().primaryKey(),
-  userId: t
-    .varchar({ length: 12 })
-    .references(() => users.id, { onDelete: "cascade" }),
+  userId: t.varchar({ length: 12 }).notNull(),
   name: t.varchar().notNull(),
   phone: t.varchar(),
   allergies: t.varchar().array().notNull().default([]),

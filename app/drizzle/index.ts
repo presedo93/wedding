@@ -7,10 +7,7 @@ export const db = drizzle({
   casing: "snake_case",
 });
 
-export type User = typeof schema.users.$inferSelect;
 export type Guest = typeof schema.guestsTable.$inferSelect;
-
-export type UserInsert = typeof schema.users.$inferInsert;
 export type GuestInsert = typeof schema.guestsTable.$inferInsert;
 
 export * from "./schema.server";

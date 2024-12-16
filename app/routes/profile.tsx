@@ -1,33 +1,24 @@
-import { eq } from "drizzle-orm";
 import { LoaderFunction } from "@remix-run/node";
 import { Link, Outlet, redirect, useLoaderData } from "@remix-run/react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import { Errors, TodoItem } from "~/components";
-import { db, User, users } from "~/drizzle";
 import { logto } from "~/service/auth.server";
+import { UserInfoResponse } from "@logto/remix";
 
 type Loader = {
-  readonly user: User;
+  readonly user: UserInfoResponse;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-  const context = await logto.getContext({ getAccessToken: false })(request);
+  const context = await logto.getContext({ fetchUserInfo: true })(request);
 
   if (!context.isAuthenticated) {
     return redirect("/auth/sign-in");
   }
 
-  const user = await db.query.users.findFirst({
-    where: eq(users.id, context.claims!.sub),
-  });
-
-  if (!user) {
-    return redirect("/auth/sign-in");
-  }
-
-  return { user } as Loader;
+  return { user: context.userInfo } as Loader;
 };
 
 export default function EditProfile() {
@@ -61,14 +52,14 @@ export default function EditProfile() {
   );
 }
 
-const ProfileCard = ({ user }: { user: User }) => (
+const ProfileCard = ({ user }: { user: UserInfoResponse }) => (
   <div className="mt-4 flex flex-row items-center gap-5 rounded-lg bg-slate-400 p-4 shadow shadow-slate-500">
     <Avatar className="size-14">
-      <AvatarImage src={user.pictureUrl || ""} alt="profile" />
+      <AvatarImage src={user.picture || ""} alt="profile" />
       <AvatarFallback>L&R</AvatarFallback>
     </Avatar>
     <p className="mr-4 line-clamp-1 text-ellipsis text-lg">
-      Hola, <span className="font-semibold">{user.name}</span>!
+      Hola, <span className="font-semibold">{user.name || user.username}</span>!
     </p>
   </div>
 );

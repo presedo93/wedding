@@ -22,7 +22,13 @@
       "when": 1734372020009,
       "tag": "0002_delete_user_table",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1734462814269,
+      "tag": "0003_create_tasks_table",
+      "breakpoints": true
     }
   ]
 }
-

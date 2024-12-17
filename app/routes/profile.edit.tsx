@@ -12,7 +12,7 @@ import { UserInfoResponse } from "@logto/remix";
 
 export const schema = zod.object({
   name: zod.string().min(1, "El nombre es necesario"),
-  phone: zod
+  primaryPhone: zod
     .string()
     .optional()
     .transform((v) => v?.replace(/\s+/g, "")),
@@ -41,7 +41,7 @@ export default function NewProfile() {
     shouldRevalidate: "onInput",
     defaultValue: {
       name: user.name ?? "",
-      phone: user.phone_number ?? "",
+      primaryPhone: user.phone_number ?? "",
     },
     lastResult,
     onValidate({ formData }) {
@@ -59,10 +59,10 @@ export default function NewProfile() {
         </Field>
 
         <Field>
-          <Label htmlFor={fields.phone.id}>Num. teléfono</Label>
-          <InputConform meta={fields.phone} type="tel" />
-          {fields.phone.errors && (
-            <FieldError>{fields.phone.errors}</FieldError>
+          <Label htmlFor={fields.primaryPhone.id}>Num. teléfono</Label>
+          <InputConform meta={fields.primaryPhone} type="tel" />
+          {fields.primaryPhone.errors && (
+            <FieldError>{fields.primaryPhone.errors}</FieldError>
           )}
         </Field>
 
@@ -73,7 +73,7 @@ export default function NewProfile() {
             </Button>
           </Link>
           <Button type="submit" className="w-1/2 min-w-min">
-            Submit
+            Guardar
           </Button>
         </div>
       </div>

@@ -6,9 +6,12 @@ import { Button } from "~/components/ui/button";
 import { Errors, TodoItem } from "~/components";
 import { logto } from "~/service/auth.server";
 import { UserInfoResponse } from "@logto/remix";
+import { db, Task, tasksTable } from "~/drizzle";
+import { eq } from "drizzle-orm";
 
 type Loader = {
   readonly user: UserInfoResponse;
+  readonly tasks: Task;
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
@@ -18,11 +21,20 @@ export const loader: LoaderFunction = async ({ request }) => {
     return redirect("/auth/sign-in");
   }
 
-  return { user: context.userInfo } as Loader;
+  const id = context.claims!.sub;
+  let tasks = await db.query.tasksTable.findFirst({
+    where: eq(tasksTable.id, id),
+  });
+
+  if (!tasks) {
+    tasks = (await db.insert(tasksTable).values({ id }).returning()).at(0);
+  }
+
+  return { user: context.userInfo, tasks } as Loader;
 };
 
 export default function EditProfile() {
-  const { user } = useLoaderData<Loader>();
+  const { user, tasks } = useLoaderData<Loader>();
 
   return (
     <div className="flex min-h-svh flex-col bg-slate-200 px-8 py-4">
@@ -31,7 +43,7 @@ export default function EditProfile() {
       </h1>
       {user && <ProfileCard user={user} />}
       <Outlet />
-      <UserTasks />
+      <UserTasks tasks={tasks} />
       <UserButtons />
     </div>
   );
@@ -40,7 +52,7 @@ export default function EditProfile() {
 const ProfileCard = ({ user }: { user: UserInfoResponse }) => (
   <div className="mt-4 flex flex-row items-center gap-5 rounded-lg bg-slate-400 p-4 shadow shadow-slate-500">
     <Avatar className="size-14">
-      <AvatarImage src={user.picture || ""} alt="profile" />
+      <AvatarImage src={user.picture!} alt="profile" />
       <AvatarFallback>L&R</AvatarFallback>
     </Avatar>
     <p className="mr-4 line-clamp-1 text-ellipsis text-lg">
@@ -49,19 +61,19 @@ const ProfileCard = ({ user }: { user: UserInfoResponse }) => (
   </div>
 );
 
-const UserTasks = () => (
+const UserTasks = ({ tasks }: { tasks: Task }) => (
   <>
     <h3 className="mt-2 text-xl font-medium underline decoration-2 underline-offset-4">
       Tareas
     </h3>
-    <div className="mt-4 flex flex-col gap-5 rounded-lg bg-slate-300 p-4 shadow shadow-slate-400">
-      <ul>
-        <TodoItem isChecked={true}>Completa tu perfil.</TodoItem>
-        <TodoItem isChecked={false}>Añade a tus acompañantes.</TodoItem>
-        <TodoItem isChecked={false}>Elige tus canciones favoritas.</TodoItem>
-        <TodoItem isChecked={false}>Deja algún mensaje.</TodoItem>
-        <TodoItem isChecked={false}>Sube tus fotos del día!</TodoItem>
-      </ul>
+    <div className="mt-4 flex flex-col rounded-lg bg-slate-300 p-4 shadow shadow-slate-400">
+      <TodoItem isChecked={tasks.profile}>Completa tu perfil.</TodoItem>
+      <TodoItem isChecked={tasks.guests}>Añade a tus acompañantes.</TodoItem>
+      <TodoItem isChecked={tasks.songs}>
+        Elige tus canciones favoritas.
+      </TodoItem>
+      <TodoItem isChecked={tasks.messages}>Deja algún mensaje.</TodoItem>
+      <TodoItem isChecked={tasks.photos}>Sube tus fotos del día!</TodoItem>
     </div>
   </>
 );

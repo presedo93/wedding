@@ -16,3 +16,12 @@ export const guestsTable = t.pgTable("guests", {
   needsTransport: t.boolean().notNull(),
   ...timestamps,
 });
+
+export const tasksTable = t.pgTable("tasks", {
+  id: t.varchar({ length: 12 }).primaryKey(),
+  profile: t.boolean().notNull().default(false),
+  guests: t.boolean().notNull().default(false),
+  songs: t.boolean().notNull().default(false),
+  messages: t.boolean().notNull().default(false),
+  photos: t.boolean().notNull().default(false),
+});

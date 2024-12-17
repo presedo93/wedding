@@ -11,7 +11,7 @@ export function TodoItem({ isChecked, children }: Props) {
   const [checked, setChecked] = useState(isChecked);
 
   return (
-    <li className="flex flex-row items-center gap-2 font-normal">
+    <div className="flex flex-row items-center gap-2 font-normal">
       <Checkbox
         className="border-slate-700 data-[state=checked]:bg-slate-950"
         checked={checked}
@@ -26,6 +26,6 @@ export function TodoItem({ isChecked, children }: Props) {
           transition={{ duration: 2, ease: "easeOut" }}
         />
       </div>
-    </li>
+    </div>
   );
 }

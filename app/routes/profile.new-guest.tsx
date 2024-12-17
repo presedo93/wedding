@@ -92,7 +92,7 @@ export default function EditGuest() {
             </Button>
           </Link>
           <Button type="submit" className="w-1/2 min-w-min">
-            Submit
+            Guardar
           </Button>
         </div>
       </div>
@@ -114,7 +114,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return submission.reply();
   }
 
-  const userId = context.claims?.sub;
+  const userId = context.claims?.sub ?? "";
   await db.insert(guestsTable).values({ userId, ...submission.value });
 
   return redirect("/profile/info");

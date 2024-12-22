@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.2.0](https://github.com/presedo93/wedding/compare/v1.1.0...v1.2.0) (2024-12-22)
+
+
+### Features
+
+* add errors component and rename guests table ([b2fc2f0](https://github.com/presedo93/wedding/commit/b2fc2f095e1c3fec609ff29201bab2ccaa2f7fd6))
+* allow users to check or uncheck tasks and store in DB ([429ed83](https://github.com/presedo93/wedding/commit/429ed83d48b714ca77f2fab5ca3b9ac0de8a635c))
+* create and delete guests ([53c0926](https://github.com/presedo93/wedding/commit/53c0926ba8c0e4e37cff6a6fe870435f0c6397a0))
+* create tasks table ([cf62b91](https://github.com/presedo93/wedding/commit/cf62b91ea07fef9d9bcf5ca1353748176a10ef17))
+* delete user table and use AccountAPI from logto ([1788ec3](https://github.com/presedo93/wedding/commit/1788ec359e53a0772e3f9cc6c7c200a9810689d2))
+* improve guests cards icons ([921910a](https://github.com/presedo93/wedding/commit/921910ab699d30b116c7283025ca5faa4ade781d))
+* improve styling on the profile page ([d47a45c](https://github.com/presedo93/wedding/commit/d47a45c0e206ea30b6a3d8072d86daaa6b34637c))
+* upgrade logto to v1.22 ([d347f97](https://github.com/presedo93/wedding/commit/d347f970fcd27c306430144b40abc42f01293a1a))
+
 ## [1.1.0](https://github.com/presedo93/wedding/compare/v1.0.0...v1.1.0) (2024-12-07)
 
 

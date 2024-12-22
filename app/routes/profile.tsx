@@ -61,22 +61,27 @@ const ProfileCard = ({ user }: { user: UserInfoResponse }) => (
   </div>
 );
 
-const UserTasks = ({ tasks }: { tasks: Task }) => (
-  <>
-    <h3 className="mt-2 text-xl font-medium underline decoration-2 underline-offset-4">
-      Tareas
-    </h3>
-    <div className="mt-4 flex flex-col rounded-lg bg-slate-300 p-4 shadow shadow-slate-400">
-      <TodoItem isChecked={tasks.profile}>Completa tu perfil.</TodoItem>
-      <TodoItem isChecked={tasks.guests}>Añade a tus acompañantes.</TodoItem>
-      <TodoItem isChecked={tasks.songs}>
-        Elige tus canciones favoritas.
-      </TodoItem>
-      <TodoItem isChecked={tasks.messages}>Deja algún mensaje.</TodoItem>
-      <TodoItem isChecked={tasks.photos}>Sube tus fotos del día!</TodoItem>
-    </div>
-  </>
-);
+const UserTasks = ({ tasks }: { tasks: Task }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { id, ...rest } = tasks;
+
+  return (
+    <>
+      <h3 className="mt-2 text-xl font-medium underline decoration-2 underline-offset-4">
+        Tareas
+      </h3>
+      <div className="mt-4 flex flex-col rounded-lg bg-slate-300 p-4 shadow shadow-slate-400">
+        {Object.entries(rest).map(([k, v]) => (
+          <TodoItem
+            key={k}
+            name={k as Exclude<keyof Task, "id">}
+            done={v as boolean}
+          />
+        ))}
+      </div>
+    </>
+  );
+};
 
 const UserButtons = () => (
   <>

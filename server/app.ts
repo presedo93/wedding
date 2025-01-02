@@ -18,7 +18,7 @@ export const app = express();
 if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is required");
 
 const client = postgres(process.env.DATABASE_URL);
-const db = drizzle(client, { schema });
+const db = drizzle(client, { schema, casing: "snake_case" });
 app.use((_, __, next) => DatabaseContext.run(db, next));
 
 app.use(

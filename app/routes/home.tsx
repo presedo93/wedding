@@ -1,60 +1,34 @@
-import { database } from "~/database/context";
-import * as schema from "~/database/schema";
-
+import { CoverPics, EventTimeline, FullLogo, SecButtons } from "~/components";
 import type { Route } from "./+types/home";
-import { Welcome } from "../welcome/welcome";
+import { logto } from "~/auth.server";
+import { CountDown } from "~/components/count-down";
 
 export function meta({}: Route.MetaArgs) {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "Laura & Rene" },
+    { name: "description", content: "Our wedding!" },
   ];
 }
 
-export async function action({ request }: Route.ActionArgs) {
-  const formData = await request.formData();
-  let name = formData.get("name");
-  let email = formData.get("email");
-  if (typeof name !== "string" || typeof email !== "string") {
-    return { guestBookError: "Name and email are required" };
-  }
-
-  name = name.trim();
-  email = email.trim();
-  if (!name || !email) {
-    return { guestBookError: "Name and email are required" };
-  }
-
-  const db = database();
-  try {
-    await db.insert(schema.guestBook).values({ name, email });
-  } catch (error) {
-    return { guestBookError: "Error adding to guest book" };
-  }
+export async function loader({ request }: Route.LoaderArgs) {
+  const context = await logto.getContext({ getAccessToken: false })(request);
+  return { auth: context.isAuthenticated };
 }
 
-export async function loader({ context }: Route.LoaderArgs) {
-  const db = database();
+export default function Home({ loaderData }: Route.ComponentProps) {
+  const { auth } = loaderData;
 
-  const guestBook = await db.query.guestBook.findMany({
-    columns: {
-      id: true,
-      name: true,
-    },
-  });
-
-  return {
-    guestBook,
-    message: context.VALUE_FROM_EXPRESS,
-  };
-}
-
-export default function Home({ actionData, loaderData }: Route.ComponentProps) {
   return (
-    <Welcome
-      guestBook={loaderData.guestBook}
-      guestBookError={actionData?.guestBookError}
-      message={loaderData.message}
-    />
+    <div className="flex flex-col items-center bg-slate-200">
+      <FullLogo className="size-32" />
+      <CoverPics />
+      <div className="h-8" />
+      <CountDown />
+      <div className="h-8" />
+      <EventTimeline />
+      <div className="h-8" />
+      <SecButtons isAuth={auth} />
+      <div className="h-12" />
+    </div>
   );
 }

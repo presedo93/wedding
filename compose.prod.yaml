@@ -1,0 +1,70 @@
+services:
+  traefik:
+    image: traefik:v3.2
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entryPoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email=presedo93@gmail.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - letsencrypt:/letsencrypt
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  wedding:
+    image: wedding:latest
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.wedding.rule=Host(`losgordissecasan.com`)"
+      - "traefik.http.routers.wedding.entrypoints=websecure"
+      - "traefik.http.routers.wedding.tls.certresolver=myresolver"
+      - "traefik.http.services.wedding.loadbalancer.server.port=3000"
+    environment:
+      - DATABASE_URL="postgres://rendres:s3cr3t@postgres:5432/wedding"
+      - LOGTO_ENDPOINT="http://logto:3001"
+      - LOGTO_APP_ID="ew8dqhsw5s6r274i8g73y"
+      - LOGTO_APP_SECRET="39hNKEvuf30qUFIu7GkI6UiH0mzwwiEW"
+      - LOGTO_BASE_URL="http://wedding:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:17.1
+    restart: always
+    environment:
+      POSTGRES_USER: rendres
+      POSTGRES_PASSWORD: s3cr3t
+    expose:
+      - 5432
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "rendres", "-d", "wedding"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+  logto:
+    depends_on:
+      postgres:
+        condition: service_healthy
+    image: svhd/logto:1.22
+    entrypoint: ["sh", "-c", "npm run cli db seed -- --swe && npm start"]
+    environment:
+      - TRUST_PROXY_HEADER=1 # NOTE: enable when using traefik
+      - DB_URL=postgres://rendres:s3cr3t@postgres:5432/logto
+      # - ENDPOINT           # TODO: add when using custom domain
+      # - ADMIN_ENDPOINT     # TODO: add when using custom domain
+
+volumes:
+  postgres:
+  letsencrypt:

@@ -1,25 +1,23 @@
-FROM oven/bun:1 AS dependencies-env
-COPY . /app
-
-FROM dependencies-env AS development-dependencies-env
-COPY ./package.json bun.lockb /app/
+FROM oven/bun:1.1.42-slim AS base
 WORKDIR /app
+COPY . .
+
+FROM base AS dev-deps
+COPY ./package.json bun.lockb /app/
 RUN bun i --frozen-lockfile
 
-FROM dependencies-env AS production-dependencies-env
+FROM base AS prod-deps
 COPY ./package.json bun.lockb /app/
-WORKDIR /app
 RUN bun i --production
 
-FROM dependencies-env AS build-env
+FROM base AS builder
 COPY ./package.json bun.lockb /app/
-COPY --from=development-dependencies-env /app/node_modules /app/node_modules
-WORKDIR /app
+COPY --from=dev-deps /app/node_modules /app/node_modules
 RUN bun run build
 
-FROM dependencies-env
+FROM base
 COPY ./package.json bun.lockb server.js /app/
-COPY --from=production-dependencies-env /app/node_modules /app/node_modules
-COPY --from=build-env /app/build /app/build
-WORKDIR /app
+COPY --from=prod-deps /app/node_modules /app/node_modules
+COPY --from=builder /app/build /app/build
+
 CMD ["bun", "run", "start"]

@@ -28,11 +28,12 @@ services:
       - "traefik.http.routers.wedding.tls.certresolver=myresolver"
       - "traefik.http.services.wedding.loadbalancer.server.port=3000"
     environment:
-      - DATABASE_URL="postgres://rendres:s3cr3t@postgres:5432/wedding"
-      - LOGTO_ENDPOINT="http://logto:3001"
-      - LOGTO_APP_ID="ew8dqhsw5s6r274i8g73y"
-      - LOGTO_APP_SECRET="39hNKEvuf30qUFIu7GkI6UiH0mzwwiEW"
-      - LOGTO_BASE_URL="http://wedding:3000"
+      - NODE_ENV=production
+      - DATABASE_URL=postgres://rendres:s3cr3t@postgres:5432/wedding
+      - LOGTO_ENDPOINT=http://logto:3001
+      - LOGTO_APP_ID=ew8dqhsw5s6r274i8g73y
+      - LOGTO_APP_SECRET=39hNKEvuf30qUFIu7GkI6UiH0mzwwiEW
+      - LOGTO_BASE_URL=http://wedding:3000
     depends_on:
       postgres:
         condition: service_healthy

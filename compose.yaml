@@ -9,11 +9,12 @@ services:
     networks:
       - net
     environment:
-      - DATABASE_URL="postgres://rendres:s3cr3t@postgres:5432/wedding"
-      - LOGTO_ENDPOINT="http://logto:3001"
-      - LOGTO_APP_ID="ew8dqhsw5s6r274i8g73y"
-      - LOGTO_APP_SECRET="39hNKEvuf30qUFIu7GkI6UiH0mzwwiEW"
-      - LOGTO_BASE_URL="http://wedding:3000"
+      - NODE_ENV=production
+      - DATABASE_URL=postgres://rendres:s3cr3t@postgres:5432/wedding
+      - LOGTO_ENDPOINT=http://logto:3001
+      - LOGTO_APP_ID=ew8dqhsw5s6r274i8g73y
+      - LOGTO_APP_SECRET=39hNKEvuf30qUFIu7GkI6UiH0mzwwiEW
+      - LOGTO_BASE_URL=http://wedding:3000
 
   postgres:
     image: postgres:17.1

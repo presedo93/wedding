@@ -8,7 +8,7 @@
     "db:migrate": "dotenv -- drizzle-kit migrate",
     "db:studio": "dotenv -- drizzle-kit studio",
     "dev": "dotenv -- node server.js",
-    "start": "node server.js",
+    "start": "node migrate.js && node server.js",
     "typecheck": "react-router typegen && tsc"
   },
   "dependencies": {

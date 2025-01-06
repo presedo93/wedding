@@ -16,7 +16,7 @@ COPY --from=dev-deps /app/node_modules /app/node_modules
 RUN bun run build
 
 FROM base
-COPY ./package.json bun.lockb server.js /app/
+COPY ./package.json bun.lockb server.js migrate.js /app/
 COPY --from=prod-deps /app/node_modules /app/node_modules
 COPY --from=builder /app/build /app/build
 

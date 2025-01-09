@@ -24,7 +24,7 @@ services:
       - "traefik.enable=false"
 
   wedding:
-    image: wedding:${APP_VERSION:-latest}
+    image: ghcr.io/presedo93/wedding:${APP_TAG:-latest}
     depends_on:
       - postgres
     secrets:
@@ -39,8 +39,8 @@ services:
       - "traefik.http.services.wedding.loadbalancer.server.port=3000"
     environment:
       - NODE_ENV=production
-      - DATABASE_URL=postgres://rendres:s3cr3t@postgres:5432/wedding
-      - DB_PASS_FILE=/run/secrets/db-pass
+      - DB_URL=postgres://rendres@postgres:5432/wedding
+      - DB_PASS=/run/secrets/db-pass
       - LOGTO_ENDPOINT=https://auth.losgordissecasan.com
       - LOGTO_APP_ID=a3faade9m56qab3ri3u8n
       - LOGTO_SECRET_FILE=/run/secrets/logto-app
@@ -51,6 +51,8 @@ services:
 
   postgres:
     image: postgres:17.1
+    secrets:
+      - db-pass
     environment:
       - POSTGRES_USER=rendres
       - POSTGRES_PASSWORD_FILE=/run/secrets/db-pass
@@ -72,7 +74,7 @@ services:
       [
         "sh",
         "-c",
-        "export DB_URL=postgres://rendres:$(cat /run/secrets/db-pass)@postgres:5432/logto && npm run cli db seed -- --swe && npm start",
+        "export DB_PASS=$$(cat /run/secrets/db-pass); export DB_URL=postgres://rendres:$$DB_PASS@postgres:5432/logto; npm run cli db seed -- --swe && npm start",
       ]
     labels:
       - "traefik.enable=true"

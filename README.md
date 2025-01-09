@@ -25,7 +25,7 @@ npm install
 
 ### Development
 
-Copy `.env.example` to `.env` and provide a `DATABASE_URL` with your connection string.
+Copy `.env.example` to `.env` and provide a `DB_URL` with your connection string.
 
 Run an initial database migration:
 

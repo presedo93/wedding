@@ -1,20 +1,26 @@
 import { migrate } from "drizzle-orm/postgres-js/migrator";
 import { drizzle } from "drizzle-orm/postgres-js";
+
+import fs from "fs";
 import postgres from "postgres";
 
-const DATABASE_URL = process.env.DATABASE_URL;
-
-if (!DATABASE_URL) {
-  throw new Error("DATABASE_URL is not set");
+if (!process.env.DB_URL || !process.env.DB_PASS) {
+  throw new Error("DB_URL and DB_PASS are required");
 }
 
-const migrationClient = postgres(DATABASE_URL, { max: 1 });
-const db = drizzle(migrationClient);
+const client = postgres(process.env.DB_URL, {
+  pass:
+    process.env.NODE_ENV === "production"
+      ? fs.readFileSync(process.env.DB_PASS, "utf8").trim()
+      : process.env.DB_PASS,
+  max: 1,
+});
+const db = drizzle(client);
 
 const run = async () => {
   console.log("Migrating database...");
   await migrate(db, { migrationsFolder: "./database/migrations/" });
-  await migrationClient.end();
+  await client.end();
   console.log("Database migrated successfully!");
 };
 

@@ -1,0 +1,102 @@
+services:
+  traefik:
+    image: traefik:v3.2
+    command:
+      # - "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email=presedo93@gmail.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - "letsencrypt:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    labels:
+      - "traefik.enable=false"
+
+  wedding:
+    image: wedding:${APP_VERSION:-latest}
+    depends_on:
+      - postgres
+    secrets:
+      - db-pass
+      - logto-app
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.wedding.rule=Host(`losgordissecasan.com`)"
+      - "traefik.http.routers.wedding.service=wedding"
+      - "traefik.http.routers.wedding.entrypoints=websecure"
+      - "traefik.http.routers.wedding.tls.certresolver=myresolver"
+      - "traefik.http.services.wedding.loadbalancer.server.port=3000"
+    environment:
+      - NODE_ENV=production
+      - DATABASE_URL=postgres://rendres:s3cr3t@postgres:5432/wedding
+      - DB_PASS_FILE=/run/secrets/db-pass
+      - LOGTO_ENDPOINT=https://auth.losgordissecasan.com
+      - LOGTO_APP_ID=a3faade9m56qab3ri3u8n
+      - LOGTO_SECRET_FILE=/run/secrets/logto-app
+      - LOGTO_BASE_URL=https://losgordissecasan.com
+    deploy:
+      update_config:
+        order: start-first
+
+  postgres:
+    image: postgres:17.1
+    environment:
+      - POSTGRES_USER=rendres
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db-pass
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+  logto:
+    image: ghcr.io/logto-io/logto:1.23
+    depends_on:
+      - postgres
+    secrets:
+      - db-pass
+    entrypoint:
+      [
+        "sh",
+        "-c",
+        "export DB_URL=postgres://rendres:$(cat /run/secrets/db-pass)@postgres:5432/logto && npm run cli db seed -- --swe && npm start",
+      ]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.admin.rule=Host(`admin.losgordissecasan.com`)"
+      - "traefik.http.routers.admin.service=admin"
+      - "traefik.http.routers.admin.entrypoints=websecure"
+      - "traefik.http.routers.admin.tls.certresolver=myresolver"
+      - "traefik.http.services.admin.loadbalancer.server.port=3002"
+      - "traefik.http.routers.auth.rule=Host(`auth.losgordissecasan.com`)"
+      - "traefik.http.routers.auth.service=auth"
+      - "traefik.http.routers.auth.entrypoints=websecure"
+      - "traefik.http.routers.auth.tls.certresolver=myresolver"
+      - "traefik.http.services.auth.loadbalancer.server.port=3001"
+    environment:
+      - TRUST_PROXY_HEADER=true
+      - ENDPOINT=https://auth.losgordissecasan.com
+      - ADMIN_ENDPOINT=https://admin.losgordissecasan.com
+
+volumes:
+  postgres:
+  letsencrypt:
+
+secrets:
+  db-pass:
+    external: true
+  logto-app:
+    external: true

@@ -1,5 +1,18 @@
+import fs from "fs";
 import { createCookieSessionStorage } from "react-router";
 import { makeLogtoRemix } from "@logto/remix";
+
+let appSecret = process.env.LOGTO_APP_SECRET || "";
+
+if (process.env.NODE_ENV === "production") {
+  const path = process.env.LOGTO_SECRET_FILE || "/run/secrets/logto-app";
+
+  try {
+    appSecret = fs.readFileSync(path, "utf8").trim();
+  } catch {
+    throw new Error("Missing LOGTO_SECRET_FILE secret");
+  }
+}
 
 const sessionStorage = createCookieSessionStorage({
   cookie: {
@@ -14,8 +27,8 @@ export const logto = makeLogtoRemix(
   {
     endpoint: process.env.LOGTO_ENDPOINT!,
     appId: process.env.LOGTO_APP_ID!,
-    appSecret: process.env.LOGTO_APP_SECRET!,
     baseUrl: process.env.LOGTO_BASE_URL!,
+    appSecret,
   },
   { sessionStorage }
 );

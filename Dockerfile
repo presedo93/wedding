@@ -1,23 +1,22 @@
-FROM oven/bun:1.1.42-slim AS base
+FROM node:20-alpine AS base
 WORKDIR /app
-COPY . .
 
 FROM base AS dev-deps
-COPY ./package.json bun.lockb /app/
-RUN bun i --frozen-lockfile
+COPY . /app
+RUN npm ci
 
 FROM base AS prod-deps
-COPY ./package.json bun.lockb /app/
-RUN bun i --production
+COPY ./package.json package-lock.json /app/
+RUN npm ci --omit=dev
 
 FROM base AS builder
-COPY ./package.json bun.lockb /app/
+COPY . /app/
 COPY --from=dev-deps /app/node_modules /app/node_modules
-RUN bun run build
+RUN npm run build
 
 FROM base
-COPY ./package.json bun.lockb server.js migrate.js /app/
+COPY ./database/migrations/ /app/database/migrations/
+COPY ./package.json package-lock.json server.js migrate.js /app/
 COPY --from=prod-deps /app/node_modules /app/node_modules
 COPY --from=builder /app/build /app/build
-
-CMD ["bun", "run", "start"]
+CMD ["npm", "run", "start"]

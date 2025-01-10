@@ -1,4 +1,4 @@
-# Welcome to React Router!
+# Welcome to React Router
 
 A modern, production-ready template for building full-stack React applications using React Router.
 
@@ -25,7 +25,18 @@ npm install
 
 ### Development
 
-Copy `.env.example` to `.env` and provide a `DB_URL` with your connection string.
+These are the environment variables the project uses:
+
+```
+NODE_ENV="development"
+DB_URL="postgres://rendres@localhost:5432/wedding"
+DB_PASS="s3cr3t"
+
+LOGTO_ENDPOINT="http://localhost:3001"
+LOGTO_APP_ID="ew8dqhsw5s6r274i8g73y"
+LOGTO_APP_SECRET="39hNKEvuf30qUFIu7GkI6UiH0mzwwiEW"
+LOGTO_BASE_URL="http://localhost:3000"
+```
 
 Run an initial database migration:
 

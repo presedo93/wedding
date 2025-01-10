@@ -13,7 +13,7 @@ const client = postgres(process.env.DB_URL, {
     process.env.NODE_ENV === "production"
       ? fs.readFileSync(process.env.DB_PASS, "utf8").trim()
       : process.env.DB_PASS,
-  max: 1,
+  max: 1, // TODO: test if this is the reason we can't scale to three instances
 });
 const db = drizzle(client);
 

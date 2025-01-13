@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.3.0](https://github.com/presedo93/wedding/compare/v1.2.0...v1.3.0) (2025-01-13)
+
+
+### Features
+
+* from bun back to npm ([1b6e449](https://github.com/presedo93/wedding/commit/1b6e4493290e3879013cf2716dca9dca5aa79f32))
+* get rid of profile edit as it not needed any longer ([4391afd](https://github.com/presedo93/wedding/commit/4391afdfed5ff291912597ddcd1795c23ac30ebd))
+
+
+### Bug Fixes
+
+* start script in prod ([32cbfe3](https://github.com/presedo93/wedding/commit/32cbfe3be40d802c1d70cd0d9519316195a99839))
+
 ## [1.2.0](https://github.com/presedo93/wedding/compare/v1.1.0...v1.2.0) (2025-01-09)
 
 

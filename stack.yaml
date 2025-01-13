@@ -24,7 +24,7 @@ services:
       - "traefik.enable=false"
 
   wedding:
-    image: wedding:latest
+    image: ghcr.io/presedo93/wedding:${GIT_TAG:-latest}
     depends_on:
       - postgres
     secrets:

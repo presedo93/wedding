@@ -1,5 +1,6 @@
 import {
   isRouteErrorResponse,
+  Link,
   Links,
   Meta,
   Outlet,
@@ -9,6 +10,8 @@ import {
 
 import type { Route } from "./+types/root";
 import stylesheet from "./app.css?url";
+import { Button } from "./components";
+import { House } from "lucide-react";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -47,15 +50,15 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
+  let message = ":(";
+  let details = "Se ha producido un problema en la página";
   let stack: string | undefined;
 
   if (isRouteErrorResponse(error)) {
     message = error.status === 404 ? "404" : "Error";
     details =
       error.status === 404
-        ? "The requested page could not be found."
+        ? "Esta página no existe"
         : error.statusText || details;
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
@@ -63,9 +66,16 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   return (
-    <main className="pt-16 p-4 container mx-auto">
-      <h1>{message}</h1>
+    <main className="p-16 mx-auto bg-blue-700 text-white">
+      <h1 className="text-6xl mb-4">{message}</h1>
       <p>{details}</p>
+
+      <Link className="mt-8 flex w-full justify-center" to={"/"}>
+        <Button className="w-10/12 min-w-min">
+          <House />
+          Página principal
+        </Button>
+      </Link>
       {stack && (
         <pre className="w-full p-4 overflow-x-auto">
           <code>{stack}</code>

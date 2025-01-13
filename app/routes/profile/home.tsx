@@ -7,6 +7,7 @@ import type { Route } from "./+types/home";
 
 import { database } from "~/database/context";
 import { type Task, tasksTable } from "~/database/schema";
+import { House } from "lucide-react";
 
 interface UserInfo {
   name?: string;
@@ -92,18 +93,18 @@ const UserTasks = ({ tasks }: { tasks: Task }) => {
 
 const UserButtons = () => (
   <>
-    <div className="flex flex-row justify-around">
+    <div className="flex flex-col justify-around">
       <Link className="mt-8 flex w-full justify-center" to={"/"}>
-        <Button className="w-10/12 min-w-min">Página principal</Button>
+        <Button className="w-2/3 min-w-min">
+          <House />
+          Página principal
+        </Button>
       </Link>
-      <Link className="mt-8 flex w-full justify-center" to={"/profile/edit"}>
-        <Button className="w-10/12 min-w-min">Editar perfil</Button>
+      <Link className="mt-4 flex w-full justify-center" to={"/auth/sign-out"}>
+        <Button variant={"destructive"} className="w-2/3 min-w-min">
+          Cerrar sesión
+        </Button>
       </Link>
     </div>
-    <Link className="mt-8 flex w-full justify-center" to={"/auth/sign-out"}>
-      <Button variant={"destructive"} className="w-2/3 min-w-min">
-        Cerrar sesión
-      </Button>
-    </Link>
   </>
 );

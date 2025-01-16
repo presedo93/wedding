@@ -26,9 +26,11 @@ export const UnloggedButtons = () => (
 
 export const LoggedButtons = () => (
   <div className="grid w-11/12 grid-cols-2 gap-4 md:flex md:flex-row md:justify-center">
-    <Button size={"lg"} className="py-2">
-      Musica
-    </Button>
+    <Link to="/music">
+      <Button size={"lg"} className="w-full py-2">
+        Música
+      </Button>
+    </Link>
     <Button size={"lg"} className="py-2">
       Fotos
     </Button>

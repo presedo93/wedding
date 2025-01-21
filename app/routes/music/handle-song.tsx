@@ -1,0 +1,40 @@
+import { logto } from "~/auth.server";
+import type { Route } from "./+types/grant-access";
+import { redirect } from "react-router";
+import { database } from "~/database/context";
+import { songsTable, type SongInsert } from "~/database/schema";
+
+export async function action({ request }: Route.ActionArgs) {
+  const context = await logto.getContext({})(request);
+
+  if (!context.isAuthenticated) {
+    return redirect("/auth/sign-in");
+  }
+
+  const userId = context.claims?.sub;
+  const db = database();
+
+  if (request.method === "POST") {
+    const form = await request.formData();
+
+    const id = form.get("id") as string;
+    const name = form.get("name") as string;
+
+    const values: SongInsert = {
+      id,
+      userId,
+      name,
+      pictureUrl: form.get("pictureUrl") as string,
+      spotifyUrl: form.get("spotifyUrl") as string,
+      popularity: parseInt(form.get("popularity") as string),
+      duration: parseInt(form.get("duration") as string),
+      artist: form.get("artist") as string,
+      album: form.get("album") as string,
+    };
+
+    await db.insert(songsTable).values(values);
+    return Response.json({ message: `Song ${name} created successfully` });
+  }
+
+  return Response.json({ message: "Not handled song" }, { status: 404 });
+}

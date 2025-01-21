@@ -9,5 +9,8 @@ export default [
     route("delete/:id", "routes/profile/delete.tsx"),
     route("edit-tasks", "routes/profile/edit-tasks.tsx"),
   ]),
-  route("music", "routes/music/home.tsx"),
+  route("music", "routes/music/home.tsx", [
+    route("grant-access", "routes/music/grant-access.tsx"),
+    route("handle-song", "routes/music/handle-song.tsx"),
+  ]),
 ] satisfies RouteConfig;

@@ -1,83 +1,81 @@
-import { useEffect, useRef, useState, type RefObject } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDebounce } from "use-debounce";
 import { Input } from "./ui/input";
 import { motion } from "motion/react";
 import { AudioLines } from "lucide-react";
+import { useFetcher } from "react-router";
 
 interface SpotifyGrantAccess {
   access_token: string;
   expires_in: number;
 }
 
-const grant_type = "client_credentials";
-const client_id = "3433502d2fb94c7d9829be06efceda4b";
-const client_secret = "703f9014ee2c410b996558ad2f008208";
-
-const requestAccessToken = async () => {
-  const params = new URLSearchParams({ grant_type, client_id, client_secret });
-  const url = `https://accounts.spotify.com/api/token?${params.toString()}`;
-
-  const response = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-  });
-
-  let { access_token, expires_in }: SpotifyGrantAccess = await response.json();
-  return { access_token, expires_in: Date.now() + expires_in * 1000 };
-};
-
-const isAccessTokenExpired = (
-  credentials: RefObject<SpotifyGrantAccess | null>
-) => !credentials.current || Date.now() > credentials.current.expires_in;
-
 export const SpotifySearch = () => {
-  const credentials = useRef<SpotifyGrantAccess | null>(null);
+  const fetcher = useFetcher();
+
+  const spotifyRef = useRef<SpotifyGrantAccess | null>(null);
   const abortController = useRef<AbortController | null>(null);
 
   const [query, setQuery] = useState("");
   const [debounced] = useDebounce(query, 500);
   const [results, setResults] = useState([]);
 
-  useEffect(() => {
-    if (!debounced) {
-      setResults([]);
-      return;
+  const getToken = async () => {
+    if (!spotifyRef.current || Date.now() > spotifyRef.current.expires_in) {
+      const response = await fetch("/music/grant-access");
+      spotifyRef.current = await response.json();
     }
 
-    const handleSearch = async () => {
-      if (abortController.current) {
-        abortController.current.abort();
-      }
+    return spotifyRef.current?.access_token ?? "";
+  };
 
-      abortController.current = new AbortController();
+  const handleSearch = async () => {
+    if (abortController.current) abortController.current.abort();
+    if (!debounced) return;
 
-      if (isAccessTokenExpired(credentials)) {
-        credentials.current = await requestAccessToken();
-      }
+    abortController.current = new AbortController();
+    const accessToken = await getToken();
 
-      // Search for songs
-      const params = new URLSearchParams({
-        type: "track",
-        limit: "5",
-        q: query,
-      });
+    const params = new URLSearchParams({
+      type: "track",
+      limit: "5",
+      q: query,
+    });
 
-      const url = `https://api.spotify.com/v1/search?${params.toString()}`;
-      const response = await fetch(url, {
-        headers: {
-          Authorization: "Bearer " + credentials.current?.access_token,
-        },
-        signal: abortController.current.signal,
-      });
+    const url = `https://api.spotify.com/v1/search?${params.toString()}`;
+    const response = await fetch(url, {
+      headers: { Authorization: "Bearer " + accessToken },
+      signal: abortController.current.signal,
+    });
 
-      const searchData = await response.json();
-      console.log(searchData);
+    const searchData = await response.json();
+    setResults(searchData.tracks.items);
+    // console.log(searchData);
+  };
 
-      setResults(searchData.tracks.items);
-    };
-
+  useEffect(() => {
+    if (!debounced) setResults([]);
     handleSearch().catch(console.error);
   }, [debounced]);
+
+  useEffect(() => {
+    getToken();
+  }, []);
+
+  const addSong = async (track: any) => {
+    const body = {
+      id: track.id,
+      name: track.name,
+      pictureUrl: track.album.images.at(0).url,
+      spotifyUrl: track.external_urls.spotify,
+      popularity: track.popularity,
+      duration: track.duration_ms,
+      artist: track.artists.map((artist: any) => artist.name).join(", "),
+      album: track.album.name,
+    };
+
+    fetcher.submit(body, { action: "/music/handle-song", method: "post" });
+  };
 
   return (
     <div className="relative">
@@ -95,13 +93,13 @@ export const SpotifySearch = () => {
         {results.map((track: any, i) => (
           <motion.li
             key={track.id}
-            className={`bg-sky-950 p-3 border-b border-slate-700
+            className={`bg-sky-950 p-3 border-b border-slate-700 cursor-pointer
               ${i === 0 ? "rounded-t-3xl" : ""}
               ${i === results.length - 1 ? "rounded-b-3xl" : ""}`}
             initial={{ translateY: -10 * i }}
             animate={{ translateY: 0 }}
             transition={{ duration: 0.6 }}
-            onClick={() => {}}
+            onClick={() => addSong(track)}
           >
             <div className="flex flex-row gap-x-3">
               <img

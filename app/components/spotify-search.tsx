@@ -75,6 +75,8 @@ export const SpotifySearch = () => {
     };
 
     fetcher.submit(body, { action: "/music/handle-song", method: "post" });
+    setQuery("");
+    setResults([]);
   };
 
   return (

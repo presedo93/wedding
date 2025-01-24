@@ -3,6 +3,7 @@ import type { Route } from "./+types/grant-access";
 import { redirect } from "react-router";
 import { database } from "~/database/context";
 import { songsTable, type SongInsert } from "~/database/schema";
+import { eq } from "drizzle-orm";
 
 export async function action({ request }: Route.ActionArgs) {
   const context = await logto.getContext({})(request);
@@ -32,8 +33,14 @@ export async function action({ request }: Route.ActionArgs) {
       album: form.get("album") as string,
     };
 
-    await db.insert(songsTable).values(values);
+    await db.insert(songsTable).values(values).onConflictDoNothing();
     return Response.json({ message: `Song ${name} created successfully` });
+  } else if (request.method === "DELETE") {
+    const form = await request.formData();
+
+    const id = form.get("id") as string;
+    await db.delete(songsTable).where(eq(songsTable.id, id));
+    return Response.json({ message: `Song deleted successfully` });
   }
 
   return Response.json({ message: "Not handled song" }, { status: 404 });

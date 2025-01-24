@@ -98,8 +98,13 @@ const ProfileCard = ({ user }: { user: User }) => (
   </div>
 );
 
+type UserTasks = Exclude<
+  keyof Task,
+  "id" | "updatedAt" | "createdAt" | "deletedAt" | "userId"
+>;
+
 const UserTasks = ({ tasks }: { tasks: Task }) => {
-  const { id, ...rest } = tasks;
+  const { id, userId, updatedAt, createdAt, deletedAt, ...rest } = tasks;
 
   return (
     <>
@@ -108,11 +113,7 @@ const UserTasks = ({ tasks }: { tasks: Task }) => {
       </h3>
       <div className="mt-4 flex flex-col rounded-lg bg-slate-300 p-4 shadow shadow-slate-400">
         {Object.entries(rest).map(([k, v]) => (
-          <TodoItem
-            key={k}
-            name={k as Exclude<keyof Task, "id">}
-            done={v as boolean}
-          />
+          <TodoItem key={k} name={k as UserTasks} done={v as boolean} />
         ))}
       </div>
     </>

@@ -29,7 +29,7 @@ export const action = async ({ request }: Route.ActionArgs) => {
   await db
     .update(tasksTable)
     .set(parsed)
-    .where(eq(tasksTable.id, context.claims!.sub));
+    .where(eq(tasksTable.userId, context.claims!.sub));
 
   return redirect("/profile");
 };

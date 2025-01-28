@@ -38,7 +38,6 @@ export const SpotifySearch = ({
 
     const search = await response.json();
     setResults(search.tracks.items);
-    // console.log(searchData);
   };
 
   useEffect(() => {

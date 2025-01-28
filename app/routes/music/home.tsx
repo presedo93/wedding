@@ -211,7 +211,6 @@ const Stats = ({
     });
 
     const search = await response.json();
-    console.log("ARIST", search);
     setPicture(search.artists.items.at(0).images.at(-1).url);
   };
 

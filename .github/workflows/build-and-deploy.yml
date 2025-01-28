@@ -37,7 +37,6 @@ jobs:
           images: ghcr.io/${{ github.repository }}
           tags: |
             type=semver,pattern={{version}}
-            type=sha
 
       - name: Build and push
         uses: docker/build-push-action@v6
@@ -55,7 +54,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: create env file
+      - name: Create env file
         run: |
           echo "GIT_TAG=${{ needs.build-and-push.outputs.tags }}" >> ./env
 

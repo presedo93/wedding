@@ -45,6 +45,8 @@ services:
       - LOGTO_APP_ID=a3faade9m56qab3ri3u8n
       - LOGTO_SECRET_FILE=/run/secrets/logto-app
       - LOGTO_BASE_URL=https://losgordissecasan.com
+      - SPOTIFY_CLIENT_ID="3433502d2fb94c7d9829be06efceda4b"
+      - SPOTIFY_SECRET_FILE=/run/secrets/spotify-secret
     deploy:
       update_config:
         order: start-first

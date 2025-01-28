@@ -4,12 +4,17 @@ import { useState } from "react";
 import { Checkbox } from "~/components/ui/checkbox";
 import { type Task } from "~/database/schema";
 
+type UserTasks = Exclude<
+  keyof Task,
+  "id" | "updatedAt" | "createdAt" | "deletedAt" | "userId"
+>;
+
 interface Props {
-  name: Exclude<keyof Task, "id">;
+  name: UserTasks;
   done: boolean;
 }
 
-const TEXTS: { [key in Exclude<keyof Task, "id">]: string } = {
+const TEXTS: { [key in UserTasks]: string } = {
   profile: "Completa tu perfil.",
   guests: "Añade a tus acompañantes.",
   songs: "Elige tus canciones favoritas.",

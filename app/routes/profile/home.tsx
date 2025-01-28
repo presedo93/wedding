@@ -6,13 +6,19 @@ import { Link, Outlet, redirect } from "react-router";
 import type { Route } from "./+types/home";
 
 import { database } from "~/database/context";
-import { type Task, tasksTable } from "~/database/schema";
+import {
+  type Task,
+  tasksTable,
+  type User,
+  usersTable,
+} from "~/database/schema";
 import { House } from "lucide-react";
 
-interface UserInfo {
-  name?: string;
-  username?: string;
-  picture?: string;
+interface LogtoUser {
+  id: string;
+  name: string;
+  email: string;
+  pictureUrl?: string;
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -22,21 +28,43 @@ export async function loader({ request }: Route.LoaderArgs) {
     return redirect("/auth/sign-in");
   }
 
-  let user = {
+  let logtoUser = {
+    id: context.claims!.sub,
     name: context.claims!.name,
-    username: context.claims!.username,
-    picture: context.claims!.picture,
-  } as UserInfo;
+    email: context.claims!.email ?? "",
+    pictureUrl: context.claims!.picture,
+  } as LogtoUser;
 
   const db = database();
-  const id = context.claims!.sub;
+
+  let user = await db.query.usersTable.findFirst({
+    where: eq(usersTable.id, logtoUser.id),
+  });
+
+  if (!user) {
+    user = (await db.insert(usersTable).values(logtoUser).returning()).at(0);
+  }
+
+  const nameChanged = user?.name !== logtoUser.name;
+  const pictureChanged = user?.pictureUrl !== logtoUser.pictureUrl;
+
+  if (nameChanged || pictureChanged) {
+    user = (
+      await db
+        .update(usersTable)
+        .set(logtoUser)
+        .where(eq(usersTable.id, logtoUser.id))
+        .returning()
+    ).at(0);
+  }
 
   let tasks = await db.query.tasksTable.findFirst({
-    where: eq(tasksTable.id, id),
+    where: eq(tasksTable.userId, logtoUser.id),
   });
 
   if (!tasks) {
-    tasks = (await db.insert(tasksTable).values({ id }).returning()).at(0);
+    const values = { userId: logtoUser.id };
+    tasks = (await db.insert(tasksTable).values(values).returning()).at(0);
   }
 
   return { user, tasks };
@@ -58,20 +86,25 @@ export default function Profile({ loaderData }: Route.ComponentProps) {
   );
 }
 
-const ProfileCard = ({ user }: { user: UserInfo }) => (
+const ProfileCard = ({ user }: { user: User }) => (
   <div className="mt-4 flex flex-row items-center gap-5 rounded-lg bg-slate-400 p-4 shadow shadow-slate-500">
     <Avatar className="size-14">
-      <AvatarImage src={user.picture!} alt="profile" />
+      <AvatarImage src={user.pictureUrl!} alt="profile" />
       <AvatarFallback>L&R</AvatarFallback>
     </Avatar>
     <p className="mr-4 line-clamp-1 text-ellipsis text-lg">
-      Hola, <span className="font-semibold">{user.name || user.username}</span>!
+      Hola, <span className="font-semibold">{user.name}</span>!
     </p>
   </div>
 );
 
+type UserTasks = Exclude<
+  keyof Task,
+  "id" | "updatedAt" | "createdAt" | "deletedAt" | "userId"
+>;
+
 const UserTasks = ({ tasks }: { tasks: Task }) => {
-  const { id, ...rest } = tasks;
+  const { id, userId, updatedAt, createdAt, deletedAt, ...rest } = tasks;
 
   return (
     <>
@@ -80,11 +113,7 @@ const UserTasks = ({ tasks }: { tasks: Task }) => {
       </h3>
       <div className="mt-4 flex flex-col rounded-lg bg-slate-300 p-4 shadow shadow-slate-400">
         {Object.entries(rest).map(([k, v]) => (
-          <TodoItem
-            key={k}
-            name={k as Exclude<keyof Task, "id">}
-            done={v as boolean}
-          />
+          <TodoItem key={k} name={k as UserTasks} done={v as boolean} />
         ))}
       </div>
     </>

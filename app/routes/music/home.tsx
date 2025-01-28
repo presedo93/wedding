@@ -2,13 +2,14 @@ import {
   Avatar,
   AvatarFallback,
   AvatarImage,
+  Button,
   Popover,
   PopoverContent,
   PopoverTrigger,
   SpotifySearch,
 } from "~/components";
 import type { Route } from "./+types/home";
-import { Form, redirect } from "react-router";
+import { Form, Link, redirect } from "react-router";
 import { logto } from "~/auth.server";
 import { database } from "~/database/context";
 import {
@@ -17,10 +18,18 @@ import {
   type Song,
   type User,
 } from "~/database/schema";
-import { desc, eq } from "drizzle-orm";
-import { Trash2 } from "lucide-react";
+import { count, desc, eq } from "drizzle-orm";
+import { House, Trash2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 
 type SongWithUser = { songs: Song; users: User | null };
+type BestArtist = { count: number; name: string | null };
+type BestUser = BestArtist & { picture: string | null };
+
+interface SpotifyGrantAccess {
+  access_token: string;
+  expires_in: number;
+}
 
 export async function loader({ request }: Route.LoaderArgs) {
   const context = await logto.getContext({})(request);
@@ -32,17 +41,57 @@ export async function loader({ request }: Route.LoaderArgs) {
   const db = database();
   const userId = context.claims?.sub;
 
-  let songs = await db
+  const songs = await db
     .select()
     .from(songsTable)
     .leftJoin(usersTable, eq(songsTable.userId, usersTable.id))
     .orderBy(desc(songsTable.createdAt));
 
-  return { songs, userId };
+  const usersBySongsAdded = await db
+    .select({
+      count: count(songsTable.id),
+      name: usersTable.name,
+      picture: usersTable.pictureUrl,
+    })
+    .from(songsTable)
+    .leftJoin(usersTable, eq(songsTable.userId, usersTable.id))
+    .groupBy(songsTable.userId, usersTable.name, usersTable.pictureUrl)
+    .limit(1);
+
+  const artistsBySongsAdded = await db
+    .select({
+      count: count(songsTable.id),
+      name: songsTable.artist,
+    })
+    .from(songsTable)
+    .groupBy(songsTable.artist)
+    .orderBy(desc(count(songsTable.id)))
+    .limit(1);
+
+  return {
+    songs,
+    userId,
+    bestUser: usersBySongsAdded[0],
+    bestArtist: artistsBySongsAdded[0],
+  };
 }
 
 export default function Music({ loaderData }: Route.ComponentProps) {
-  const { songs, userId } = loaderData;
+  const { songs, userId, bestUser, bestArtist } = loaderData;
+  const spotifyRef = useRef<SpotifyGrantAccess | null>(null);
+
+  const getToken = async () => {
+    if (!spotifyRef.current || Date.now() > spotifyRef.current.expires_in) {
+      const response = await fetch("/music/grant-access");
+      spotifyRef.current = await response.json();
+    }
+
+    return spotifyRef.current?.access_token ?? "";
+  };
+
+  useEffect(() => {
+    getToken();
+  }, []);
 
   return (
     <div className="flex min-h-svh flex-col bg-slate-200 px-8 py-4">
@@ -50,10 +99,18 @@ export default function Music({ loaderData }: Route.ComponentProps) {
         La música de la boda
       </h1>
       <div className="mt-4 p-3 bg-sky-900 rounded-xl flex flex-col">
-        <SpotifySearch />
+        <SpotifySearch getToken={getToken} />
         <div className="mt-4 mb-2 bg-slate-300 h-px w-11/12 self-center" />
         <Playlist songs={songs} userId={userId} />
       </div>
+      <div className="mt-4 p-3 bg-sky-900 rounded-xl flex flex-col">
+        <Stats
+          bestUser={bestUser}
+          bestArtist={bestArtist}
+          getToken={getToken}
+        />
+      </div>
+      <Buttons />
     </div>
   );
 }
@@ -78,8 +135,8 @@ const Playlist = ({
             className="w-1/4 rounded-lg"
           />
           <div className="w-2/4 flex flex-col">
-            <span className="font-bold">{s.songs.name}</span>
-            <span className="font-bold text-xs text-gray-400">
+            <span className="font-semibold">{s.songs.name}</span>
+            <span className="font-semibold text-xs text-gray-400">
               {s.songs.artist}
             </span>
           </div>
@@ -102,7 +159,7 @@ const UserAvatar = ({ user }: { user: User }) => {
   return (
     <Popover>
       <PopoverTrigger>
-        <Avatar>
+        <Avatar className="size-10">
           <AvatarImage
             src={user.pictureUrl ?? ""}
             className="rounded-full size-10 border border-white p-px"
@@ -127,3 +184,84 @@ const DeleteSong = ({ id }: { id: string }) => {
     </Form>
   );
 };
+
+const Stats = ({
+  bestUser,
+  bestArtist,
+  getToken,
+}: {
+  bestUser: BestUser;
+  bestArtist: BestArtist;
+  getToken: () => Promise<string>;
+}) => {
+  const [picture, setPicture] = useState("");
+
+  const handleSearch = async () => {
+    const accessToken = await getToken();
+
+    const params = new URLSearchParams({
+      type: "artist",
+      limit: "1",
+      q: bestArtist.name ?? "",
+    });
+
+    const url = `https://api.spotify.com/v1/search?${params.toString()}`;
+    const response = await fetch(url, {
+      headers: { Authorization: "Bearer " + accessToken },
+    });
+
+    const search = await response.json();
+    console.log("ARIST", search);
+    setPicture(search.artists.items.at(0).images.at(-1).url);
+  };
+
+  useEffect(() => {
+    handleSearch().catch(console.error);
+  }, [bestArtist]);
+
+  return (
+    <div className="py-4">
+      <p className="text-white text-xs font-playwrite text-center">
+        El usuario que más canciones ha añadido y el artista más escuchado
+        son...
+      </p>
+      <div className="mt-8 flex justify-around">
+        <div className="flex flex-col justify-center items-center">
+          <Avatar className="size-16">
+            <AvatarImage
+              src={bestUser.picture ?? ""}
+              className="rounded-full size-16 border border-white p-px"
+            />
+            <AvatarFallback className="text-sky-950">L&R</AvatarFallback>
+          </Avatar>
+          <span className="mt-3 px-2 py-px rounded-lg bg-white text-black text-sm font-semibold">
+            {bestUser.name ?? ""}
+          </span>
+        </div>
+        <div className="flex flex-col justify-center items-center">
+          <Avatar className="size-16">
+            <AvatarImage
+              src={picture ?? ""}
+              className="rounded-full size-16 border border-white p-px"
+            />
+            <AvatarFallback className="text-sky-950">L&R</AvatarFallback>
+          </Avatar>
+          <span className="mt-3 px-2 py-px rounded-lg bg-white text-black text-sm font-semibold">
+            {"Bad Bunny"}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const Buttons = () => (
+  <div className="flex flex-col justify-around">
+    <Link className="mt-8 flex w-full justify-center" to={"/"}>
+      <Button className="w-2/3 min-w-min">
+        <House />
+        Página principal
+      </Button>
+    </Link>
+  </div>
+);

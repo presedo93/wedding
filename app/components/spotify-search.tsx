@@ -5,29 +5,17 @@ import { motion } from "motion/react";
 import { AudioLines } from "lucide-react";
 import { useFetcher } from "react-router";
 
-interface SpotifyGrantAccess {
-  access_token: string;
-  expires_in: number;
-}
-
-export const SpotifySearch = () => {
+export const SpotifySearch = ({
+  getToken,
+}: {
+  getToken: () => Promise<string>;
+}) => {
   const fetcher = useFetcher();
-
-  const spotifyRef = useRef<SpotifyGrantAccess | null>(null);
   const abortController = useRef<AbortController | null>(null);
 
   const [query, setQuery] = useState("");
   const [debounced] = useDebounce(query, 500);
   const [results, setResults] = useState([]);
-
-  const getToken = async () => {
-    if (!spotifyRef.current || Date.now() > spotifyRef.current.expires_in) {
-      const response = await fetch("/music/grant-access");
-      spotifyRef.current = await response.json();
-    }
-
-    return spotifyRef.current?.access_token ?? "";
-  };
 
   const handleSearch = async () => {
     if (abortController.current) abortController.current.abort();
@@ -48,8 +36,8 @@ export const SpotifySearch = () => {
       signal: abortController.current.signal,
     });
 
-    const searchData = await response.json();
-    setResults(searchData.tracks.items);
+    const search = await response.json();
+    setResults(search.tracks.items);
     // console.log(searchData);
   };
 
@@ -57,10 +45,6 @@ export const SpotifySearch = () => {
     if (!debounced) setResults([]);
     handleSearch().catch(console.error);
   }, [debounced]);
-
-  useEffect(() => {
-    getToken();
-  }, []);
 
   const addSong = async (track: any) => {
     const body = {

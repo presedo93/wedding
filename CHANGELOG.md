@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.0](https://github.com/presedo93/wedding/compare/v1.3.0...v1.4.0) (2025-01-28)
+
+
+### Features
+
+* change favicon to the wedding logo ([ec5502b](https://github.com/presedo93/wedding/commit/ec5502bc16bfbca4d5876207706cce9b12ad62fe))
+* spotify integration ([#8](https://github.com/presedo93/wedding/issues/8)) ([3364011](https://github.com/presedo93/wedding/commit/3364011b2e3829c6a7442fe1aefd8c26939e318b))
+
 ## [1.3.0](https://github.com/presedo93/wedding/compare/v1.2.0...v1.3.0) (2025-01-13)
 
 

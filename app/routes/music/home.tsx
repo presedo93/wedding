@@ -71,8 +71,8 @@ export async function loader({ request }: Route.LoaderArgs) {
   return {
     songs,
     userId,
-    bestUser: usersBySongsAdded[0],
-    bestArtist: artistsBySongsAdded[0],
+    bestUser: usersBySongsAdded[0] ?? null,
+    bestArtist: artistsBySongsAdded[0] ?? null,
   };
 }
 
@@ -103,13 +103,15 @@ export default function Music({ loaderData }: Route.ComponentProps) {
         <div className="mt-4 mb-2 bg-slate-300 h-px w-11/12 self-center" />
         <Playlist songs={songs} userId={userId} />
       </div>
-      <div className="mt-4 p-3 bg-sky-900 rounded-xl flex flex-col">
-        <Stats
-          bestUser={bestUser}
-          bestArtist={bestArtist}
-          getToken={getToken}
-        />
-      </div>
+      {(bestArtist || bestUser) && (
+        <div className="mt-4 p-3 bg-sky-900 rounded-xl flex flex-col">
+          <Stats
+            bestUser={bestUser}
+            bestArtist={bestArtist}
+            getToken={getToken}
+          />
+        </div>
+      )}
       <Buttons />
     </div>
   );
@@ -190,13 +192,15 @@ const Stats = ({
   bestArtist,
   getToken,
 }: {
-  bestUser: BestUser;
-  bestArtist: BestArtist;
+  bestUser?: BestUser;
+  bestArtist?: BestArtist;
   getToken: () => Promise<string>;
 }) => {
   const [picture, setPicture] = useState("");
 
   const handleSearch = async () => {
+    if (!bestArtist) return;
+
     const accessToken = await getToken();
 
     const params = new URLSearchParams({
@@ -225,30 +229,34 @@ const Stats = ({
         son...
       </p>
       <div className="mt-8 flex justify-around">
-        <div className="flex flex-col justify-center items-center">
-          <Avatar className="size-16">
-            <AvatarImage
-              src={bestUser.picture ?? ""}
-              className="rounded-full size-16 border border-white p-px"
-            />
-            <AvatarFallback className="text-sky-950">L&R</AvatarFallback>
-          </Avatar>
-          <span className="mt-3 px-2 py-px rounded-lg bg-white text-black text-sm font-semibold">
-            {bestUser.name ?? ""}
-          </span>
-        </div>
-        <div className="flex flex-col justify-center items-center">
-          <Avatar className="size-16">
-            <AvatarImage
-              src={picture ?? ""}
-              className="rounded-full size-16 border border-white p-px"
-            />
-            <AvatarFallback className="text-sky-950">L&R</AvatarFallback>
-          </Avatar>
-          <span className="mt-3 px-2 py-px rounded-lg bg-white text-black text-sm font-semibold">
-            {"Bad Bunny"}
-          </span>
-        </div>
+        {bestUser && (
+          <div className="flex flex-col justify-center items-center">
+            <Avatar className="size-16">
+              <AvatarImage
+                src={bestUser.picture ?? ""}
+                className="rounded-full size-16 border border-white p-px"
+              />
+              <AvatarFallback className="text-sky-950">L&R</AvatarFallback>
+            </Avatar>
+            <span className="mt-3 px-2 py-px rounded-lg bg-white text-black text-sm font-semibold">
+              {bestUser.name ?? ""}
+            </span>
+          </div>
+        )}
+        {bestArtist && (
+          <div className="flex flex-col justify-center items-center">
+            <Avatar className="size-16">
+              <AvatarImage
+                src={picture}
+                className="rounded-full size-16 border border-white p-px"
+              />
+              <AvatarFallback className="text-sky-950">L&R</AvatarFallback>
+            </Avatar>
+            <span className="mt-3 px-2 py-px rounded-lg bg-white text-black text-sm font-semibold">
+              {bestArtist.name}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );

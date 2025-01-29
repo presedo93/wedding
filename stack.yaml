@@ -24,12 +24,13 @@ services:
       - "traefik.enable=false"
 
   wedding:
-    image: ${GIT_TAG:-ghcr.io/presedo93/wedding:latest}
+    image: ghcr.io/presedo93/wedding:1.4.1
     depends_on:
       - postgres
     secrets:
       - db-pass
       - logto-app
+      - spotify-secret
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.wedding.rule=Host(`losgordissecasan.com`)"
@@ -103,4 +104,6 @@ secrets:
   db-pass:
     external: true
   logto-app:
+    external: true
+  spotify-secret:
     external: true

@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.4.2](https://github.com/presedo93/wedding/compare/v1.4.1...v1.4.2) (2025-01-29)
+
+
+### Bug Fixes
+
+* add spotify secret to the stack deploy file ([0d50e8a](https://github.com/presedo93/wedding/commit/0d50e8af167a228746bb6f1514e39c7d9d896fc0))
+* hide Spotify Stats component if there is no data in the DB yet ([cc7996a](https://github.com/presedo93/wedding/commit/cc7996a603a8776e1af283f76d8d2c6a7eeb6814))
+
 ## [1.4.1](https://github.com/presedo93/wedding/compare/v1.4.0...v1.4.1) (2025-01-29)
 
 

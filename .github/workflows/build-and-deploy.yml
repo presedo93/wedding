@@ -37,6 +37,7 @@ jobs:
           images: ghcr.io/${{ github.repository }}
           tags: |
             type=semver,pattern={{version}}
+            type=sha
 
       - name: Build and push
         uses: docker/build-push-action@v6
@@ -56,7 +57,9 @@ jobs:
 
       - name: Create env file
         run: |
-          echo "GIT_TAG=${{ needs.build-and-push.outputs.tags }}" >> ./env
+          tags=${{ needs.build-and-push.outputs.tags }}
+          first=$(echo $tags | jq -r '.[0]')
+          echo "IMAGE_TAG=$first" >> ./env
 
       - name: Docker Stack Deploy
         uses: cssnr/stack-deploy-action@v1

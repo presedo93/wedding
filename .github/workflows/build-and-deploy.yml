@@ -59,6 +59,7 @@ jobs:
         run: |
           tags=${{ needs.build-and-push.outputs.tags }}
           first=$(echo $tags | jq -r '.[0]')
+          echo "Tag selected is $first"
           echo "IMAGE_TAG=$first" >> ./env
 
       - name: Docker Stack Deploy

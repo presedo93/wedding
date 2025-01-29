@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1](https://github.com/presedo93/wedding/compare/v1.4.0...v1.4.1) (2025-01-29)
+
+
+### Bug Fixes
+
+* merge migrations because of drizzle generation error ([55f9ba9](https://github.com/presedo93/wedding/commit/55f9ba9d8718e0ad46ccfc3e81a3cc3c8928389f))
+
 ## [1.4.0](https://github.com/presedo93/wedding/compare/v1.3.0...v1.4.0) (2025-01-28)
 
 

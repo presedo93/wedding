@@ -57,9 +57,8 @@ jobs:
 
       - name: Create env file
         run: |
-          tags=${{ needs.build-and-push.outputs.tags }}
-          first=$(echo $tags | head -n 1)
-          echo "IMAGE_TAG=$first" >> ./env
+          tag=$(echo ${{ needs.build-and-push.outputs.tags }} | head -n 1)
+          echo "IMAGE_TAG=$tag" >> ./env
 
       - name: Docker Stack Deploy
         uses: cssnr/stack-deploy-action@v1

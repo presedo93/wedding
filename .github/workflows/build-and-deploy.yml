@@ -58,8 +58,7 @@ jobs:
       - name: Create env file
         run: |
           tags=${{ needs.build-and-push.outputs.tags }}
-          first=$(echo $tags | jq -r '.[0]')
-          echo "Tag selected is $first"
+          first=$(echo $tags | head -n 1)
           echo "IMAGE_TAG=$first" >> ./env
 
       - name: Docker Stack Deploy

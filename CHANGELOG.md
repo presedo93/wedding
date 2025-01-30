@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.4](https://github.com/presedo93/wedding/compare/v1.4.3...v1.4.4) (2025-01-30)
+
+
+### Bug Fixes
+
+* parse docker tags output in deploy action ([8955c15](https://github.com/presedo93/wedding/commit/8955c157a610e4b9a422c6b589616ee408245c45))
+
 ## [1.4.3](https://github.com/presedo93/wedding/compare/v1.4.2...v1.4.3) (2025-01-30)
 
 

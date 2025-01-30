@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.3](https://github.com/presedo93/wedding/compare/v1.4.2...v1.4.3) (2025-01-30)
+
+
+### Bug Fixes
+
+* GH action deploy was not selecting the tag correctly ([53cec9c](https://github.com/presedo93/wedding/commit/53cec9cefcc2e2ea61ede47581853db60a3a4242))
+
 ## [1.4.2](https://github.com/presedo93/wedding/compare/v1.4.1...v1.4.2) (2025-01-29)
 
 

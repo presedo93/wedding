@@ -20,11 +20,10 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 
   return (
     <div className="flex flex-col items-center bg-slate-200">
-      <FullLogo className="size-32" />
-      <CoverPics />
-      <div className="h-8" />
-      <CountDown />
-      <div className="h-8" />
+      <div className="h-8 sm:h-12" />
+      <SmallCover />
+      <MediumCover />
+      <div className="h-8 sm:h-16" />
       <EventTimeline />
       <div className="h-8" />
       <SecButtons isAuth={auth} />
@@ -32,3 +31,28 @@ export default function Home({ loaderData }: Route.ComponentProps) {
     </div>
   );
 }
+
+const SmallCover = () => (
+  <div className="block sm:hidden px-4">
+    <div className="flex flex-col items-center justify-between">
+      <FullLogo />
+      <div className="h-8" />
+      <CoverPics />
+      <div className="h-8" />
+      <CountDown />
+    </div>
+  </div>
+);
+
+const MediumCover = () => (
+  <div className="max-w-[1024px] w-full hidden sm:block px-4">
+    <div className="flex flex-row items-center justify-around">
+      <CoverPics />
+      <div className="w-2/5 flex flex-col items-center justify-between">
+        <FullLogo />
+        <div className="h-8" />
+        <CountDown />
+      </div>
+    </div>
+  </div>
+);

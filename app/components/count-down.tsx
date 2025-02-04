@@ -33,13 +33,13 @@ export const CountDown = () => {
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
+      initial={{ opacity: 0, translateY: -20 }}
+      whileInView={{ opacity: 1, translateY: 0 }}
       transition={{ duration: 2 }}
       viewport={{ once: true }}
-      className="flex w-full flex-col items-center font-playwrite text-lg font-thin"
+      className="flex max-w-96 w-full flex-col items-center font-playwrite text-lg font-thin"
     >
-      <p>Quedan</p>
+      <p className="mb-2">Quedan</p>
       <div className="my-2 flex h-full w-10/12 flex-row items-center justify-around rounded-md border border-black p-2 shadow-md shadow-slate-500">
         <div className="flex flex-col items-center">
           <span className="font-normal">{left.months}</span>
@@ -66,7 +66,6 @@ export const CountDown = () => {
           <span className="text-sm">secs</span>
         </div>
       </div>
-      <span>para...</span>
     </motion.div>
   );
 };

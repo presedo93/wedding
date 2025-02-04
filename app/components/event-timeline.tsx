@@ -1,7 +1,5 @@
 import { motion } from "motion/react";
-import { ChurchText } from "./svg/texts/church";
-import { LaToscaText } from "./svg/texts/latosca";
-import { DateText } from "./svg/texts/date";
+import { ChurchText, LaToscaText, DateText } from "./svg";
 
 export const EventTimeline = () => {
   return (

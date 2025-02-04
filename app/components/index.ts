@@ -1,4 +1,5 @@
 export * from "./cover-pics";
+export * from "./full-logo";
 export * from "./sec-buttons";
 export * from "./event-timeline";
 export * from "./guest-card";

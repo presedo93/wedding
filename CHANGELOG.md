@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.5.0](https://github.com/presedo93/wedding/compare/v1.4.4...v1.5.0) (2025-02-04)
+
+
+### Features
+
+* improve front page animations and layout ([10182d3](https://github.com/presedo93/wedding/commit/10182d38fcd0b5d1a4456fa7fed8257cee2820a8))
+
+
+### Bug Fixes
+
+* delete repo stored images and place them in a bucket ([093b25a](https://github.com/presedo93/wedding/commit/093b25a4a489b8542dc9d052dac5a00740bb599f))
+
 ## [1.4.4](https://github.com/presedo93/wedding/compare/v1.4.3...v1.4.4) (2025-01-30)
 
 

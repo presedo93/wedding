@@ -1,6 +1,11 @@
 import { motion } from "motion/react";
 import { ChurchText, LaToscaText, DateText } from "./svg";
 
+const CHURCH =
+  "https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//boliches.jpg";
+const EVENT =
+  "https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//latosca.jpg";
+
 export const EventTimeline = () => {
   return (
     <div className="flex h-fit w-full flex-col items-center justify-center">
@@ -9,11 +14,11 @@ export const EventTimeline = () => {
       <AnimatedSeparator />
       <ChurchText className="h-28 w-44" />
       <AnimatedSeparator />
-      <RoundedImage src="/images/boliches.jpg" />
+      <RoundedImage src={CHURCH} />
       <AnimatedSeparator />
       <LaToscaText className="h-20 w-56" />
       <AnimatedSeparator />
-      <RoundedImage src="/images/latosca.jpg" />
+      <RoundedImage src={EVENT} />
     </div>
   );
 };

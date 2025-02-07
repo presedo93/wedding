@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/presedo93/wedding/compare/v1.5.0...v1.6.0) (2025-02-07)
+
+
+### Features
+
+* adapt UI to mid and big screen sizes ([1c10a7d](https://github.com/presedo93/wedding/commit/1c10a7da1cf6f8c2416f2b70d054c95f37e39180))
+
 ## [1.5.0](https://github.com/presedo93/wedding/compare/v1.4.4...v1.5.0) (2025-02-04)
 
 

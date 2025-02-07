@@ -74,14 +74,16 @@ export default function Profile({ loaderData }: Route.ComponentProps) {
   const { user, tasks } = loaderData;
 
   return (
-    <div className="flex min-h-svh flex-col bg-slate-200 px-8 py-4">
-      <h1 className="mt-4 text-2xl font-semibold underline decoration-2 underline-offset-4">
-        Mi perfil
-      </h1>
-      {user && <ProfileCard user={user} />}
-      <Outlet />
-      <UserTasks tasks={tasks!} />
-      <UserButtons />
+    <div className="bg-slate-200 min-h-svh flex flex-col items-center w-full">
+      <div className="flex flex-col max-w-[640px] w-full px-8 py-4">
+        <h1 className="mt-4 text-2xl font-playwrite font-light underline decoration-1 underline-offset-4">
+          Mi perfil
+        </h1>
+        {user && <ProfileCard user={user} />}
+        <Outlet />
+        <UserTasks tasks={tasks!} />
+        <UserButtons />
+      </div>
     </div>
   );
 }
@@ -108,7 +110,7 @@ const UserTasks = ({ tasks }: { tasks: Task }) => {
 
   return (
     <>
-      <h3 className="mt-2 text-xl font-medium underline decoration-2 underline-offset-4">
+      <h3 className="mt-6 text-xl font-playwrite font-light underline decoration-1 underline-offset-4">
         Tareas
       </h3>
       <div className="mt-4 flex flex-col rounded-lg bg-slate-300 p-4 shadow shadow-slate-400">
@@ -124,13 +126,13 @@ const UserButtons = () => (
   <>
     <div className="flex flex-col justify-around">
       <Link className="mt-8 flex w-full justify-center" to={"/"}>
-        <Button className="w-2/3 min-w-min">
+        <Button className="w-2/3 md:w-1/3 min-w-min">
           <House />
           Página principal
         </Button>
       </Link>
       <Link className="mt-4 flex w-full justify-center" to={"/auth/sign-out"}>
-        <Button variant={"destructive"} className="w-2/3 min-w-min">
+        <Button variant={"destructive"} className="w-2/3 md:w-1/3 min-w-min">
           Cerrar sesión
         </Button>
       </Link>

@@ -94,25 +94,27 @@ export default function Music({ loaderData }: Route.ComponentProps) {
   }, []);
 
   return (
-    <div className="flex min-h-svh flex-col bg-slate-200 px-8 py-4">
-      <h1 className="font-playwrite self-center mt-4 text-2xl font-semibold">
-        La música de la boda
-      </h1>
-      <div className="mt-4 p-3 bg-sky-900 rounded-xl flex flex-col">
-        <SpotifySearch getToken={getToken} />
-        <div className="mt-4 mb-2 bg-slate-300 h-px w-11/12 self-center" />
-        <Playlist songs={songs} userId={userId} />
-      </div>
-      {(bestArtist || bestUser) && (
+    <div className="bg-slate-200 min-h-svh flex flex-col items-center w-full">
+      <div className="flex flex-col max-w-[640px] w-full px-8 py-4">
+        <h1 className="mt-4 text-2xl font-playwrite font-light underline decoration-1 underline-offset-4">
+          La música de la boda
+        </h1>
         <div className="mt-4 p-3 bg-sky-900 rounded-xl flex flex-col">
-          <Stats
-            bestUser={bestUser}
-            bestArtist={bestArtist}
-            getToken={getToken}
-          />
+          <SpotifySearch getToken={getToken} />
+          <div className="mt-4 mb-2 bg-slate-300 h-px w-11/12 self-center" />
+          <Playlist songs={songs} userId={userId} />
         </div>
-      )}
-      <Buttons />
+        {(bestArtist || bestUser) && (
+          <div className="mt-4 p-3 bg-sky-900 rounded-xl flex flex-col">
+            <Stats
+              bestUser={bestUser}
+              bestArtist={bestArtist}
+              getToken={getToken}
+            />
+          </div>
+        )}
+        <Buttons />
+      </div>
     </div>
   );
 }
@@ -265,7 +267,7 @@ const Stats = ({
 const Buttons = () => (
   <div className="flex flex-col justify-around">
     <Link className="mt-8 flex w-full justify-center" to={"/"}>
-      <Button className="w-2/3 min-w-min">
+      <Button className="w-2/3 md:w-1/3 min-w-min">
         <House />
         Página principal
       </Button>

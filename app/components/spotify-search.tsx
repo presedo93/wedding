@@ -46,6 +46,23 @@ export const SpotifySearch = ({
   }, [debounced]);
 
   const addSong = async (track: any) => {
+    const accessToken = await getToken();
+    let artist = track.artists.at(0).name;
+
+    const params = new URLSearchParams({
+      type: "artist",
+      limit: "1",
+      q: artist,
+    });
+
+    const url = `https://api.spotify.com/v1/search?${params.toString()}`;
+    const response = await fetch(url, {
+      headers: { Authorization: "Bearer " + accessToken },
+    });
+
+    const search = await response.json();
+    const images = search.artists.items.at(0).images;
+
     const body = {
       id: track.id,
       name: track.name,
@@ -53,8 +70,9 @@ export const SpotifySearch = ({
       spotifyUrl: track.external_urls.spotify,
       popularity: track.popularity,
       duration: track.duration_ms,
-      artist: track.artists.map((artist: any) => artist.name).join(", "),
       album: track.album.name,
+      artistUrl: images.at(0).url,
+      artist,
     };
 
     fetcher.submit(body, { action: "/music/handle-song", method: "post" });

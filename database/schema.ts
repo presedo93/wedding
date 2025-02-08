@@ -54,6 +54,7 @@ export const songsTable = t.pgTable("songs", {
   name: t.varchar().notNull(),
   pictureUrl: t.varchar(),
   spotifyUrl: t.varchar(),
+  artistUrl: t.varchar(),
   popularity: t.integer().notNull().default(0),
   duration: t.integer().notNull().default(0),
   artist: t.varchar(),

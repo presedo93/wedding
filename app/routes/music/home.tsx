@@ -18,13 +18,12 @@ import {
   type Song,
   type User,
 } from "~/database/schema";
-import { count, desc, eq } from "drizzle-orm";
-import { House, Trash2 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { count, desc, eq, sql } from "drizzle-orm";
+import { ExternalLink, House, Trash2 } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 type SongWithUser = { songs: Song; users: User | null };
-type BestArtist = { count: number; name: string | null };
-type BestUser = BestArtist & { picture: string | null };
+type Best = { count: number; name: string | null; picture?: string | null };
 
 interface SpotifyGrantAccess {
   access_token: string;
@@ -56,29 +55,33 @@ export async function loader({ request }: Route.LoaderArgs) {
     .from(songsTable)
     .leftJoin(usersTable, eq(songsTable.userId, usersTable.id))
     .groupBy(songsTable.userId, usersTable.name, usersTable.pictureUrl)
-    .limit(1);
+    .orderBy(desc(count(usersTable.id)))
+    .limit(3);
 
   const artistsBySongsAdded = await db
     .select({
       count: count(songsTable.id),
       name: songsTable.artist,
+      picture: sql`MAX(${songsTable.artistUrl})`.as("picture"),
     })
     .from(songsTable)
     .groupBy(songsTable.artist)
     .orderBy(desc(count(songsTable.id)))
-    .limit(1);
+    .limit(3);
 
   return {
     songs,
     userId,
-    bestUser: usersBySongsAdded[0] ?? null,
-    bestArtist: artistsBySongsAdded[0] ?? null,
+    users: usersBySongsAdded ?? null,
+    artists: artistsBySongsAdded ?? null,
   };
 }
 
 export default function Music({ loaderData }: Route.ComponentProps) {
-  const { songs, userId, bestUser, bestArtist } = loaderData;
+  const { songs, userId, users, artists } = loaderData;
+
   const spotifyRef = useRef<SpotifyGrantAccess | null>(null);
+  const hasStats = artists.length > 0 && users.length > 0;
 
   const getToken = async () => {
     if (!spotifyRef.current || Date.now() > spotifyRef.current.expires_in) {
@@ -104,14 +107,15 @@ export default function Music({ loaderData }: Route.ComponentProps) {
           <div className="mt-4 mb-2 bg-slate-300 h-px w-11/12 self-center" />
           <Playlist songs={songs} userId={userId} />
         </div>
-        {(bestArtist || bestUser) && (
-          <div className="mt-4 p-3 bg-sky-900 rounded-xl flex flex-col">
-            <Stats
-              bestUser={bestUser}
-              bestArtist={bestArtist}
-              getToken={getToken}
-            />
-          </div>
+        {hasStats && (
+          <>
+            <h3 className="mt-6 text-xl font-playwrite font-light underline decoration-1 underline-offset-4">
+              Mejores usuarios y artistas
+            </h3>
+            <div className="mt-4 p-3 bg-sky-900 rounded-xl flex flex-col">
+              <Stats users={users} artists={artists} />
+            </div>
+          </>
         )}
         <Buttons />
       </div>
@@ -125,39 +129,44 @@ const Playlist = ({
 }: {
   songs: SongWithUser[];
   userId?: string;
-}) => {
-  return (
-    <ul className="h-96 overflow-y-auto scrollbar-hide">
-      {songs.map((s) => (
-        <li
-          key={s.songs.id}
-          className="bg-sky-950 gap-x-4 rounded-lg py-2 px-3 text-white my-1 flex flex-row"
-        >
-          <img
-            src={s.songs.pictureUrl ?? ""}
-            alt={`Spotify ${s.songs.name} album picture...`}
-            className="w-1/4 rounded-lg"
-          />
-          <div className="w-2/4 flex flex-col">
-            <span className="font-semibold">{s.songs.name}</span>
-            <span className="font-semibold text-xs text-gray-400">
+}) => (
+  <ul className="h-96 overflow-y-auto scrollbar-hide">
+    {songs.map((s) => (
+      <li
+        key={s.songs.id}
+        className="bg-sky-950 gap-x-4 rounded-lg py-2 px-3 text-white my-1 flex flex-row"
+      >
+        <img
+          src={s.songs.pictureUrl ?? ""}
+          alt={`Spotify ${s.songs.name} album picture...`}
+          className="w-1/4 rounded-lg"
+        />
+        <div className="w-2/4 flex flex-col">
+          <span className="font-semibold truncate">{s.songs.name}</span>
+          <div className="flex flex-row justify-start items-baseline gap-x-2">
+            <span className="font-semibold text-sm text-gray-400">
               {s.songs.artist}
             </span>
+            {s.songs.spotifyUrl && (
+              <a href={s.songs.spotifyUrl} target="_blank">
+                <ExternalLink className="size-3 text-gray-400" />
+              </a>
+            )}
           </div>
-          {s.users && (
-            <div className="flex items-center justify-center w-1/4">
-              {s.users.id === userId ? (
-                <DeleteSong id={s.songs.id} />
-              ) : (
-                <UserAvatar user={s.users} />
-              )}
-            </div>
-          )}
-        </li>
-      ))}
-    </ul>
-  );
-};
+        </div>
+        {s.users && (
+          <div className="flex items-center justify-center w-1/4">
+            {s.users.id === userId ? (
+              <DeleteSong id={s.songs.id} />
+            ) : (
+              <UserAvatar user={s.users} />
+            )}
+          </div>
+        )}
+      </li>
+    ))}
+  </ul>
+);
 
 const UserAvatar = ({ user }: { user: User }) => {
   return (
@@ -189,80 +198,54 @@ const DeleteSong = ({ id }: { id: string }) => {
   );
 };
 
-const Stats = ({
-  bestUser,
-  bestArtist,
-  getToken,
-}: {
-  bestUser?: BestUser;
-  bestArtist?: BestArtist;
-  getToken: () => Promise<string>;
-}) => {
-  const [picture, setPicture] = useState("");
-
-  const handleSearch = async () => {
-    if (!bestArtist) return;
-
-    const accessToken = await getToken();
-
-    const params = new URLSearchParams({
-      type: "artist",
-      limit: "1",
-      q: bestArtist.name ?? "",
-    });
-
-    const url = `https://api.spotify.com/v1/search?${params.toString()}`;
-    const response = await fetch(url, {
-      headers: { Authorization: "Bearer " + accessToken },
-    });
-
-    const search = await response.json();
-    setPicture(search.artists.items.at(0).images.at(-1).url);
-  };
-
-  useEffect(() => {
-    handleSearch().catch(console.error);
-  }, [bestArtist]);
-
-  return (
-    <div className="py-4">
-      <p className="text-white text-xs font-playwrite text-center">
-        El usuario que más canciones ha añadido y el artista más escuchado
-        son...
-      </p>
-      <div className="mt-8 flex justify-around">
-        {bestUser && (
-          <div className="flex flex-col justify-center items-center">
-            <Avatar className="size-16">
+const Stats = ({ users, artists }: { users: Best[]; artists: Best[] }) => (
+  <div className="py-4">
+    <div className="flex justify-around">
+      <div className="flex flex-col items-center gap-y-4">
+        {users.map((user, index) => (
+          <div
+            key={index}
+            className="flex flex-col justify-center items-center"
+          >
+            <Avatar className={`size-${index < 1 ? "14" : "9"}`}>
               <AvatarImage
-                src={bestUser.picture ?? ""}
-                className="rounded-full size-16 border border-white p-px"
+                src={user.picture ?? ""}
+                className={`rounded-full size-${
+                  index < 1 ? "14" : "9"
+                } border border-white p-px`}
               />
               <AvatarFallback className="text-sky-950">L&R</AvatarFallback>
             </Avatar>
-            <span className="mt-3 px-2 py-px rounded-lg bg-white text-black text-sm font-semibold">
-              {bestUser.name ?? ""}
+            <span className="mt-3 px-2 py-px rounded-lg bg-white text-black text-xs font-semibold">
+              {user.name ?? ""} ({user.count})
             </span>
           </div>
-        )}
-        {bestArtist && (
-          <div className="flex flex-col justify-center items-center">
-            <Avatar className="size-16">
+        ))}
+      </div>
+      <div className="flex flex-col items-center gap-y-4">
+        {artists.map((artist, index) => (
+          <div
+            key={index}
+            className="flex flex-col justify-center items-center"
+          >
+            <Avatar className={`size-${index < 1 ? "14" : "9"}`}>
               <AvatarImage
-                src={picture}
-                className="rounded-full size-16 border border-white p-px"
+                src={artist.picture ?? ""}
+                className={`rounded-full size-${
+                  index < 1 ? "14" : "9"
+                } border border-white p-px`}
               />
               <AvatarFallback className="text-sky-950">L&R</AvatarFallback>
             </Avatar>
-            <span className="mt-3 px-2 py-px rounded-lg bg-white text-black text-sm font-semibold">
-              {bestArtist.name}
+            <span className="mt-3 px-2 py-px rounded-lg bg-white text-black text-xs font-semibold">
+              {artist.name} ({artist.count})
             </span>
           </div>
-        )}
+        ))}
       </div>
     </div>
-  );
-};
+  </div>
+);
 
 const Buttons = () => (
   <div className="flex flex-col justify-around">

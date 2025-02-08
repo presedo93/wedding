@@ -26,6 +26,7 @@ export async function action({ request }: Route.ActionArgs) {
       userId,
       name,
       pictureUrl: form.get("pictureUrl") as string,
+      artistUrl: form.get("artistUrl") as string,
       spotifyUrl: form.get("spotifyUrl") as string,
       popularity: parseInt(form.get("popularity") as string),
       duration: parseInt(form.get("duration") as string),
@@ -34,13 +35,13 @@ export async function action({ request }: Route.ActionArgs) {
     };
 
     await db.insert(songsTable).values(values).onConflictDoNothing();
-    return Response.json({ message: `Song ${name} created successfully` });
+    return redirect("/music");
   } else if (request.method === "DELETE") {
     const form = await request.formData();
 
     const id = form.get("id") as string;
     await db.delete(songsTable).where(eq(songsTable.id, id));
-    return Response.json({ message: `Song deleted successfully` });
+    return redirect("/music");
   }
 
   return Response.json({ message: "Not handled song" }, { status: 404 });

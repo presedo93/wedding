@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.7.0](https://github.com/presedo93/wedding/compare/v1.6.0...v1.7.0) (2025-02-08)
+
+
+### Features
+
+* Music stats now shows a ranking ([43a0a99](https://github.com/presedo93/wedding/commit/43a0a9978c6939036cd6f292bf8a85b00fdd3ff5))
+
 ## [1.6.0](https://github.com/presedo93/wedding/compare/v1.5.0...v1.6.0) (2025-02-07)
 
 

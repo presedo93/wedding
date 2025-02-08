@@ -44,7 +44,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     }
   );
 
-  let { access_token, expires_in }: SpotifyGrantAccess = await response.json();
+  const { access_token, expires_in }: SpotifyGrantAccess = await response.json();
   return Response.json({
     access_token,
     expires_in: Date.now() + expires_in * 1000,

@@ -25,7 +25,7 @@ export const UnloggedButtons = () => (
 );
 
 export const LoggedButtons = () => (
-  <div className="grid w-11/12 md:max-w-fit grid-cols-2 gap-4 md:flex md:flex-row md:justify-center">
+  <div className="grid w-11/12 grid-cols-2 gap-4 md:flex md:max-w-fit md:flex-row md:justify-center">
     <Link to="/music">
       <Button size={"lg"} className="w-full py-2">
         Música

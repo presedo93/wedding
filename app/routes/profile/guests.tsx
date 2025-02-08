@@ -32,7 +32,7 @@ export default function ProfileInfo({ loaderData }: Route.ComponentProps) {
 
   return (
     <>
-      <h3 className="mt-6 text-xl font-playwrite font-light underline decoration-1 underline-offset-4">
+      <h3 className="mt-6 font-playwrite text-xl font-light underline decoration-1 underline-offset-4">
         Acompañantes
       </h3>
       <div className="my-2 flex flex-col items-center justify-center">
@@ -43,7 +43,7 @@ export default function ProfileInfo({ loaderData }: Route.ComponentProps) {
         )}
       </div>
       <Link className="flex w-full justify-center" to={"/profile/new-guest"}>
-        <Button className="w-2/3 md:w-1/3 min-w-min">Nuevo acompanante</Button>
+        <Button className="w-2/3 min-w-min md:w-1/3">Nuevo acompanante</Button>
       </Link>
     </>
   );

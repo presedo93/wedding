@@ -5,6 +5,20 @@ import { motion } from "motion/react";
 import { AudioLines } from "lucide-react";
 import { useFetcher } from "react-router";
 
+interface Artist {
+  name: string;
+}
+
+interface Track {
+  id: string;
+  name: string;
+  album: { images: { url: string }[]; name: string };
+  artists: Artist[];
+  external_urls: { spotify: string };
+  popularity: number;
+  duration_ms: number;
+}
+
 export const SpotifySearch = ({
   getToken,
 }: {
@@ -17,37 +31,38 @@ export const SpotifySearch = ({
   const [debounced] = useDebounce(query, 500);
   const [results, setResults] = useState([]);
 
-  const handleSearch = async () => {
-    if (abortController.current) abortController.current.abort();
-    if (!debounced) return;
-
-    abortController.current = new AbortController();
-    const accessToken = await getToken();
-
-    const params = new URLSearchParams({
-      type: "track",
-      limit: "5",
-      q: query,
-    });
-
-    const url = `https://api.spotify.com/v1/search?${params.toString()}`;
-    const response = await fetch(url, {
-      headers: { Authorization: "Bearer " + accessToken },
-      signal: abortController.current.signal,
-    });
-
-    const search = await response.json();
-    setResults(search.tracks.items);
-  };
-
   useEffect(() => {
     if (!debounced) setResults([]);
-    handleSearch().catch(console.error);
-  }, [debounced]);
 
-  const addSong = async (track: any) => {
+    const handleSearch = async () => {
+      if (abortController.current) abortController.current.abort();
+      if (!debounced) return;
+
+      abortController.current = new AbortController();
+      const accessToken = await getToken();
+
+      const params = new URLSearchParams({
+        type: "track",
+        limit: "5",
+        q: query,
+      });
+
+      const url = `https://api.spotify.com/v1/search?${params.toString()}`;
+      const response = await fetch(url, {
+        headers: { Authorization: "Bearer " + accessToken },
+        signal: abortController.current.signal,
+      });
+
+      const search = await response.json();
+      setResults(search.tracks.items);
+    };
+
+    handleSearch().catch(console.error);
+  }, [debounced, getToken, query]);
+
+  const addSong = async (track: Track) => {
     const accessToken = await getToken();
-    let artist = track.artists.at(0).name;
+    const artist = track.artists.at(0)?.name ?? "";
 
     const params = new URLSearchParams({
       type: "artist",
@@ -66,7 +81,7 @@ export const SpotifySearch = ({
     const body = {
       id: track.id,
       name: track.name,
-      pictureUrl: track.album.images.at(0).url,
+      pictureUrl: track.album.images.at(0)?.url,
       spotifyUrl: track.external_urls.spotify,
       popularity: track.popularity,
       duration: track.duration_ms,
@@ -75,6 +90,7 @@ export const SpotifySearch = ({
       artist,
     };
 
+    // @ts-expect-error Not matchinfg the fetcher type
     fetcher.submit(body, { action: "/music/handle-song", method: "post" });
     setQuery("");
     setResults([]);
@@ -82,21 +98,21 @@ export const SpotifySearch = ({
 
   return (
     <div className="relative">
-      <div className="w-full flex flex-row items-center gap-x-3">
+      <div className="flex w-full flex-row items-center gap-x-3">
         <AudioLines className="size-8 text-slate-300" />
         <Input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Añade tus canciones favoritas..."
-          className="border-slate-300 placeholder:text-slate-300 placeholder:text-xs placeholder:opacity-75 rounded-3xl text-white font-semibold italic text-sm"
+          className="rounded-3xl border-slate-300 text-sm font-semibold italic text-white placeholder:text-xs placeholder:text-slate-300 placeholder:opacity-75"
         />
       </div>
-      <motion.ul className="absolute z-10 mt-2 text-white rounded-3xl">
-        {results.map((track: any, i) => (
+      <motion.ul className="absolute z-10 mt-2 rounded-3xl text-white">
+        {results.map((track: Track, i) => (
           <motion.li
             key={track.id}
-            className={`bg-sky-950 p-3 border-b border-slate-700 cursor-pointer
+            className={`cursor-pointer border-b border-slate-700 bg-sky-950 p-3
               ${i === 0 ? "rounded-t-3xl" : ""}
               ${i === results.length - 1 ? "rounded-b-3xl" : ""}`}
             initial={{ translateY: -10 * i }}
@@ -106,13 +122,16 @@ export const SpotifySearch = ({
           >
             <div className="flex flex-row gap-x-3">
               <img
+                alt={`Spotify ${track.name} album picture...`}
                 className="w-1/5 rounded-md"
-                src={track.album.images.at(0).url}
+                src={track.album.images.at(0)?.url}
               />
-              <div className="w-3/5 flex flex-col">
+              <div className="flex w-3/5 flex-col">
                 <span className="font-semibold">{track.name}</span>
                 <span className="text-xs font-bold text-gray-400">
-                  {track.artists.map((artist: any) => artist.name).join(", ")}
+                  {track.artists
+                    .map((artist: Artist) => artist.name)
+                    .join(", ")}
                 </span>
               </div>
             </div>

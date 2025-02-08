@@ -32,7 +32,7 @@ export function CheckboxConform({
           control.change(checked ? "on" : "");
         }}
         onBlur={control.blur}
-        className="focus:ring-stone-950 focus:ring-2 focus:ring-offset-2"
+        className="focus:ring-2 focus:ring-stone-950 focus:ring-offset-2"
       />
     </>
   );

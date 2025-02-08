@@ -97,22 +97,22 @@ export default function Music({ loaderData }: Route.ComponentProps) {
   }, []);
 
   return (
-    <div className="bg-slate-200 min-h-svh flex flex-col items-center w-full">
-      <div className="flex flex-col max-w-[640px] w-full px-8 py-4">
-        <h1 className="mt-4 text-2xl font-playwrite font-light underline decoration-1 underline-offset-4">
+    <div className="flex min-h-svh w-full flex-col items-center bg-slate-200">
+      <div className="flex w-full max-w-screen-sm flex-col px-8 py-4">
+        <h1 className="mt-4 font-playwrite text-2xl font-light underline decoration-1 underline-offset-4">
           La música de la boda
         </h1>
-        <div className="mt-4 p-3 bg-sky-900 rounded-xl flex flex-col">
+        <div className="mt-4 flex flex-col rounded-xl bg-sky-900 p-3">
           <SpotifySearch getToken={getToken} />
-          <div className="mt-4 mb-2 bg-slate-300 h-px w-11/12 self-center" />
+          <div className="mb-2 mt-4 h-px w-11/12 self-center bg-slate-300" />
           <Playlist songs={songs} userId={userId} />
         </div>
         {hasStats && (
           <>
-            <h3 className="mt-6 text-xl font-playwrite font-light underline decoration-1 underline-offset-4">
+            <h3 className="mt-6 font-playwrite text-xl font-light underline decoration-1 underline-offset-4">
               Mejores usuarios y artistas
             </h3>
-            <div className="mt-4 p-3 bg-sky-900 rounded-xl flex flex-col">
+            <div className="mt-4 flex flex-col rounded-xl bg-sky-900 p-3">
               <Stats users={users} artists={artists} />
             </div>
           </>
@@ -134,28 +134,28 @@ const Playlist = ({
     {songs.map((s) => (
       <li
         key={s.songs.id}
-        className="bg-sky-950 gap-x-4 rounded-lg py-2 px-3 text-white my-1 flex flex-row"
+        className="my-1 flex flex-row gap-x-4 rounded-lg bg-sky-950 px-3 py-2 text-white"
       >
         <img
           src={s.songs.pictureUrl ?? ""}
           alt={`Spotify ${s.songs.name} album picture...`}
-          className="w-1/4 rounded-lg"
+          className="w-1/4 max-w-24 rounded-lg"
         />
-        <div className="w-2/4 flex flex-col">
-          <span className="font-semibold truncate">{s.songs.name}</span>
-          <div className="flex flex-row justify-start items-baseline gap-x-2">
-            <span className="font-semibold text-sm text-gray-400">
+        <div className="flex w-2/4 flex-col">
+          <span className="truncate font-semibold">{s.songs.name}</span>
+          <div className="flex flex-row items-baseline justify-start gap-x-2">
+            <span className="text-sm font-semibold text-gray-400">
               {s.songs.artist}
             </span>
             {s.songs.spotifyUrl && (
-              <a href={s.songs.spotifyUrl} target="_blank">
+              <a href={s.songs.spotifyUrl} target="_blank" rel="noreferrer">
                 <ExternalLink className="size-3 text-gray-400" />
               </a>
             )}
           </div>
         </div>
         {s.users && (
-          <div className="flex items-center justify-center w-1/4">
+          <div className="flex w-1/4 items-center justify-center">
             {s.users.id === userId ? (
               <DeleteSong id={s.songs.id} />
             ) : (
@@ -175,12 +175,12 @@ const UserAvatar = ({ user }: { user: User }) => {
         <Avatar className="size-10">
           <AvatarImage
             src={user.pictureUrl ?? ""}
-            className="rounded-full size-10 border border-white p-px"
+            className="size-10 rounded-full border border-white p-px"
           />
           <AvatarFallback className="text-sky-950">L&R</AvatarFallback>
         </Avatar>
       </PopoverTrigger>
-      <PopoverContent className="py-1 px-3 w-fit text-center bg-sky-950 text-white text-sm italic">
+      <PopoverContent className="w-fit bg-sky-950 px-3 py-1 text-center text-sm italic text-white">
         Añadida por <span className="font-semibold">{user.name}</span>
       </PopoverContent>
     </Popover>
@@ -191,7 +191,7 @@ const DeleteSong = ({ id }: { id: string }) => {
   return (
     <Form action="/music/handle-song" method="delete">
       <input type="hidden" name="id" value={id} />
-      <button type="submit" className="bg-sky-900 rounded-full p-3">
+      <button type="submit" className="rounded-full bg-sky-900 p-3">
         <Trash2 className="size-5 stroke-red-600 stroke-[1.5px] " />
       </button>
     </Form>
@@ -205,18 +205,18 @@ const Stats = ({ users, artists }: { users: Best[]; artists: Best[] }) => (
         {users.map((user, index) => (
           <div
             key={index}
-            className="flex flex-col justify-center items-center"
+            className="flex flex-col items-center justify-center"
           >
-            <Avatar className={`size-${index < 1 ? "14" : "9"}`}>
+            <Avatar className={`${index < 1 ? "size-14" : "size-9"}`}>
               <AvatarImage
                 src={user.picture ?? ""}
-                className={`rounded-full size-${
-                  index < 1 ? "14" : "9"
+                className={`rounded-full ${
+                  index < 1 ? "size-14" : "size-9"
                 } border border-white p-px`}
               />
               <AvatarFallback className="text-sky-950">L&R</AvatarFallback>
             </Avatar>
-            <span className="mt-3 px-2 py-px rounded-lg bg-white text-black text-xs font-semibold">
+            <span className="mt-3 rounded-lg bg-white px-2 py-px text-xs font-semibold text-black">
               {user.name ?? ""} ({user.count})
             </span>
           </div>
@@ -226,18 +226,18 @@ const Stats = ({ users, artists }: { users: Best[]; artists: Best[] }) => (
         {artists.map((artist, index) => (
           <div
             key={index}
-            className="flex flex-col justify-center items-center"
+            className="flex flex-col items-center justify-center"
           >
-            <Avatar className={`size-${index < 1 ? "14" : "9"}`}>
+            <Avatar className={`${index < 1 ? "size-14" : "size-9"}`}>
               <AvatarImage
                 src={artist.picture ?? ""}
-                className={`rounded-full size-${
-                  index < 1 ? "14" : "9"
+                className={`rounded-full ${
+                  index < 1 ? "size-14" : "size-9"
                 } border border-white p-px`}
               />
               <AvatarFallback className="text-sky-950">L&R</AvatarFallback>
             </Avatar>
-            <span className="mt-3 px-2 py-px rounded-lg bg-white text-black text-xs font-semibold">
+            <span className="mt-3 rounded-lg bg-white px-2 py-px text-xs font-semibold text-black">
               {artist.name} ({artist.count})
             </span>
           </div>
@@ -250,7 +250,7 @@ const Stats = ({ users, artists }: { users: Best[]; artists: Best[] }) => (
 const Buttons = () => (
   <div className="flex flex-col justify-around">
     <Link className="mt-8 flex w-full justify-center" to={"/"}>
-      <Button className="w-2/3 md:w-1/3 min-w-min">
+      <Button className="w-2/3 min-w-min md:w-1/3">
         <House />
         Página principal
       </Button>

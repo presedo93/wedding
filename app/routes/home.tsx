@@ -3,7 +3,7 @@ import type { Route } from "./+types/home";
 import { logto } from "~/auth.server";
 import { CountDown } from "~/components/count-down";
 
-export function meta({}: Route.MetaArgs) {
+export function meta() {
   return [
     { title: "Laura & Rene" },
     { name: "description", content: "Our wedding!" },
@@ -33,7 +33,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
 }
 
 const SmallCover = () => (
-  <div className="block sm:hidden px-4">
+  <div className="block px-4 sm:hidden">
     <div className="flex flex-col items-center justify-between">
       <FullLogo />
       <div className="h-8" />
@@ -45,10 +45,10 @@ const SmallCover = () => (
 );
 
 const MediumCover = () => (
-  <div className="max-w-[1024px] w-full hidden sm:block px-4">
+  <div className="hidden w-full max-w-screen-lg px-4 sm:block">
     <div className="flex flex-row items-center justify-around">
       <CoverPics />
-      <div className="w-2/5 flex flex-col items-center justify-between">
+      <div className="flex w-2/5 flex-col items-center justify-between">
         <FullLogo />
         <div className="h-8" />
         <CountDown />

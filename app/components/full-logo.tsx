@@ -9,7 +9,7 @@ export const FullLogo = () => (
     whileInView={{ opacity: 1, translateY: 0 }}
     transition={{ duration: 2 }}
     viewport={{ once: true }}
-    className="h-32 flex justify-center items-center rounded-full"
+    className="flex h-32 items-center justify-center rounded-full"
   >
     <motion.img src={SRC} className="h-5/6 rounded-lg object-cover" />
   </motion.div>

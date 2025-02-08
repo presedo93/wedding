@@ -28,7 +28,7 @@ export async function loader({ request }: Route.LoaderArgs) {
     return redirect("/auth/sign-in");
   }
 
-  let logtoUser = {
+  const logtoUser = {
     id: context.claims!.sub,
     name: context.claims!.name,
     email: context.claims!.email ?? "",
@@ -74,9 +74,9 @@ export default function Profile({ loaderData }: Route.ComponentProps) {
   const { user, tasks } = loaderData;
 
   return (
-    <div className="bg-slate-200 min-h-svh flex flex-col items-center w-full">
-      <div className="flex flex-col max-w-[640px] w-full px-8 py-4">
-        <h1 className="mt-4 text-2xl font-playwrite font-light underline decoration-1 underline-offset-4">
+    <div className="flex min-h-svh w-full flex-col items-center bg-slate-200">
+      <div className="flex w-full max-w-screen-sm flex-col px-8 py-4">
+        <h1 className="mt-4 font-playwrite text-2xl font-light underline decoration-1 underline-offset-4">
           Mi perfil
         </h1>
         {user && <ProfileCard user={user} />}
@@ -106,11 +106,12 @@ type UserTasks = Exclude<
 >;
 
 const UserTasks = ({ tasks }: { tasks: Task }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { id, userId, updatedAt, createdAt, deletedAt, ...rest } = tasks;
 
   return (
     <>
-      <h3 className="mt-6 text-xl font-playwrite font-light underline decoration-1 underline-offset-4">
+      <h3 className="mt-6 font-playwrite text-xl font-light underline decoration-1 underline-offset-4">
         Tareas
       </h3>
       <div className="mt-4 flex flex-col rounded-lg bg-slate-300 p-4 shadow shadow-slate-400">
@@ -126,13 +127,13 @@ const UserButtons = () => (
   <>
     <div className="flex flex-col justify-around">
       <Link className="mt-8 flex w-full justify-center" to={"/"}>
-        <Button className="w-2/3 md:w-1/3 min-w-min">
+        <Button className="w-2/3 min-w-min md:w-1/3">
           <House />
           Página principal
         </Button>
       </Link>
       <Link className="mt-4 flex w-full justify-center" to={"/auth/sign-out"}>
-        <Button variant={"destructive"} className="w-2/3 md:w-1/3 min-w-min">
+        <Button variant={"destructive"} className="w-2/3 min-w-min md:w-1/3">
           Cerrar sesión
         </Button>
       </Link>

@@ -57,8 +57,8 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   return (
-    <main className="p-16 h-screen mx-auto bg-blue-700 text-white">
-      <h1 className="text-6xl mb-4">{message}</h1>
+    <main className="mx-auto h-screen bg-blue-700 p-16 text-white">
+      <h1 className="mb-4 text-6xl">{message}</h1>
       <p>{details}</p>
 
       <Link className="mt-8 flex w-full justify-center" to={"/"}>
@@ -68,7 +68,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
         </Button>
       </Link>
       {stack && (
-        <pre className="w-full p-4 overflow-x-auto">
+        <pre className="w-full overflow-x-auto p-4">
           <code>{stack}</code>
         </pre>
       )}

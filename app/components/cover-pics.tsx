@@ -30,11 +30,11 @@ export const CoverPics = () => {
       whileInView={{ opacity: 1, translateY: 0 }}
       transition={{ duration: 2 }}
       viewport={{ once: true }}
-      className="flex max-w-96 h-96 w-11/12 items-center overflow-hidden rounded-md bg-slate-300"
+      className="flex h-96 w-11/12 max-w-96 items-center overflow-hidden rounded-md bg-slate-300"
     >
       <AnimatePresence initial={false}>
         <motion.div
-          className="w-fit flex size-full flex-row items-center justify-center"
+          className="flex size-full w-fit flex-row items-center justify-center"
           animate={{ translateX: `${-(pos - MID) * WIDTH}px` }}
           transition={{ duration: 2, ease: "easeOut" }}
         >

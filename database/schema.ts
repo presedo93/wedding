@@ -61,3 +61,13 @@ export const songsTable = t.pgTable("songs", {
   album: t.varchar(),
   ...timestamps,
 });
+
+export type Message = typeof messagesTable.$inferSelect;
+export type MessageInsert = typeof messagesTable.$inferInsert;
+
+export const messagesTable = t.pgTable("messages", {
+  id: t.serial().primaryKey(),
+  userId: t.varchar({ length: 12 }).references(() => usersTable.id),
+  text: t.text().notNull(),
+  ...timestamps,
+});

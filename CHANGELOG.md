@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.2](https://github.com/presedo93/wedding/compare/v1.8.1...v1.8.2) (2025-02-13)
+
+
+### Bug Fixes
+
+* viewport in chat ([8aadbc6](https://github.com/presedo93/wedding/commit/8aadbc6654edcadfb4d322846fc88dff0018e0f6))
+
 ## [1.8.1](https://github.com/presedo93/wedding/compare/v1.8.0...v1.8.1) (2025-02-13)
 
 

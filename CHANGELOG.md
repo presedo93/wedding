@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.1](https://github.com/presedo93/wedding/compare/v1.8.0...v1.8.1) (2025-02-13)
+
+
+### Bug Fixes
+
+* heigh in chat and home tweaks ([336af5c](https://github.com/presedo93/wedding/commit/336af5c53392bd9af3b890dc361f7f94b99746d0))
+
 ## [1.8.0](https://github.com/presedo93/wedding/compare/v1.7.0...v1.8.0) (2025-02-13)
 
 

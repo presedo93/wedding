@@ -1,16 +1,21 @@
 import { ChevronLeft, SendHorizonal } from "lucide-react";
 import type { Route } from "./+types/home";
-import { Link } from "react-router";
-import { Textarea } from "~/components";
+import { Link, redirect, useFetcher } from "react-router";
+import { Button, Textarea } from "~/components";
+import { useState } from "react";
+import { logto } from "~/auth.server";
+import { database } from "~/database/context";
+import { messagesTable, usersTable } from "~/database/schema";
+import { eq } from "drizzle-orm";
 
 const MINI_LOGO =
   "https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//mini-logo.png";
 
 interface Message {
   id: number;
-  user: string;
+  name: string | null;
   message: string;
-  picture: string;
+  picture: string | null;
 }
 
 interface UserMessage {
@@ -19,68 +24,21 @@ interface UserMessage {
   messages: { id: number; message: string }[];
 }
 
-const MESSAGES = [
-  {
-    id: 1,
-    user: "A",
-    message: "Hola",
-    picture:
-      "https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//mini-logo.png",
-  },
-  {
-    id: 2,
-    user: "A",
-    message: "¿Cómo estás?",
-    picture:
-      "https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//mini-logo.png",
-  },
-  {
-    id: 3,
-    user: "B",
-    message: "Hola, soy el usuario B",
-    picture:
-      "https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//mini-logo.png",
-  },
-  {
-    id: 4,
-    user: "B",
-    message: "Tengo una pregunta",
-    picture:
-      "https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//mini-logo.png",
-  },
-  {
-    id: 5,
-    user: "A",
-    message: "¡Hola de nuevo!",
-    picture:
-      "https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//mini-logo.png",
-  },
-  {
-    id: 6,
-    user: "A",
-    message: "Otra vez yo",
-    picture:
-      "https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//mini-logo.png",
-  },
-];
-
 const massageMsgs = (messages: Message[]) => {
   const groupedMessages: UserMessage[] = [];
 
   messages.forEach((message) => {
     const lastGroup = groupedMessages[groupedMessages.length - 1];
 
-    if (lastGroup && lastGroup.user === message.user) {
-      // Si el último grupo es del mismo usuario, añade el mensaje a ese grupo
+    if (lastGroup && lastGroup.user === message.name) {
       lastGroup.messages.push({
         id: message.id,
         message: message.message,
       });
     } else {
-      // Si no, crea un nuevo grupo para ese usuario
       groupedMessages.push({
-        user: message.user,
-        picture: message.picture,
+        user: message.name!,
+        picture: message.picture!,
         messages: [
           {
             id: message.id,
@@ -94,25 +52,45 @@ const massageMsgs = (messages: Message[]) => {
   return groupedMessages;
 };
 
-export async function loader() {
-  const messages = massageMsgs(MESSAGES);
-  return { messages };
+export async function loader({ request }: Route.LoaderArgs) {
+  const context = await logto.getContext({})(request);
+
+  if (!context.isAuthenticated) {
+    return redirect("/auth/sign-in");
+  }
+
+  const db = database();
+
+  const messages = await db
+    .select({
+      id: messagesTable.id,
+      name: usersTable.name,
+      message: messagesTable.text,
+      picture: usersTable.pictureUrl,
+    })
+    .from(messagesTable)
+    .leftJoin(usersTable, eq(usersTable.id, messagesTable.userId));
+
+  const massages = massageMsgs(messages);
+  return { messages: massages.reverse() };
 }
 
 export default function Chat({ loaderData }: Route.ComponentProps) {
   const { messages } = loaderData;
 
   return (
-    <div className="flex min-h-svh w-full flex-col items-center justify-start bg-slate-200">
-      <Header />
-      <Timeline messages={messages} />
-      <ChatInput />
+    <div className="flex min-h-svh w-full items-center justify-center bg-slate-200">
+      <div className="flex max-h-screen flex-col items-center justify-start md:min-h-80 md:rounded-3xl md:border-2 md:border-black">
+        <Header />
+        <Timeline messages={messages} />
+        <ChatInput />
+      </div>
     </div>
   );
 }
 
 const Header = () => (
-  <div className="flex h-14 w-full flex-row items-center py-3 shadow-lg shadow-black">
+  <div className="flex h-[10%] w-full flex-row items-center py-3">
     <Link to={"/"}>
       <ChevronLeft className="size-8" />
     </Link>
@@ -126,7 +104,7 @@ const Header = () => (
 );
 
 const Timeline = ({ messages }: { messages: UserMessage[] }) => (
-  <div className="flex w-full flex-1 flex-col-reverse bg-slate-300 px-2 py-3 font-playwrite text-sm font-extralight">
+  <div className="flex max-h-[80%] w-full flex-col-reverse overflow-y-auto bg-slate-300 px-2 py-3 font-playwrite text-sm font-extralight scrollbar-hide md:max-h-[600px]">
     {messages.map((group, idx) => (
       <div
         className={`my-1 max-w-[80%] ${idx % 2 ? "self-start" : "self-end"}`}
@@ -141,7 +119,7 @@ const Timeline = ({ messages }: { messages: UserMessage[] }) => (
             {group.messages.map((message, jdx) => (
               <div
                 key={message.id}
-                className={`my-0.5 items-center break-words rounded-xl bg-slate-400 px-3 py-1 ${
+                className={`my-0.5 items-center whitespace-pre-wrap break-words rounded-xl bg-slate-400 px-3 py-1 ${
                   jdx === group.messages.length - 1
                     ? idx % 2
                       ? "rounded-bl-none"
@@ -167,14 +145,33 @@ const Timeline = ({ messages }: { messages: UserMessage[] }) => (
 );
 
 const ChatInput = () => {
+  const [text, setText] = useState("");
+  const fetcher = useFetcher();
+
+  const addMessage = () => {
+    if (!text) return;
+
+    const body = { text };
+    fetcher.submit(body, { action: "/chat/handle-message", method: "post" });
+
+    setText("");
+  };
+
   return (
-    <div className="flex w-full flex-row items-center p-1 shadow-xl shadow-black">
+    <div className="flex h-[10%] w-full flex-row items-center p-1">
       <Textarea
         rows={1}
+        value={text}
         placeholder="Escribe un mensaje..."
+        onChange={(e) => setText(e.target.value)}
         className="resize-none rounded-full border border-black placeholder:text-slate-800"
       />
-      <SendHorizonal className="ml-2 size-9 rounded-full bg-blue-500 stroke-white stroke-1 p-2" />
+      <Button
+        onClick={addMessage}
+        className="mx-2 rounded-full bg-blue-700 active:bg-blue-900"
+      >
+        <SendHorizonal className="stroke-white stroke-1" />
+      </Button>
     </div>
   );
 };

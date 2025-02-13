@@ -13,5 +13,7 @@ export default [
     route("grant-access", "routes/music/grant-access.tsx"),
     route("handle-song", "routes/music/handle-song.tsx"),
   ]),
-  route("chat", "routes/chat/home.tsx"),
+  route("chat", "routes/chat/home.tsx", [
+    route("handle-message", "routes/chat/handle-message.tsx"),
+  ]),
 ] satisfies RouteConfig;

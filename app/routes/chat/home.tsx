@@ -1,4 +1,4 @@
-import { ChevronLeft, SendHorizonal } from "lucide-react";
+import { ChevronLeft, SendHorizonal, Trash2 } from "lucide-react";
 import type { Route } from "./+types/home";
 import { Link, redirect, useFetcher } from "react-router";
 import { Button, Textarea } from "~/components";
@@ -14,6 +14,7 @@ const MINI_LOGO =
 interface Message {
   id: number;
   name: string | null;
+  userId: string | null;
   message: string;
   picture: string | null;
 }
@@ -21,6 +22,7 @@ interface Message {
 interface UserMessage {
   user: string;
   picture: string;
+  userId: string;
   messages: { id: number; message: string }[];
 }
 
@@ -38,6 +40,7 @@ const massageMsgs = (messages: Message[]) => {
     } else {
       groupedMessages.push({
         user: message.name!,
+        userId: message.userId!,
         picture: message.picture!,
         messages: [
           {
@@ -64,6 +67,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   const messages = await db
     .select({
       id: messagesTable.id,
+      userId: messagesTable.userId,
       name: usersTable.name,
       message: messagesTable.text,
       picture: usersTable.pictureUrl,
@@ -72,17 +76,17 @@ export async function loader({ request }: Route.LoaderArgs) {
     .leftJoin(usersTable, eq(usersTable.id, messagesTable.userId));
 
   const massages = massageMsgs(messages);
-  return { messages: massages.reverse() };
+  return { messages: massages.reverse(), userId: context.claims?.sub };
 }
 
 export default function Chat({ loaderData }: Route.ComponentProps) {
-  const { messages } = loaderData;
+  const { messages, userId } = loaderData;
 
   return (
     <div className="flex min-h-svh w-full items-center justify-center bg-slate-200">
-      <div className="flex max-h-screen flex-col items-center justify-start md:min-h-80 md:rounded-3xl md:border-2 md:border-black">
+      <div className="flex max-h-screen flex-col items-center justify-start md:min-h-80 md:max-w-[400px] md:rounded-3xl md:border-2 md:border-black">
         <Header />
-        <Timeline messages={messages} />
+        <Timeline messages={messages} userId={userId} />
         <ChatInput />
       </div>
     </div>
@@ -103,46 +107,78 @@ const Header = () => (
   </div>
 );
 
-const Timeline = ({ messages }: { messages: UserMessage[] }) => (
-  <div className="flex max-h-[80%] w-full flex-col-reverse overflow-y-auto bg-slate-300 px-2 py-3 font-playwrite text-sm font-extralight scrollbar-hide md:max-h-[600px]">
-    {messages.map((group, idx) => (
-      <div
-        className={`my-1 max-w-[80%] ${idx % 2 ? "self-start" : "self-end"}`}
-        key={idx}
-      >
+const Timeline = ({
+  messages,
+  userId,
+}: {
+  messages: UserMessage[];
+  userId?: string;
+}) => {
+  const fetcher = useFetcher();
+
+  const deleteMessage = (id: number) => {
+    const body = { id };
+    fetcher.submit(body, { action: "/chat/handle-message", method: "delete" });
+  };
+
+  return (
+    <div className="flex h-3/4 w-full flex-col-reverse overflow-y-auto bg-slate-300 px-2 py-3 font-playwrite text-sm font-extralight scrollbar-hide md:max-h-[600px]">
+      {messages.map((group, idx) => (
         <div
-          className={`flex ${
-            idx % 2 ? "flex-row-reverse" : "flex-row"
-          }  items-end`}
+          className={`my-1 w-[90%] ${idx % 2 ? "self-start" : "self-end"}`}
+          key={idx}
         >
-          <div>
-            {group.messages.map((message, jdx) => (
-              <div
-                key={message.id}
-                className={`my-0.5 items-center whitespace-pre-wrap break-words rounded-xl bg-slate-400 px-3 py-1 ${
-                  jdx === group.messages.length - 1
-                    ? idx % 2
-                      ? "rounded-bl-none"
-                      : "rounded-br-none"
-                    : ""
-                }`}
-              >
-                {message.message}
-              </div>
-            ))}
+          <div
+            className={`flex ${
+              idx % 2 ? "flex-row-reverse items-start" : "flex-row"
+            }  items-end gap-x-2`}
+          >
+            <div className="w-full">
+              {group.messages.map((message, jdx) => (
+                <div
+                  className={`flex flex-row ${
+                    idx % 2 ? "justify-start" : "justify-end"
+                  } gap-3`}
+                  key={message.id}
+                >
+                  {userId == group.userId && (
+                    <button
+                      onClick={() => {
+                        deleteMessage(message.id);
+                      }}
+                      className="mb-0.5 flex size-6 shrink-0 items-center justify-center self-center rounded-full"
+                    >
+                      <Trash2 className="size-4 stroke-red-700 stroke-[1.5px]" />
+                    </button>
+                  )}
+                  <div
+                    className={`my-0.5 flex max-w-[90%] items-center truncate whitespace-pre-wrap break-all rounded-xl bg-slate-400 px-3 py-1
+                  ${
+                    jdx === group.messages.length - 1
+                      ? idx % 2
+                        ? "rounded-bl-none"
+                        : "rounded-br-none"
+                      : ""
+                  }`}
+                  >
+                    {message.message}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <img
+              alt="User profile"
+              src={group.picture}
+              className={`${
+                idx % 2 ? "mr-1" : "ml-1"
+              } size-8 rounded-full bg-slate-100`}
+            />
           </div>
-          <img
-            alt="User profile"
-            src={group.picture}
-            className={`${
-              idx % 2 ? "mr-2" : "ml-2"
-            } size-8 rounded-full bg-slate-100`}
-          />
         </div>
-      </div>
-    ))}
-  </div>
-);
+      ))}
+    </div>
+  );
+};
 
 const ChatInput = () => {
   const [text, setText] = useState("");

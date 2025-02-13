@@ -83,7 +83,7 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
   const { messages, userId } = loaderData;
 
   return (
-    <div className="flex h-screen w-full items-center justify-center bg-slate-200">
+    <div className="flex h-svh w-full items-center justify-center bg-slate-200">
       <div className="flex h-screen w-full flex-col items-center justify-start md:h-4/5 md:max-w-[400px] md:rounded-3xl md:border-2 md:border-black">
         <Header />
         <Timeline messages={messages} userId={userId} />

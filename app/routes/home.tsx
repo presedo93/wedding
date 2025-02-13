@@ -25,7 +25,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       <MediumCover />
       <div className="h-8 sm:h-16" />
       <EventTimeline />
-      <div className="h-8" />
+      <div className="h-4" />
       <SecButtons isAuth={auth} />
       <div className="h-12" />
     </div>

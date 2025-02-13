@@ -8,9 +8,9 @@ interface Props {
 export const SecButtons = ({ isAuth }: Props) => {
   return (
     <div className="flex w-10/12 flex-col items-center justify-center gap-y-3 font-playwrite font-thin">
-      <p>Pero antes del gran día, queremos que</p>
+      <p className="text-center">Pero antes del gran día, queremos que</p>
       <h2 className="text-3xl font-normal">Interactúes</h2>
-      <p>con nosotros, asi que...</p>
+      <p className="text-center">con nosotros, asi que...</p>
       {isAuth ? <LoggedButtons /> : <UnloggedButtons />}
     </div>
   );

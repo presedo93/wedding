@@ -83,8 +83,8 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
   const { messages, userId } = loaderData;
 
   return (
-    <div className="flex min-h-svh w-full items-center justify-center bg-slate-200">
-      <div className="flex max-h-screen flex-col items-center justify-start md:min-h-80 md:max-w-[400px] md:rounded-3xl md:border-2 md:border-black">
+    <div className="flex h-screen w-full items-center justify-center bg-slate-200">
+      <div className="flex h-screen w-full flex-col items-center justify-start md:h-4/5 md:max-w-[400px] md:rounded-3xl md:border-2 md:border-black">
         <Header />
         <Timeline messages={messages} userId={userId} />
         <ChatInput />
@@ -122,7 +122,7 @@ const Timeline = ({
   };
 
   return (
-    <div className="flex h-3/4 w-full flex-col-reverse overflow-y-auto bg-slate-300 px-2 py-3 font-playwrite text-sm font-extralight scrollbar-hide md:max-h-[600px]">
+    <div className="flex h-4/5 w-full flex-col-reverse overflow-y-auto bg-slate-300 px-2 py-3 font-playwrite text-sm font-extralight scrollbar-hide md:max-h-[600px]">
       {messages.map((group, idx) => (
         <div
           className={`my-1 w-[90%] ${idx % 2 ? "self-start" : "self-end"}`}

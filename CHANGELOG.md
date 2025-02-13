@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.0](https://github.com/presedo93/wedding/compare/v1.7.0...v1.8.0) (2025-02-13)
+
+
+### Features
+
+* add chat page ([#16](https://github.com/presedo93/wedding/issues/16)) ([e245e8a](https://github.com/presedo93/wedding/commit/e245e8abebde9a3a8e28b0ae05ce42796c1bd842))
+
 ## [1.7.0](https://github.com/presedo93/wedding/compare/v1.6.0...v1.7.0) (2025-02-08)
 
 

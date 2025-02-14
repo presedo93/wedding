@@ -10,13 +10,13 @@ export const EventTimeline = () => {
   return (
     <div className="flex h-fit w-full flex-col items-center justify-center">
       <h2 className="font-playwrite text-3xl font-bold italic">El evento</h2>
-      <DateText className="h-20 w-56" />
+      <DateText className="h-16 w-56" />
       <AnimatedSeparator />
-      <ChurchText className="h-28 w-44" />
+      <ChurchText className="h-32 w-80" />
       <AnimatedSeparator />
       <RoundedImage src={CHURCH} />
       <AnimatedSeparator />
-      <LaToscaText className="h-20 w-56" />
+      <LaToscaText className="mb-2 h-20 w-72" />
       <AnimatedSeparator />
       <RoundedImage src={EVENT} />
     </div>

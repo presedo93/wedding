@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.0](https://github.com/presedo93/wedding/compare/v1.9.0...v1.10.0) (2025-02-14)
+
+
+### Features
+
+* add location to places ([546d332](https://github.com/presedo93/wedding/commit/546d332480da69da58eec91a69150a9655ec821e))
+
 ## [1.9.0](https://github.com/presedo93/wedding/compare/v1.8.3...v1.9.0) (2025-02-14)
 
 

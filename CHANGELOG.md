@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.1](https://github.com/presedo93/wedding/compare/v1.10.0...v1.10.1) (2025-02-14)
+
+
+### Bug Fixes
+
+* spacing between svg and vertical lines ([19a5160](https://github.com/presedo93/wedding/commit/19a516077cad3a2101c22d9e3ba745682b11a7b6))
+
 ## [1.10.0](https://github.com/presedo93/wedding/compare/v1.9.0...v1.10.0) (2025-02-14)
 
 

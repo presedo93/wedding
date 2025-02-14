@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
 import { ChurchText, LaToscaText, DateText } from "./svg";
+import { MapPin } from "lucide-react";
 
 const CHURCH =
   "https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//boliches.jpg";
@@ -12,11 +13,31 @@ export const EventTimeline = () => {
       <h2 className="font-playwrite text-3xl font-bold italic">El evento</h2>
       <DateText className="h-16 w-56" />
       <AnimatedSeparator />
-      <ChurchText className="h-32 w-80" />
+      <div className="relative h-32 w-80">
+        <a
+          href="https://maps.app.goo.gl/hYafEcvGbq22ZGXZ6"
+          target="_blank"
+          className="absolute -top-3 left-full z-10"
+          rel="noreferrer"
+        >
+          <MapPin className="rotate-12 opacity-50" />
+        </a>
+        <ChurchText className="w-full" />
+      </div>
       <AnimatedSeparator />
       <RoundedImage src={CHURCH} />
       <AnimatedSeparator />
-      <LaToscaText className="mb-2 h-20 w-72" />
+      <div className="relative mb-2 h-20 w-72">
+        <a
+          href="https://maps.app.goo.gl/C7jwasYoN6Tuidn67"
+          target="_blank"
+          className="absolute -top-3 left-full z-10"
+          rel="noreferrer"
+        >
+          <MapPin className="rotate-12 opacity-50" />
+        </a>
+        <LaToscaText className="w-full" />
+      </div>
       <AnimatedSeparator />
       <RoundedImage src={EVENT} />
     </div>

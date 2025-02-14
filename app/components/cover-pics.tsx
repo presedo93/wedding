@@ -7,10 +7,16 @@ const IMAGE_URLS = [
   "https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//2.jpg",
   "https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//3.jpg",
   "https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//4.jpg",
+  "https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//5.jpg",
+  "https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//6.jpg",
+  "https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//7.jpg",
+  "https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//8.jpg",
+  "https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//9.jpg",
+  "https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//10.jpg",
 ];
 
 const TIME = 4;
-const WIDTH = 236.5;
+const WIDTH = 235;
 const MID = Math.floor(IMAGE_URLS.length / 2);
 
 export const CoverPics = () => {

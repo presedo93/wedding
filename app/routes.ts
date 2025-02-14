@@ -16,4 +16,5 @@ export default [
   route("chat", "routes/chat/home.tsx", [
     route("handle-message", "routes/chat/handle-message.tsx"),
   ]),
+  route("photo", "routes/photo/home.tsx"),
 ] satisfies RouteConfig;

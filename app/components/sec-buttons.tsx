@@ -31,9 +31,11 @@ export const LoggedButtons = () => (
         Música
       </Button>
     </Link>
-    <Button size={"lg"} className="w-full py-2">
-      Fotos
-    </Button>
+    <Link to="/photo">
+      <Button size={"lg"} className="w-full py-2">
+        Fotos
+      </Button>
+    </Link>
     <Link to="/chat">
       <Button size={"lg"} className="w-full py-2">
         Chat

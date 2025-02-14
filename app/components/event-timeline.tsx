@@ -13,7 +13,7 @@ export const EventTimeline = () => {
       <h2 className="font-playwrite text-3xl font-bold italic">El evento</h2>
       <DateText className="h-16 w-56" />
       <AnimatedSeparator />
-      <div className="relative h-32 w-80">
+      <div className="relative mt-5 h-32 w-80">
         <a
           href="https://maps.app.goo.gl/hYafEcvGbq22ZGXZ6"
           target="_blank"
@@ -27,7 +27,7 @@ export const EventTimeline = () => {
       <AnimatedSeparator />
       <RoundedImage src={CHURCH} />
       <AnimatedSeparator />
-      <div className="relative mb-2 h-20 w-72">
+      <div className="relative mb-6 h-20 w-72">
         <a
           href="https://maps.app.goo.gl/C7jwasYoN6Tuidn67"
           target="_blank"

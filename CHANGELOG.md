@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.9.0](https://github.com/presedo93/wedding/compare/v1.8.3...v1.9.0) (2025-02-14)
+
+
+### Features
+
+* new texts in main page ([33de235](https://github.com/presedo93/wedding/commit/33de2359f95c2ab32b220acdc01e9f704824251a))
+
+
+### Bug Fixes
+
+* add pending photos and coming soon photos page ([4001e49](https://github.com/presedo93/wedding/commit/4001e49101160b9bed6b834c2911616e1a547760))
+
 ## [1.8.3](https://github.com/presedo93/wedding/compare/v1.8.2...v1.8.3) (2025-02-14)
 
 

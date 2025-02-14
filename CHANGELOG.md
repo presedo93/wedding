@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.8.3](https://github.com/presedo93/wedding/compare/v1.8.2...v1.8.3) (2025-02-14)
+
+
+### Bug Fixes
+
+* chat max height in bigger screens ([c770f5f](https://github.com/presedo93/wedding/commit/c770f5f2ab5c7128050b7175c739149aca20d363))
+
 ## [1.8.2](https://github.com/presedo93/wedding/compare/v1.8.1...v1.8.2) (2025-02-13)
 
 

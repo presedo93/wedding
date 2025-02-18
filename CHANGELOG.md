@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.2](https://github.com/presedo93/wedding/compare/v1.10.1...v1.10.2) (2025-02-18)
+
+
+### Bug Fixes
+
+* improve chat readability ([817d9b6](https://github.com/presedo93/wedding/commit/817d9b6bd98b3f2610e3c45c16047e62a387649a))
+
 ## [1.10.1](https://github.com/presedo93/wedding/compare/v1.10.0...v1.10.1) (2025-02-14)
 
 

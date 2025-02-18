@@ -103,7 +103,7 @@ const Header = () => (
       alt="Wedding logo"
       className="ml-6 size-9 rounded-full border border-white bg-slate-100 p-px"
     />
-    <h3 className="font-playwrite ml-3">Laura & Rene - Wedding</h3>
+    <h3 className="font-playwrite ml-3">Laura & René - Wedding</h3>
   </div>
 )
 
@@ -122,7 +122,7 @@ const Timeline = ({
   }
 
   return (
-    <div className="font-playwrite scrollbar-none flex w-full flex-1 flex-col-reverse overflow-y-auto bg-slate-300 px-2 py-3 text-sm font-extralight">
+    <div className="scrollbar-none flex w-full flex-1 flex-col-reverse overflow-y-auto bg-slate-300 px-2 py-3 font-sans text-sm font-extralight">
       {messages.map((group, idx) => (
         <div
           className={`my-1 w-[90%] ${idx % 2 ? 'self-start' : 'self-end'}`}
@@ -146,13 +146,13 @@ const Timeline = ({
                       onClick={() => {
                         deleteMessage(message.id)
                       }}
-                      className="mb-0.5 flex size-6 shrink-0 items-center justify-center self-center rounded-full"
+                      className="mb-0.5 flex size-6 shrink-0 items-center justify-center self-center rounded-full border border-red-700"
                     >
                       <Trash2 className="size-4 stroke-red-700 stroke-[1.5px]" />
                     </button>
                   )}
                   <div
-                    className={`my-0.5 flex max-w-[90%] items-center truncate rounded-xl bg-slate-400 px-3 py-1 break-all whitespace-pre-wrap ${
+                    className={`my-0.5 flex max-w-[90%] flex-col items-center rounded-xl bg-slate-400 px-3 py-1 whitespace-pre-line ${
                       jdx === group.messages.length - 1
                         ? idx % 2
                           ? 'rounded-bl-none'
@@ -160,7 +160,16 @@ const Timeline = ({
                         : ''
                     }`}
                   >
-                    {message.message}
+                    {jdx === 0 && (
+                      <div
+                        className={`w-full truncate text-xs font-medium ${
+                          idx % 2 ? 'text-left' : 'text-right'
+                        }`}
+                      >
+                        {group.user}
+                      </div>
+                    )}
+                    <div className="w-full text-left">{message.message}</div>
                   </div>
                 </div>
               ))}

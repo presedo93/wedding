@@ -1,35 +1,35 @@
-import { motion } from "motion/react";
-import { useEffect, useState } from "react";
+import { motion } from 'motion/react'
+import { useEffect, useState } from 'react'
 
-const MIN = 60;
-const HOUR = 60 * MIN;
-const DAY = 24 * HOUR;
-const MONTH = 30 * DAY;
+const MIN = 60
+const HOUR = 60 * MIN
+const DAY = 24 * HOUR
+const MONTH = 30 * DAY
 
 const calculateTimeLeft = () => {
-  const target = new Date("2025-05-24T17:00:00Z");
-  const now = new Date();
-  const diff = target.getTime() - now.getTime();
+  const target = new Date('2025-05-24T17:00:00Z')
+  const now = new Date()
+  const diff = target.getTime() - now.getTime()
 
-  const seconds = Math.floor((diff % (1000 * MIN)) / 1000);
-  const minutes = Math.floor((diff % (1000 * HOUR)) / (1000 * MIN));
-  const hours = Math.floor((diff % (1000 * DAY)) / (1000 * HOUR));
-  const days = Math.floor((diff % (1000 * MONTH)) / (1000 * DAY));
-  const months = Math.floor(diff / (1000 * MONTH));
+  const seconds = Math.floor((diff % (1000 * MIN)) / 1000)
+  const minutes = Math.floor((diff % (1000 * HOUR)) / (1000 * MIN))
+  const hours = Math.floor((diff % (1000 * DAY)) / (1000 * HOUR))
+  const days = Math.floor((diff % (1000 * MONTH)) / (1000 * DAY))
+  const months = Math.floor(diff / (1000 * MONTH))
 
-  return { months, days, hours, minutes, seconds };
-};
+  return { months, days, hours, minutes, seconds }
+}
 
 export const CountDown = () => {
-  const [left, setLeft] = useState(calculateTimeLeft());
+  const [left, setLeft] = useState(calculateTimeLeft())
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setLeft(calculateTimeLeft());
-    }, 1000);
+      setLeft(calculateTimeLeft())
+    }, 1000)
 
-    return () => clearInterval(timer);
-  }, []);
+    return () => clearInterval(timer)
+  }, [])
 
   return (
     <motion.div
@@ -37,7 +37,7 @@ export const CountDown = () => {
       whileInView={{ opacity: 1, translateY: 0 }}
       transition={{ duration: 2 }}
       viewport={{ once: true }}
-      className="flex w-full max-w-96 flex-col items-center font-playwrite text-lg font-thin"
+      className="font-playwrite flex w-full max-w-96 flex-col items-center text-lg font-thin"
     >
       <p className="mb-2">Quedan</p>
       <div className="my-2 flex h-full w-10/12 flex-row items-center justify-around rounded-md border border-black p-2 shadow-md shadow-slate-500">
@@ -67,5 +67,5 @@ export const CountDown = () => {
         </div>
       </div>
     </motion.div>
-  );
-};
+  )
+}

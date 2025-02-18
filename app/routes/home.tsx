@@ -1,22 +1,22 @@
-import { CoverPics, EventTimeline, FullLogo, SecButtons } from "~/components";
-import type { Route } from "./+types/home";
-import { logto } from "~/auth.server";
-import { CountDown } from "~/components/count-down";
+import { CoverPics, EventTimeline, FullLogo, SecButtons } from '~/components'
+import type { Route } from './+types/home'
+import { logto } from '~/auth.server'
+import { CountDown } from '~/components/count-down'
 
 export function meta() {
   return [
-    { title: "Laura & Rene" },
-    { name: "description", content: "Our wedding!" },
-  ];
+    { title: 'Laura & Rene' },
+    { name: 'description', content: 'Our wedding!' },
+  ]
 }
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const context = await logto.getContext({ getAccessToken: false })(request);
-  return { auth: context.isAuthenticated };
+  const context = await logto.getContext({ getAccessToken: false })(request)
+  return { auth: context.isAuthenticated }
 }
 
 export default function Home({ loaderData }: Route.ComponentProps) {
-  const { auth } = loaderData;
+  const { auth } = loaderData
 
   return (
     <div className="flex flex-col items-center bg-slate-200">
@@ -29,7 +29,7 @@ export default function Home({ loaderData }: Route.ComponentProps) {
       <SecButtons isAuth={auth} />
       <div className="h-12" />
     </div>
-  );
+  )
 }
 
 const SmallCover = () => (
@@ -42,10 +42,10 @@ const SmallCover = () => (
       <CountDown />
     </div>
   </div>
-);
+)
 
 const MediumCover = () => (
-  <div className="hidden w-full max-w-screen-lg px-4 sm:block">
+  <div className="hidden w-full max-w-(--breakpoint-lg) px-4 sm:block">
     <div className="flex flex-row items-center justify-around">
       <CoverPics />
       <div className="flex w-2/5 flex-col items-center justify-between">
@@ -55,4 +55,4 @@ const MediumCover = () => (
       </div>
     </div>
   </div>
-);
+)

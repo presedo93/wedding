@@ -1,7 +1,7 @@
-import { motion } from "motion/react";
+import { motion } from 'motion/react'
 
 const SRC =
-  "https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//logo.png";
+  'https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//logo.png'
 
 export const FullLogo = () => (
   <motion.div
@@ -13,4 +13,4 @@ export const FullLogo = () => (
   >
     <motion.img src={SRC} className="h-5/6 rounded-lg object-cover" />
   </motion.div>
-);
+)

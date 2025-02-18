@@ -1,41 +1,41 @@
-import * as zod from "zod";
-import { useForm } from "@conform-to/react";
-import { parseWithZod } from "@conform-to/zod";
-import { Form, Link, useActionData, redirect } from "react-router";
+import * as zod from 'zod'
+import { useForm } from '@conform-to/react'
+import { parseWithZod } from '@conform-to/zod'
+import { Form, Link, useActionData, redirect } from 'react-router'
 
-import { logto } from "~/auth.server";
-import { Errors, Field, FieldError } from "~/components";
-import { InputConform, CheckboxConform, Button, Label } from "~/components/ui";
+import { logto } from '~/auth.server'
+import { Errors, Field, FieldError } from '~/components'
+import { InputConform, CheckboxConform, Button, Label } from '~/components/ui'
 
-import { database } from "~/database/context";
-import { guestsTable } from "~/database/schema";
-import type { Route } from "./+types/new-guest";
+import { database } from '~/database/context'
+import { guestsTable } from '~/database/schema'
+import type { Route } from './+types/new-guest'
 
 export const schema = zod.object({
-  name: zod.string().min(1, "El nombre es necesario"),
+  name: zod.string().min(1, 'El nombre es necesario'),
   phone: zod
     .string()
     .optional()
-    .transform((v) => v?.replace(/\s+/g, "")),
+    .transform((v) => v?.replace(/\s+/g, '')),
   allergies: zod
     .string()
     .optional()
-    .transform((v) => v?.split(",").map((s) => s.trim())),
+    .transform((v) => v?.split(',').map((s) => s.trim())),
   isVegetarian: zod.boolean().default(false),
   needsTransport: zod.boolean().default(false),
-});
+})
 
 export default function EditGuest() {
-  const lastResult = useActionData<typeof action>();
+  const lastResult = useActionData<typeof action>()
 
   const [form, fields] = useForm({
-    shouldValidate: "onBlur",
-    shouldRevalidate: "onInput",
+    shouldValidate: 'onBlur',
+    shouldRevalidate: 'onInput',
     lastResult,
     onValidate({ formData }) {
-      return parseWithZod(formData, { schema });
+      return parseWithZod(formData, { schema })
     },
-  });
+  })
 
   return (
     <Form method="post" id={form.id} onSubmit={form.onSubmit} noValidate>
@@ -87,8 +87,8 @@ export default function EditGuest() {
         </Field>
 
         <div className="flex flex-row justify-center space-x-3">
-          <Link className="w-1/2" to={"/profile"}>
-            <Button variant={"destructive"} className="w-full min-w-min">
+          <Link className="w-1/2" to={'/profile'}>
+            <Button variant={'destructive'} className="w-full min-w-min">
               Cancelar
             </Button>
           </Link>
@@ -98,30 +98,30 @@ export default function EditGuest() {
         </div>
       </div>
     </Form>
-  );
+  )
 }
 
 export const action = async ({ request }: Route.ActionArgs) => {
-  const context = await logto.getContext({ getAccessToken: false })(request);
+  const context = await logto.getContext({ getAccessToken: false })(request)
 
   if (!context.isAuthenticated) {
-    return redirect("/auth/sign-in");
+    return redirect('/auth/sign-in')
   }
 
-  const formData = await request.formData();
-  const submission = parseWithZod(formData, { schema });
+  const formData = await request.formData()
+  const submission = parseWithZod(formData, { schema })
 
-  if (submission.status !== "success") {
-    return submission.reply();
+  if (submission.status !== 'success') {
+    return submission.reply()
   }
 
-  const db = database();
-  const userId = context.claims?.sub ?? "";
+  const db = database()
+  const userId = context.claims?.sub ?? ''
 
-  await db.insert(guestsTable).values({ userId, ...submission.value });
-  return redirect("/profile");
-};
+  await db.insert(guestsTable).values({ userId, ...submission.value })
+  return redirect('/profile')
+}
 
 export function ErrorBoundary() {
-  return <Errors />;
+  return <Errors />
 }

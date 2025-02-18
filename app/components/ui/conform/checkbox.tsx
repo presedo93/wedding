@@ -1,17 +1,17 @@
 import {
   unstable_useControl as useControl,
   type FieldMetadata,
-} from "@conform-to/react";
-import { useRef, type ElementRef } from "react";
-import { Checkbox } from "../checkbox";
+} from '@conform-to/react'
+import { useRef, type ElementRef } from 'react'
+import { Checkbox } from '../checkbox'
 
 export function CheckboxConform({
   meta,
 }: {
-  meta: FieldMetadata<string | boolean | undefined>;
+  meta: FieldMetadata<string | boolean | undefined>
 }) {
-  const checkboxRef = useRef<ElementRef<typeof Checkbox>>(null);
-  const control = useControl(meta);
+  const checkboxRef = useRef<ElementRef<typeof Checkbox>>(null)
+  const control = useControl(meta)
 
   return (
     <>
@@ -27,13 +27,13 @@ export function CheckboxConform({
       <Checkbox
         ref={checkboxRef}
         id={meta.id}
-        checked={control.value === "on"}
+        checked={control.value === 'on'}
         onCheckedChange={(checked) => {
-          control.change(checked ? "on" : "");
+          control.change(checked ? 'on' : '')
         }}
         onBlur={control.blur}
         className="focus:ring-2 focus:ring-stone-950 focus:ring-offset-2"
       />
     </>
-  );
+  )
 }

@@ -1,7 +1,7 @@
-import { motion, type Variants } from "motion/react";
+import { motion, type Variants } from 'motion/react'
 
 interface Props {
-  className?: string;
+  className?: string
 }
 
 const variants: Variants = {
@@ -10,7 +10,7 @@ const variants: Variants = {
     pathLength: 1,
     transition: { duration: 2, delay: custom / 10 },
   }),
-};
+}
 
 export const ChurchText = ({ className }: Props) => {
   return (
@@ -1959,5 +1959,5 @@ export const ChurchText = ({ className }: Props) => {
         mask="url(#path-176-inside-176_17_272)"
       />
     </motion.svg>
-  );
-};
+  )
+}

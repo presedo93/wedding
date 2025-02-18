@@ -1,38 +1,38 @@
-import { Link, redirect } from "react-router";
-import { eq } from "drizzle-orm";
-import { Reorder } from "motion/react";
-import { useState } from "react";
+import { Link, redirect } from 'react-router'
+import { eq } from 'drizzle-orm'
+import { Reorder } from 'motion/react'
+import { useState } from 'react'
 
-import { GuestCard } from "~/components";
-import { Button } from "~/components/ui";
-import { logto } from "~/auth.server";
+import { GuestCard } from '~/components'
+import { Button } from '~/components/ui'
+import { logto } from '~/auth.server'
 
-import type { Route } from "./+types/guests";
-import { database } from "~/database/context";
-import { type Guest, guestsTable } from "~/database/schema";
+import type { Route } from './+types/guests'
+import { database } from '~/database/context'
+import { type Guest, guestsTable } from '~/database/schema'
 
 export async function loader({ request }: Route.LoaderArgs) {
-  const context = await logto.getContext({})(request);
+  const context = await logto.getContext({})(request)
 
   if (!context.isAuthenticated) {
-    return redirect("/auth/sign-in");
+    return redirect('/auth/sign-in')
   }
 
-  const db = database();
+  const db = database()
   const guests = await db.query.guestsTable.findMany({
     where: eq(guestsTable.userId, context.claims!.sub),
-  });
+  })
 
-  return { guests };
+  return { guests }
 }
 
 export default function ProfileInfo({ loaderData }: Route.ComponentProps) {
-  const { guests } = loaderData;
-  const [guestsList, setGuestsList] = useState(guests);
+  const { guests } = loaderData
+  const [guestsList, setGuestsList] = useState(guests)
 
   return (
     <>
-      <h3 className="mt-6 font-playwrite text-xl font-light underline decoration-1 underline-offset-4">
+      <h3 className="font-playwrite mt-6 text-xl font-light underline decoration-1 underline-offset-4">
         Acompañantes
       </h3>
       <div className="my-2 flex flex-col items-center justify-center">
@@ -42,19 +42,19 @@ export default function ProfileInfo({ loaderData }: Route.ComponentProps) {
           <NoGuests />
         )}
       </div>
-      <Link className="flex w-full justify-center" to={"/profile/new-guest"}>
+      <Link className="flex w-full justify-center" to={'/profile/new-guest'}>
         <Button className="w-2/3 min-w-min md:w-1/3">Nuevo acompanante</Button>
       </Link>
     </>
-  );
+  )
 }
 
 const GuestsList = ({
   guests,
   onReorder,
 }: {
-  guests: Guest[];
-  onReorder: React.Dispatch<React.SetStateAction<Guest[]>>;
+  guests: Guest[]
+  onReorder: React.Dispatch<React.SetStateAction<Guest[]>>
 }) => {
   return (
     <Reorder.Group
@@ -67,12 +67,12 @@ const GuestsList = ({
         <GuestCard guest={g} key={g.id} />
       ))}
     </Reorder.Group>
-  );
-};
+  )
+}
 
 const NoGuests = () => (
   <div className="my-6 text-center text-sm">
     <p>No has añadido ningun acompañante aún!</p>
     <p className="text-slate-500">(Recuerda añadirte a ti también)</p>
   </div>
-);
+)

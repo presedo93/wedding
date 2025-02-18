@@ -1,7 +1,7 @@
-import { motion, type Variants } from "motion/react";
+import { motion, type Variants } from 'motion/react'
 
 interface Props {
-  className?: string;
+  className?: string
 }
 
 const variants: Variants = {
@@ -10,7 +10,7 @@ const variants: Variants = {
     pathLength: 1,
     transition: { duration: 2, delay: custom },
   }),
-};
+}
 
 export const LaToscaText = ({ className }: Props) => {
   return (
@@ -1080,5 +1080,5 @@ export const LaToscaText = ({ className }: Props) => {
         mask="url(#path-96-inside-96_16_174)"
       />
     </motion.svg>
-  );
-};
+  )
+}

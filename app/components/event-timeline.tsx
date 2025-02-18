@@ -1,11 +1,11 @@
-import { motion } from "motion/react";
-import { ChurchText, LaToscaText, DateText } from "./svg";
-import { MapPin } from "lucide-react";
+import { motion } from 'motion/react'
+import { ChurchText, LaToscaText, DateText } from './svg'
+import { MapPin } from 'lucide-react'
 
 const CHURCH =
-  "https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//boliches.jpg";
+  'https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//boliches.jpg'
 const EVENT =
-  "https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//latosca.jpg";
+  'https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//latosca.jpg'
 
 export const EventTimeline = () => {
   return (
@@ -41,23 +41,23 @@ export const EventTimeline = () => {
       <AnimatedSeparator />
       <RoundedImage src={EVENT} />
     </div>
-  );
-};
+  )
+}
 
 const AnimatedSeparator = () => (
   <div className="h-[60px]">
     <motion.div
       className="h-[60px] w-px self-center rounded-xl bg-black"
-      initial={{ height: "0%" }}
-      whileInView={{ height: "100%" }}
+      initial={{ height: '0%' }}
+      whileInView={{ height: '100%' }}
       transition={{ duration: 3 }}
       viewport={{ once: true }}
     />
   </div>
-);
+)
 
 const RoundedImage = ({ src }: { src: string }) => (
   <motion.div className="my-4 rounded-full border border-black">
     <img src={src} alt="" className="size-36 rounded-full p-2" />
   </motion.div>
-);
+)

@@ -1,26 +1,26 @@
-import * as t from "drizzle-orm/pg-core";
+import * as t from 'drizzle-orm/pg-core'
 
 const timestamps = {
   updatedAt: t.timestamp({ withTimezone: true }),
   createdAt: t.timestamp({ withTimezone: true }).defaultNow().notNull(),
   deletedAt: t.timestamp({ withTimezone: true }),
-};
+}
 
-export type User = typeof usersTable.$inferSelect;
-export type UserInsert = typeof usersTable.$inferInsert;
+export type User = typeof usersTable.$inferSelect
+export type UserInsert = typeof usersTable.$inferInsert
 
-export const usersTable = t.pgTable("users", {
+export const usersTable = t.pgTable('users', {
   id: t.varchar({ length: 12 }).primaryKey(),
   name: t.varchar().notNull(),
   email: t.varchar().notNull(),
   pictureUrl: t.varchar(),
   ...timestamps,
-});
+})
 
-export type Guest = typeof guestsTable.$inferSelect;
-export type GuestInsert = typeof guestsTable.$inferInsert;
+export type Guest = typeof guestsTable.$inferSelect
+export type GuestInsert = typeof guestsTable.$inferInsert
 
-export const guestsTable = t.pgTable("guests", {
+export const guestsTable = t.pgTable('guests', {
   id: t.serial().primaryKey(),
   userId: t.varchar({ length: 12 }).references(() => usersTable.id),
   name: t.varchar().notNull(),
@@ -29,12 +29,12 @@ export const guestsTable = t.pgTable("guests", {
   isVegetarian: t.boolean().notNull(),
   needsTransport: t.boolean().notNull(),
   ...timestamps,
-});
+})
 
-export type Task = typeof tasksTable.$inferSelect;
-export type TaskInsert = typeof tasksTable.$inferInsert;
+export type Task = typeof tasksTable.$inferSelect
+export type TaskInsert = typeof tasksTable.$inferInsert
 
-export const tasksTable = t.pgTable("tasks", {
+export const tasksTable = t.pgTable('tasks', {
   id: t.serial().primaryKey(),
   userId: t.varchar({ length: 12 }).references(() => usersTable.id),
   profile: t.boolean().notNull().default(false),
@@ -43,12 +43,12 @@ export const tasksTable = t.pgTable("tasks", {
   messages: t.boolean().notNull().default(false),
   photos: t.boolean().notNull().default(false),
   ...timestamps,
-});
+})
 
-export type Song = typeof songsTable.$inferSelect;
-export type SongInsert = typeof songsTable.$inferInsert;
+export type Song = typeof songsTable.$inferSelect
+export type SongInsert = typeof songsTable.$inferInsert
 
-export const songsTable = t.pgTable("songs", {
+export const songsTable = t.pgTable('songs', {
   id: t.varchar({ length: 22 }).primaryKey(),
   userId: t.varchar({ length: 12 }).references(() => usersTable.id),
   name: t.varchar().notNull(),
@@ -60,14 +60,14 @@ export const songsTable = t.pgTable("songs", {
   artist: t.varchar(),
   album: t.varchar(),
   ...timestamps,
-});
+})
 
-export type Message = typeof messagesTable.$inferSelect;
-export type MessageInsert = typeof messagesTable.$inferInsert;
+export type Message = typeof messagesTable.$inferSelect
+export type MessageInsert = typeof messagesTable.$inferInsert
 
-export const messagesTable = t.pgTable("messages", {
+export const messagesTable = t.pgTable('messages', {
   id: t.serial().primaryKey(),
   userId: t.varchar({ length: 12 }).references(() => usersTable.id),
   text: t.text().notNull(),
   ...timestamps,
-});
+})

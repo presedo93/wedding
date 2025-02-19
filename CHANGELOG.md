@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.10.3](https://github.com/presedo93/wedding/compare/v1.10.2...v1.10.3) (2025-02-19)
+
+
+### Bug Fixes
+
+* update Dockerfile to node 22 ([5a0316c](https://github.com/presedo93/wedding/commit/5a0316c8f6944a2eada69471d0b814532819c4af))
+
 ## [1.10.2](https://github.com/presedo93/wedding/compare/v1.10.1...v1.10.2) (2025-02-18)
 
 

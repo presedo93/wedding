@@ -72,5 +72,5 @@
     "vite": "^6.1.1",
     "vite-tsconfig-paths": "^5.1.4"
   },
-  "version": "1.10.2"
+  "version": "1.10.3"
 }

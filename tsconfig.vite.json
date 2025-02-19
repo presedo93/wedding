@@ -9,7 +9,7 @@
     "server/**/*"
   ],
   "compilerOptions": {
-    "composite": false,
+    "composite": true,
     "strict": true,
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "types": ["vite/client"],

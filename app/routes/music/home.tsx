@@ -136,21 +136,22 @@ const Playlist = ({
           alt={`Spotify ${s.songs.name} album picture...`}
           className="w-1/4 max-w-24 rounded-lg"
         />
-        <div className="flex w-2/4 flex-col">
+        <a
+          className="flex w-2/4 flex-col"
+          href={s.songs.spotifyUrl!}
+          target="_blank"
+          rel="noreferrer"
+        >
           <span className="truncate font-semibold">{s.songs.name}</span>
           <div className="flex flex-row items-baseline justify-start gap-x-2">
-            <span className="text-sm font-semibold text-gray-400">
+            <span className="max-w-3/4 truncate text-sm font-semibold text-gray-400">
               {s.songs.artist}
             </span>
-            {s.songs.spotifyUrl && (
-              <a href={s.songs.spotifyUrl} target="_blank" rel="noreferrer">
-                <ExternalLink className="size-3 text-gray-400" />
-              </a>
-            )}
+            <ExternalLink className="size-3 text-gray-400" />
           </div>
-        </div>
+        </a>
         {s.users && (
-          <div className="flex w-1/4 items-center justify-center">
+          <div className="flex items-center justify-center">
             {s.users.id === userId ? (
               <DeleteSong id={s.songs.id} />
             ) : (
@@ -211,9 +212,10 @@ const Stats = ({ users, artists }: { users: Best[]; artists: Best[] }) => (
               />
               <AvatarFallback className="text-sky-950">L&R</AvatarFallback>
             </Avatar>
-            <span className="mt-3 rounded-lg bg-white px-2 py-px text-xs font-semibold text-black">
-              {user.name ?? ''} ({user.count})
-            </span>
+            <div className="mt-3 flex max-w-32 flex-row rounded-lg bg-white px-2 py-px align-baseline text-xs font-semibold sm:max-w-56">
+              <span className="truncate">{user.name ?? ''}</span>
+              <span className="ml-1 text-clip">({user.count})</span>
+            </div>
           </div>
         ))}
       </div>
@@ -232,9 +234,10 @@ const Stats = ({ users, artists }: { users: Best[]; artists: Best[] }) => (
               />
               <AvatarFallback className="text-sky-950">L&R</AvatarFallback>
             </Avatar>
-            <span className="mt-3 rounded-lg bg-white px-2 py-px text-xs font-semibold text-black">
-              {artist.name} ({artist.count})
-            </span>
+            <div className="mt-3 flex max-w-32 flex-row rounded-lg bg-white px-2 py-px align-baseline text-xs font-semibold sm:max-w-56">
+              <span className="truncate">{artist.name ?? ''}</span>
+              <span className="ml-1 text-clip">({artist.count})</span>
+            </div>
           </div>
         ))}
       </div>

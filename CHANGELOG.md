@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.10.4](https://github.com/presedo93/wedding/compare/v1.10.3...v1.10.4) (2025-02-21)
+
+
+### Bug Fixes
+
+* music components truncates texts that are longer than their space ([95a3dc9](https://github.com/presedo93/wedding/commit/95a3dc9c04db439251eef285a3ba33244cddf8e6))
+* users images in playlist ([1dad39e](https://github.com/presedo93/wedding/commit/1dad39e1e1d25e2e8e252d49dcf14af938eb114a))
+
 ## [1.10.3](https://github.com/presedo93/wedding/compare/v1.10.2...v1.10.3) (2025-02-19)
 
 

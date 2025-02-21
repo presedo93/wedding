@@ -151,7 +151,7 @@ const Playlist = ({
           </div>
         </a>
         {s.users && (
-          <div className="flex items-center justify-center">
+          <div className="flex flex-1 items-center justify-center">
             {s.users.id === userId ? (
               <DeleteSong id={s.songs.id} />
             ) : (
@@ -196,7 +196,7 @@ const DeleteSong = ({ id }: { id: string }) => {
 
 const Stats = ({ users, artists }: { users: Best[]; artists: Best[] }) => (
   <div className="py-4">
-    <div className="flex justify-around">
+    <div className="flex justify-around gap-x-6">
       <div className="flex flex-col items-center gap-y-4">
         {users.map((user, index) => (
           <div

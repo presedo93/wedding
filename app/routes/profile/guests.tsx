@@ -33,7 +33,7 @@ export default function ProfileInfo({ loaderData }: Route.ComponentProps) {
   return (
     <>
       <h3 className="font-playwrite mt-6 text-xl font-light underline decoration-1 underline-offset-4">
-        Acompañantes
+        Miembros
       </h3>
       <div className="my-2 flex flex-col items-center justify-center">
         {guests.length ? (
@@ -43,7 +43,7 @@ export default function ProfileInfo({ loaderData }: Route.ComponentProps) {
         )}
       </div>
       <Link className="flex w-full justify-center" to={'/profile/new-guest'}>
-        <Button className="w-2/3 min-w-min md:w-1/3">Nuevo acompanante</Button>
+        <Button className="w-2/3 min-w-min md:w-1/3">Nuevo miembro</Button>
       </Link>
     </>
   )
@@ -57,16 +57,22 @@ const GuestsList = ({
   onReorder: React.Dispatch<React.SetStateAction<Guest[]>>
 }) => {
   return (
-    <Reorder.Group
-      axis="y"
-      values={guests}
-      onReorder={onReorder}
-      className="w-full"
-    >
-      {guests.map((g) => (
-        <GuestCard guest={g} key={g.id} />
-      ))}
-    </Reorder.Group>
+    <div className="w-full">
+      <Reorder.Group
+        axis="y"
+        values={guests}
+        onReorder={onReorder}
+        className="w-full"
+      >
+        {guests.map((g) => (
+          <GuestCard guest={g} key={g.id} />
+        ))}
+      </Reorder.Group>
+      <p className="text-center text-xs font-medium text-slate-500">
+        <span className="font-semibold">P.D:</span> Recuerda estar también en la
+        lista!
+      </p>
+    </div>
   )
 }
 

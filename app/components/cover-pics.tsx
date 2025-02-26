@@ -1,34 +1,24 @@
 import { AnimatePresence, motion } from 'motion/react'
 import { useEffect, useState } from 'react'
 
-const IMAGE_URLS = [
-  'https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//0.jpg',
-  'https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//1.jpg',
-  'https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//2.jpg',
-  'https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//3.jpg',
-  'https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//4.jpg',
-  'https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//5.jpg',
-  'https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//6.jpg',
-  'https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//7.jpg',
-  'https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//8.jpg',
-  'https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//9.jpg',
-  'https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//10.jpg',
-]
+interface Props {
+  images: string[]
+}
 
 const TIME = 4
 const WIDTH = 235
-const MID = Math.floor(IMAGE_URLS.length / 2)
 
-export const CoverPics = () => {
-  const [pos, setPos] = useState(MID)
+export const CoverPics = ({ images }: Props) => {
+  const mid = Math.floor(images.length / 2)
+  const [pos, setPos] = useState(mid)
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setPos((pos + 1) % IMAGE_URLS.length)
+      setPos((pos + 1) % images.length)
     }, TIME * 1000)
 
     return () => clearInterval(interval)
-  }, [pos])
+  }, [pos, images.length])
 
   return (
     <motion.div
@@ -41,10 +31,10 @@ export const CoverPics = () => {
       <AnimatePresence initial={false}>
         <motion.div
           className="flex size-full w-fit flex-row items-center justify-center"
-          animate={{ translateX: `${-(pos - MID) * WIDTH}px` }}
+          animate={{ translateX: `${-(pos - mid) * WIDTH}px` }}
           transition={{ duration: 2, ease: 'easeOut' }}
         >
-          {IMAGE_URLS.map((src, idx) => (
+          {images.map((src, idx) => (
             <motion.img
               key={src}
               src={src}

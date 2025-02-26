@@ -2,12 +2,12 @@ import { motion } from 'motion/react'
 import { ChurchText, LaToscaText, DateText } from './svg'
 import { MapPin } from 'lucide-react'
 
-const CHURCH =
-  'https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//boliches.jpg'
-const EVENT =
-  'https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//latosca.jpg'
+interface Props {
+  church: string
+  event: string
+}
 
-export const EventTimeline = () => {
+export const EventTimeline = ({ church, event }: Props) => {
   return (
     <div className="flex h-fit w-full flex-col items-center justify-center">
       <h2 className="font-playwrite text-3xl font-bold italic">El evento</h2>
@@ -25,7 +25,7 @@ export const EventTimeline = () => {
         <ChurchText className="w-full" />
       </div>
       <AnimatedSeparator />
-      <RoundedImage src={CHURCH} />
+      <RoundedImage src={church} />
       <AnimatedSeparator />
       <div className="relative mb-6 h-20 w-72">
         <a
@@ -39,7 +39,7 @@ export const EventTimeline = () => {
         <LaToscaText className="w-full" />
       </div>
       <AnimatedSeparator />
-      <RoundedImage src={EVENT} />
+      <RoundedImage src={event} />
     </div>
   )
 }

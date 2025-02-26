@@ -7,9 +7,7 @@ import { logto } from '~/auth.server'
 import { database } from '~/database/context'
 import { messagesTable, usersTable } from '~/database/schema'
 import { eq } from 'drizzle-orm'
-
-const MINI_LOGO =
-  'https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//mini-logo.png'
+import { getSignedImageUrl } from '~/lib/s3.server'
 
 interface Message {
   id: number
@@ -63,6 +61,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   }
 
   const db = database()
+  const logo = await getSignedImageUrl('public/mini-logo.png')
 
   const messages = await db
     .select({
@@ -76,16 +75,16 @@ export async function loader({ request }: Route.LoaderArgs) {
     .leftJoin(usersTable, eq(usersTable.id, messagesTable.userId))
 
   const massages = massageMsgs(messages)
-  return { messages: massages.reverse(), userId: context.claims?.sub }
+  return { messages: massages.reverse(), userId: context.claims?.sub, logo }
 }
 
 export default function Chat({ loaderData }: Route.ComponentProps) {
-  const { messages, userId } = loaderData
+  const { messages, userId, logo } = loaderData
 
   return (
     <div className="flex h-dvh w-full items-center justify-center bg-slate-200">
       <div className="flex h-dvh w-full flex-col items-center justify-start md:h-4/5 md:max-w-[400px] md:rounded-3xl md:border-2 md:border-black">
-        <Header />
+        <Header logo={logo} />
         <Timeline messages={messages} userId={userId} />
         <ChatInput />
       </div>
@@ -93,13 +92,13 @@ export default function Chat({ loaderData }: Route.ComponentProps) {
   )
 }
 
-const Header = () => (
+const Header = ({ logo }: { logo: string }) => (
   <div className="flex h-16 w-full flex-row items-center py-3">
     <Link to={'/'}>
       <ChevronLeft className="size-8" />
     </Link>
     <img
-      src={MINI_LOGO}
+      src={logo}
       alt="Wedding logo"
       className="ml-6 size-9 rounded-full border border-white bg-slate-100 p-px"
     />

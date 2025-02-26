@@ -1,9 +1,10 @@
 import { motion } from 'motion/react'
 
-const SRC =
-  'https://hbjwdmibaweonejpklvh.supabase.co/storage/v1/object/public/public_files//logo.png'
+interface Props {
+  image: string
+}
 
-export const FullLogo = () => (
+export const FullLogo = ({ image }: Props) => (
   <motion.div
     initial={{ opacity: 0, translateY: -20 }}
     whileInView={{ opacity: 1, translateY: 0 }}
@@ -11,6 +12,6 @@ export const FullLogo = () => (
     viewport={{ once: true }}
     className="flex h-32 items-center justify-center rounded-full"
   >
-    <motion.img src={SRC} className="h-5/6 rounded-lg object-cover" />
+    <motion.img src={image} className="h-5/6 rounded-lg object-cover" />
   </motion.div>
 )

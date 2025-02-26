@@ -4,8 +4,7 @@ import { eq } from 'drizzle-orm'
 import { logto } from '~/auth.server'
 import type { Route } from './+types/edit-tasks'
 
-import { database } from '~/database/context'
-import { type Task, tasksTable } from '~/database/schema'
+import { database, type Task, tasksTable } from '~/database'
 
 type FormType = {
   [key in Exclude<keyof Task, 'id'>]?: string

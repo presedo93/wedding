@@ -1,8 +1,7 @@
 import { logto } from '~/auth.server'
 import type { Route } from './+types/handle-message'
 import { redirect } from 'react-router'
-import { database } from '~/database/context'
-import { messagesTable, type MessageInsert } from '~/database/schema'
+import { messagesTable, type MessageInsert, database } from '~/database'
 import { eq } from 'drizzle-orm'
 
 export async function action({ request }: Route.ActionArgs) {

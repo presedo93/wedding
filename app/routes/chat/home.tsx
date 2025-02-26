@@ -3,10 +3,9 @@ import type { Route } from './+types/home'
 import { Link, redirect, useFetcher } from 'react-router'
 import { Button, Textarea } from '~/components'
 import { useState } from 'react'
-import { logto } from '~/auth.server'
-import { database } from '~/database/context'
-import { messagesTable, usersTable } from '~/database/schema'
 import { eq } from 'drizzle-orm'
+import { logto } from '~/auth.server'
+import { database, messagesTable, usersTable } from '~/database'
 import { getSignedImageUrl } from '~/lib/s3.server'
 
 interface Message {

@@ -5,9 +5,14 @@ import { eq } from 'drizzle-orm'
 import { Link, Outlet, redirect } from 'react-router'
 import type { Route } from './+types/home'
 
-import { database } from '~/database/context'
-import { type Task, tasksTable, type User, usersTable } from '~/database/schema'
 import { House } from 'lucide-react'
+import {
+  database,
+  type Task,
+  tasksTable,
+  type User,
+  usersTable,
+} from '~/database'
 
 interface LogtoUser {
   id: string

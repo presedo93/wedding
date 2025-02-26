@@ -2,8 +2,7 @@ import { redirect } from 'react-router'
 import { eq } from 'drizzle-orm'
 import { logto } from '~/auth.server'
 
-import { database } from '~/database/context'
-import { guestsTable } from '~/database/schema'
+import { database, guestsTable } from '~/database'
 import type { Route } from './+types/delete'
 
 export async function action({ request, params }: Route.ActionArgs) {

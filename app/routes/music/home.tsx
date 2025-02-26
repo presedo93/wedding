@@ -11,8 +11,13 @@ import {
 import type { Route } from './+types/home'
 import { Form, Link, redirect } from 'react-router'
 import { logto } from '~/auth.server'
-import { database } from '~/database/context'
-import { songsTable, usersTable, type Song, type User } from '~/database/schema'
+import {
+  database,
+  songsTable,
+  usersTable,
+  type Song,
+  type User,
+} from '~/database'
 import { count, desc, eq, sql } from 'drizzle-orm'
 import { ExternalLink, House, Trash2 } from 'lucide-react'
 import { useEffect, useRef } from 'react'

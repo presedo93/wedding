@@ -1,7 +1,7 @@
 import { Form } from 'react-router'
 import { Bus, GripVertical, Salad, Trash2, WheatOff } from 'lucide-react'
 import { Reorder, useMotionValue } from 'motion/react'
-import { type Guest } from '~/database/schema'
+import { type Guest } from '~/database'
 
 interface Props {
   guest: Guest

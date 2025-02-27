@@ -1,7 +1,8 @@
 import { logto } from '~/auth.server'
 import type { Route } from './+types/grant-access'
 import { redirect } from 'react-router'
-import { database, songsTable, type SongInsert } from '~/database'
+import { database } from '~/database/context'
+import { songsTable, type SongInsert } from '~/database/schema'
 import { eq } from 'drizzle-orm'
 
 export async function action({ request }: Route.ActionArgs) {

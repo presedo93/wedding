@@ -2,7 +2,7 @@ import { useSubmit } from 'react-router'
 import { motion } from 'motion/react'
 import { useState } from 'react'
 import { Checkbox } from '~/components/ui/checkbox'
-import { type Task } from '~/database'
+import { type Task } from '~/database/schema'
 
 type UserTasks = Exclude<
   keyof Task,

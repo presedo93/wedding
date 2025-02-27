@@ -21,7 +21,6 @@
     "rootDirs": [".", "./.react-router/types"],
     "paths": {
       "~/database/*": ["./database/*"],
-      "~/database": ["./database"],
       "~/*": ["./app/*"]
     },
     "esModuleInterop": true,

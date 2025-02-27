@@ -8,7 +8,8 @@ import { Button } from '~/components/ui'
 import { logto } from '~/auth.server'
 
 import type { Route } from './+types/guests'
-import { database, type Guest, guestsTable } from '~/database'
+import { database } from '~/database/context'
+import { type Guest, guestsTable } from '~/database/schema'
 
 export async function loader({ request }: Route.LoaderArgs) {
   const context = await logto.getContext({})(request)

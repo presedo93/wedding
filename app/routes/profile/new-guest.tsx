@@ -7,7 +7,8 @@ import { logto } from '~/auth.server'
 import { Errors, Field, FieldError } from '~/components'
 import { InputConform, CheckboxConform, Button, Label } from '~/components/ui'
 
-import { database, guestsTable } from '~/database'
+import { database } from '~/database/context'
+import { guestsTable } from '~/database/schema'
 import type { Route } from './+types/new-guest'
 
 export const schema = zod.object({

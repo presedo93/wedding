@@ -6,6 +6,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  type MetaFunction,
 } from 'react-router'
 
 import type { Route } from './+types/root'
@@ -17,6 +18,10 @@ export const links: Route.LinksFunction = () => [
   { rel: 'icon', href: '/favicon.svg' },
   { rel: 'stylesheet', href: stylesheet },
 ]
+
+export const meta: MetaFunction = () => {
+  return [{ name: 'theme-color', content: '#64748b' }] // 🌑 Azul oscuro (ajústalo según tu diseño)
+}
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -58,7 +63,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   return (
-    <main className="mx-auto h-screen bg-blue-700 p-16 text-white">
+    <main className="mx-auto h-screen bg-blue-800 p-16 text-white">
       <h1 className="mb-4 text-6xl">{message}</h1>
       <p>{details}</p>
 

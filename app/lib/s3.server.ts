@@ -1,6 +1,7 @@
 import {
   DeleteObjectCommand,
   GetObjectCommand,
+  ListObjectsV2Command,
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3'
@@ -28,6 +29,18 @@ export async function getSignedImageUrl(path: string) {
   })
 
   return getSignedUrl(s3, command, { expiresIn: 3600 })
+}
+
+export async function getListFolderImages(path: string) {
+  const command = new ListObjectsV2Command({
+    Bucket: STORAGE_S3_BUCKET,
+    Prefix: `${path}`,
+  })
+
+  const output = await s3.send(command)
+  return (
+    output?.Contents?.flatMap((o) => (o.Key !== undefined ? [o.Key] : [])) ?? []
+  )
 }
 
 export async function uploadImage(path: string, file: File) {

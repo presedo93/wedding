@@ -30,7 +30,11 @@ import { database } from '~/database/context'
 import { usersTable } from '~/database/schema'
 
 import type { Route } from './+types/home'
-import { uploadImage } from '~/lib/s3.server'
+import {
+  getListFolderImages,
+  getSignedImageUrl,
+  uploadImage,
+} from '~/lib/s3.server'
 import { useEffect, useState } from 'react'
 import { useMediaQuery } from '~/hooks'
 
@@ -60,18 +64,43 @@ export async function loader({ request }: Route.LoaderArgs) {
     where: eq(usersTable.id, userId),
   })
 
-  return { scopes: user?.scope ?? [] }
+  const scopes = user?.scope ?? []
+  const images: Record<string, string[]> = {}
+
+  for (const sc of scopes) {
+    console.log(sc)
+    const list = await getListFolderImages(`pictures/${sc}`)
+    const imgs = await Promise.all(list?.map(getSignedImageUrl))
+    images[sc] = imgs
+  }
+
+  return { images }
 }
 
-export default function Photo() {
+export default function Photo({ loaderData }: Route.ComponentProps) {
+  const { images } = loaderData
   const lastResult = useActionData<typeof action>()
 
   return (
     <div className="flex min-h-dvh w-full flex-col items-center bg-slate-200 px-8 py-4">
-      <h3 className="font-playwrite my-4 text-xl font-extralight">
-        La despedida de la novia
-      </h3>
-      <div className="h-[800px] w-full bg-slate-300" />
+      {Object.entries(images).map(([key, images]) => (
+        <div key={key}>
+          <h3 className="font-playwrite my-4 text-xl font-extralight">
+            La despedida de la novia ({key})
+          </h3>
+          <div className="flex flex-row flex-wrap gap-2">
+            {images.map((img, idx) => (
+              <img
+                key={idx}
+                src={img}
+                className="w-auto rounded-md"
+                alt={img}
+                loading="lazy"
+              />
+            ))}
+          </div>
+        </div>
+      ))}
       <ImageLoader lastResult={lastResult} />
     </div>
   )

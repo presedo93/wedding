@@ -73,7 +73,6 @@ export default function Photo() {
       </h3>
       <div className="h-[800px] w-full bg-slate-300" />
       <ImageLoader lastResult={lastResult} />
-      <HomeButton />
     </div>
   )
 }
@@ -86,9 +85,12 @@ const ImageLoader = ({ lastResult }: { lastResult?: LastResult }) => {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button className="fixed top-9/10 w-3/5 min-w-min md:w-1/3">
-            <ImageUp /> Subir imagen
-          </Button>
+          <div className="fixed top-9/10 flex w-3/5 min-w-min flex-row justify-between gap-x-8 rounded-md px-2 py-1 md:w-1/3">
+            <Button className="w-full">
+              <ImageUp /> Subir imagen
+            </Button>
+            <HomeButton />
+          </div>
         </DialogTrigger>
         <DialogContent className="bg-slate-300 sm:max-w-[425px]">
           <DialogHeader>
@@ -112,9 +114,12 @@ const ImageLoader = ({ lastResult }: { lastResult?: LastResult }) => {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button className="fixed top-9/10 w-3/5 min-w-min md:w-1/3">
-          <ImageUp /> Subir imagen
-        </Button>
+        <div className="fixed top-9/10 flex w-3/5 min-w-min flex-row justify-between gap-x-8 rounded-md px-2 py-1 md:w-1/3">
+          <Button className="w-full">
+            <ImageUp /> Subir imagen
+          </Button>
+          <HomeButton />
+        </div>
       </DrawerTrigger>
       <DrawerContent className="flex items-center bg-slate-300">
         <div className="mx-8 w-4/5">

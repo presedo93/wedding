@@ -1,12 +1,18 @@
 import * as zod from 'zod'
 import { eq } from 'drizzle-orm'
 import { useForm, type SubmissionResult } from '@conform-to/react'
-import { House, ImageUp } from 'lucide-react'
+import { House, ImageUp, LoaderCircle } from 'lucide-react'
 import { parseWithZod } from '@conform-to/zod'
-import { Form, Link, redirect, useActionData } from 'react-router'
+import { Link, redirect, useActionData, useFetcher } from 'react-router'
 
 import {
   Button,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
   Drawer,
   DrawerClose,
   DrawerContent,
@@ -24,17 +30,20 @@ import { database } from '~/database/context'
 import { usersTable } from '~/database/schema'
 
 import type { Route } from './+types/home'
+import { uploadImage } from '~/lib/s3.server'
+import { useEffect, useState } from 'react'
+import { useMediaQuery } from '~/hooks'
+
+type LastResult = SubmissionResult<string[]>
 
 export const schema = zod.object({
   section: zod.string(),
-  file: zod
-    .array(
-      zod.instanceof(File).refine((f) => /^(image|video)\//.test(f.type)),
-      {
-        message: 'Solo se permiten imagenes o videos',
-      },
-    )
-    .min(1, 'Al menos tienes que seleccionar una imagen'),
+  file: zod.array(
+    zod.instanceof(File).refine((f) => /^(image|video)\//.test(f.type)),
+    {
+      message: 'Solo se permiten imagenes o videos',
+    },
+  ),
 })
 
 export async function loader({ request }: Route.LoaderArgs) {
@@ -69,9 +78,90 @@ export default function Photo() {
   )
 }
 
-type LastResult = SubmissionResult<string[]>
-
 const ImageLoader = ({ lastResult }: { lastResult?: LastResult }) => {
+  const [open, setOpen] = useState(false)
+  const isDesktop = useMediaQuery('(min-width: 768px)')
+
+  if (isDesktop) {
+    return (
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button className="fixed top-9/10 w-3/5 min-w-min md:w-1/3">
+            <ImageUp /> Subir imagen
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="bg-slate-300 sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Sube tus fotos y videos</DialogTitle>
+            <DialogDescription>
+              ¡Se pueden elegir multiples imágenes o videos!
+            </DialogDescription>
+          </DialogHeader>
+          {lastResult?.error?.scope && (
+            <div className="rounded-md bg-red-600 px-2 py-1 text-center text-xs font-semibold text-white">
+              No tienes permisos para subir fotos a esta sección
+            </div>
+          )}
+          <div className="p-2 pb-0"></div>
+          <ImageForm lastResult={lastResult} setOpen={setOpen} />
+        </DialogContent>
+      </Dialog>
+    )
+  }
+
+  return (
+    <Drawer open={open} onOpenChange={setOpen}>
+      <DrawerTrigger asChild>
+        <Button className="fixed top-9/10 w-3/5 min-w-min md:w-1/3">
+          <ImageUp /> Subir imagen
+        </Button>
+      </DrawerTrigger>
+      <DrawerContent className="flex items-center bg-slate-300">
+        <div className="mx-8 w-4/5">
+          <DrawerHeader>
+            <DrawerTitle>Sube tus fotos y videos</DrawerTitle>
+            <DrawerDescription>
+              ¡Se pueden elegir multiples imágenes o videos!
+            </DrawerDescription>
+          </DrawerHeader>
+          {lastResult?.error?.scope && (
+            <div className="rounded-md bg-red-600 px-2 py-1 text-center text-xs font-semibold text-white">
+              No tienes permisos para subir fotos a esta sección
+            </div>
+          )}
+          <div className="p-4 pb-0"></div>
+          <ImageForm lastResult={lastResult} setOpen={setOpen} />
+          <DrawerClose asChild>
+            <Button variant="destructive" className="mt-2 mb-4 w-full">
+              Cerrar
+            </Button>
+          </DrawerClose>
+        </div>
+      </DrawerContent>
+    </Drawer>
+  )
+}
+
+const ImageForm = ({
+  lastResult,
+  setOpen,
+}: {
+  lastResult?: LastResult
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>
+}) => {
+  const fetcher = useFetcher()
+  const [uploading, setUploading] = useState(false)
+
+  useEffect(() => {
+    if (fetcher.state === 'submitting') {
+      setUploading(true)
+    } else if (fetcher.state === 'idle') {
+      setUploading(false)
+    } else if (fetcher.state === 'loading') {
+      setOpen(false)
+    }
+  }, [fetcher.state, setOpen])
+
   const [form, fields] = useForm({
     shouldValidate: 'onBlur',
     shouldRevalidate: 'onInput',
@@ -82,71 +172,53 @@ const ImageLoader = ({ lastResult }: { lastResult?: LastResult }) => {
   })
 
   return (
-    <Drawer>
-      <DrawerTrigger asChild>
-        <Button className="fixed top-9/10 w-3/5 min-w-min md:w-1/3">
-          <ImageUp /> Subir imagen
-        </Button>
-      </DrawerTrigger>
-      <DrawerContent className="bg-slate-300">
-        <div className="mx-8 w-4/5">
-          <DrawerHeader>
-            <DrawerTitle>Elige una foto</DrawerTitle>
-            <DrawerDescription>
-              Se pueden elegir multiples imagenes.
-            </DrawerDescription>
-          </DrawerHeader>
-          <div className="p-4 pb-0"></div>
-          <Form
-            method="post"
-            encType="multipart/form-data"
-            id={form.id}
-            onSubmit={form.onSubmit}
-            noValidate
-          >
-            <Field>
-              <Label htmlFor={fields.section.id}>Seccion</Label>
-              <div className="flex w-full flex-row items-center justify-center gap-x-6">
-                <SelectConform
-                  placeholder="Selecciona una sección"
-                  meta={fields.section}
-                  items={[
-                    { value: 'her', name: 'La despedida de la novia' },
-                    { value: 'day', name: 'El día de la boda' },
-                  ]}
-                />
-              </div>
-            </Field>
-            <div className="h-6" />
-            <Field>
-              <Label htmlFor={fields.file.id}>Imagenes</Label>
-              <div className="flex justify-center">
-                <input
-                  type="file"
-                  placeholder="Selecciona una imagen"
-                  name={fields.file.name}
-                  multiple
-                  className="rounded-md border px-2 py-1"
-                />
-              </div>
-              {fields.file.errors && (
-                <FieldError>
-                  {Object.values(fields.file.allErrors).flat()}
-                </FieldError>
-              )}
-            </Field>
-            <Button type="submit" className="mt-4 w-full min-w-min self-center">
-              Subir
-            </Button>
-          </Form>
-          <DrawerClose asChild>
-            <Button variant="destructive" className="mt-2 mb-4 w-full">
-              Cerrar
-            </Button>
-          </DrawerClose>
+    <fetcher.Form
+      method="post"
+      encType="multipart/form-data"
+      id={form.id}
+      onSubmit={form.onSubmit}
+      noValidate
+    >
+      <Field>
+        <Label htmlFor={fields.section.id}>Seccion</Label>
+        <div className="flex w-full flex-row items-center justify-center gap-x-6">
+          <SelectConform
+            classTrigger="border border-black"
+            classContent="bg-slate-400"
+            placeholder="Selecciona una sección"
+            meta={fields.section}
+            items={[
+              { value: 'hen', name: 'La despedida de la novia' },
+              { value: 'day', name: 'El día de la boda' },
+            ]}
+          />
         </div>
-      </DrawerContent>
-    </Drawer>
+      </Field>
+      <div className="h-6" />
+      <Field>
+        <Label htmlFor={fields.file.id}>Imagenes</Label>
+        <input
+          type="file"
+          accept="image/*,video/*"
+          placeholder="Selecciona una imagen o video"
+          name={fields.file.name}
+          multiple
+          className="w-full rounded-md border border-black px-2 py-1"
+        />
+        {fields.file.errors && (
+          <FieldError>{Object.values(fields.file.allErrors).flat()}</FieldError>
+        )}
+      </Field>
+      <Button type="submit" className="mt-4 w-full min-w-min self-center">
+        {uploading ? (
+          <>
+            <LoaderCircle className="animate-spin" /> Subiendo...
+          </>
+        ) : (
+          <>Subir</>
+        )}
+      </Button>
+    </fetcher.Form>
   )
 }
 
@@ -181,9 +253,17 @@ export const action = async ({ request }: Route.ActionArgs) => {
   })
 
   if (!user?.scope.includes(submission.value.section)) {
-    return { success: false }
+    return {
+      status: 'error',
+      fields: ['scope'],
+      error: { scope: [''] },
+    } satisfies SubmissionResult
   }
 
-  console.log('FORM IS VALID', formData)
-  return { success: true }
+  const path = `pictures/${submission.value.section}`
+  for (const file of submission.value.file) {
+    await uploadImage(path, file)
+  }
+
+  return redirect('/photo')
 }

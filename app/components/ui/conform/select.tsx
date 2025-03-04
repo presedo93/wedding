@@ -12,11 +12,15 @@ import {
 } from '~/components/ui/select'
 
 export const SelectConform = ({
+  classTrigger,
+  classContent,
   meta,
   items,
   placeholder,
   ...props
 }: {
+  classTrigger?: string
+  classContent?: string
   meta: FieldMetadata<string>
   items: Array<{ name: string; value: string }>
   placeholder: string
@@ -53,10 +57,10 @@ export const SelectConform = ({
           }
         }}
       >
-        <SelectTrigger>
+        <SelectTrigger className={classTrigger}>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
-        <SelectContent className="bg-slate-400">
+        <SelectContent className={classContent}>
           {items.map((item) => {
             return (
               <SelectItem key={item.value} value={item.value}>

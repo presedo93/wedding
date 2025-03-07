@@ -37,6 +37,7 @@ import {
 } from '~/lib/s3.server'
 import { useEffect, useState } from 'react'
 import { useMediaQuery } from '~/hooks'
+import { motion } from 'motion/react'
 
 type LastResult = SubmissionResult<string[]>
 
@@ -68,7 +69,6 @@ export async function loader({ request }: Route.LoaderArgs) {
   const images: Record<string, string[]> = {}
 
   for (const sc of scopes) {
-    console.log(sc)
     const list = await getListFolderImages(`pictures/${sc}`)
     const imgs = await Promise.all(list?.map(getSignedImageUrl))
     images[sc] = imgs
@@ -81,21 +81,51 @@ export default function Photo({ loaderData }: Route.ComponentProps) {
   const { images } = loaderData
   const lastResult = useActionData<typeof action>()
 
+  const [expanded, setExpanded] = useState('')
+  const isDesktop = useMediaQuery('(min-width: 768px)')
+
+  const getHeader = (section: string) => {
+    if (section === 'hen') {
+      return 'La despedida de la novia'
+    }
+  }
+
   return (
     <div className="flex min-h-dvh w-full flex-col items-center bg-slate-200 px-8 py-4">
+      <motion.div
+        className={`${!expanded ? 'hidden' : 'absolute'} inset-0 z-10 flex flex-col items-center justify-center backdrop-blur-lg`}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+      >
+        <motion.img
+          key={expanded}
+          src={expanded}
+          className="rounded-2xl md:max-h-9/10 md:w-auto"
+          initial={{ width: isDesktop ? '20%' : '60%' }}
+          animate={{ width: isDesktop ? 'auto' : '90%' }}
+          transition={{ duration: 1.2, ease: 'easeInOut' }}
+        />
+        <Button className="mt-2 px-8" onClick={() => setExpanded('')}>
+          Cerrar
+        </Button>
+      </motion.div>
       {Object.entries(images).map(([key, images]) => (
         <div key={key}>
           <h3 className="font-playwrite my-4 text-xl font-extralight">
-            La despedida de la novia ({key})
+            {getHeader(key)}
           </h3>
-          <div className="flex flex-row flex-wrap gap-2">
+          <div className="flex flex-row flex-wrap justify-around gap-2">
             {images.map((img, idx) => (
-              <img
+              <motion.img
                 key={idx}
                 src={img}
-                className="w-auto rounded-md"
                 alt={img}
                 loading="lazy"
+                className="max-h-30 rounded-md"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setExpanded(img)
+                }}
               />
             ))}
           </div>
@@ -115,7 +145,7 @@ const ImageLoader = ({ lastResult }: { lastResult?: LastResult }) => {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <div className="fixed top-9/10 flex w-3/5 min-w-min flex-row justify-between gap-x-8 rounded-md px-2 py-1 md:w-1/3">
-            <Button className="w-full">
+            <Button className="w-2/3 min-w-min md:w-1/3">
               <ImageUp /> Subir imagen
             </Button>
             <HomeButton />
@@ -144,7 +174,7 @@ const ImageLoader = ({ lastResult }: { lastResult?: LastResult }) => {
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         <div className="fixed top-9/10 flex w-3/5 min-w-min flex-row justify-between gap-x-8 rounded-md px-2 py-1 md:w-1/3">
-          <Button className="w-full">
+          <Button className="w-2/3 min-w-min md:w-1/3">
             <ImageUp /> Subir imagen
           </Button>
           <HomeButton />

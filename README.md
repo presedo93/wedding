@@ -27,18 +27,22 @@ npm install
 
 These are the environment variables the project uses:
 
-```
-NODE_ENV="development"
-DB_URL="postgres://rendres@localhost:5432/wedding"
-DB_PASS="s3cr3t"
+```js
+NODE_ENV = 'development'
+DB_URL = 'postgres://rendres@localhost:5432/wedding'
+DB_PASS = 's3cr3t'
 
-LOGTO_ENDPOINT="http://localhost:3001"
-LOGTO_APP_ID="ew8dqhsw5s6r274i8g73y"
-LOGTO_APP_SECRET="some_logto_secret"
-LOGTO_BASE_URL="http://localhost:3000"
+LOGTO_ENDPOINT = 'http://localhost:3001'
+LOGTO_APP_ID = 'ew8dqhsw5s6r274i8g73y'
+LOGTO_APP_SECRET = 'some_logto_secret'
+LOGTO_BASE_URL = 'http://localhost:3000'
 
-SPOTIFY_CLIENT_ID="3433502d2fb94c7d9829be06efceda4b"
-SPOTIFY_CLIENT_SECRET="some_spotify_secret"
+SPOTIFY_CLIENT_ID = '3433502d2fb94c7d9829be06efceda4b'
+SPOTIFY_CLIENT_SECRET = 'some_spotify_secret'
+
+STORAGE_S3_ACCESS = 'OPNH2C30YYOZ03VWQ8X6'
+STORAGE_S3_BUCKET = 'losgordissecasan'
+STORAGE_S3_SECRET = 'some_s3_secret'
 ```
 
 Run an initial database migration:

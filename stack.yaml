@@ -31,6 +31,7 @@ services:
       - db-pass
       - logto-app
       - spotify-secret
+      - hetzner-secret
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.wedding.rule=Host(`losgordissecasan.com`)"
@@ -48,6 +49,9 @@ services:
       - LOGTO_BASE_URL=https://losgordissecasan.com
       - SPOTIFY_CLIENT_ID=3433502d2fb94c7d9829be06efceda4b
       - SPOTIFY_SECRET_FILE=/run/secrets/spotify-secret
+      - STORAGE_S3_BUCKET="losgordissecasan"
+      - STORAGE_S3_ACCESS="OPNH2C30YYOZ03VWQ8X6"
+      - STORAGE_S3_SECRET=/run/secrets/hetzner-secret
     deploy:
       update_config:
         order: start-first
@@ -106,4 +110,6 @@ secrets:
   logto-app:
     external: true
   spotify-secret:
+    external: true
+  hetzner-secret:
     external: true

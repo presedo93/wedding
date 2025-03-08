@@ -1,5 +1,20 @@
 # Changelog
 
+## [1.11.0](https://github.com/presedo93/wedding/compare/v1.10.4...v1.11.0) (2025-03-08)
+
+
+### Features
+
+* migrate public images from supabase to hetzner bucket ([#28](https://github.com/presedo93/wedding/issues/28)) ([b39e406](https://github.com/presedo93/wedding/commit/b39e406bbaa7f91e746ce0b494c2bdb95189640d))
+* pictures section with upload and delete ([#29](https://github.com/presedo93/wedding/issues/29)) ([d7930d0](https://github.com/presedo93/wedding/commit/d7930d0e69d8411aa2bd1afabfb2747ef3943ab1))
+* rename Guests to Members and add P.S. label ([4388eb1](https://github.com/presedo93/wedding/commit/4388eb1feace8a7d00a44967282c22af8847f457))
+* ts path for the database imports ([2a23c14](https://github.com/presedo93/wedding/commit/2a23c1497b3b99a455e390cd9cfaccfee9858ca8))
+
+
+### Reverts
+
+* "feat: ts path for the database imports" ([76e6875](https://github.com/presedo93/wedding/commit/76e6875444b23c8f9aaea7c234c386bad9206e25))
+
 ## [1.10.4](https://github.com/presedo93/wedding/compare/v1.10.3...v1.10.4) (2025-02-21)
 
 

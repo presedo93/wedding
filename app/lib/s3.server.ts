@@ -43,13 +43,13 @@ export async function getListFolderImages(path: string) {
   )
 }
 
-export async function uploadImage(path: string, file: File) {
+export async function uploadImage(path: string, userId: string, file: File) {
   const { name, type } = file
   const buffer = await file.arrayBuffer()
 
   const command = new PutObjectCommand({
     Bucket: STORAGE_S3_BUCKET,
-    Key: `${path}/${name}`,
+    Key: `${path}/${userId}_${name}`,
     Body: Buffer.from(buffer),
     ContentType: type,
   })

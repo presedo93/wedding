@@ -3,7 +3,13 @@ import { eq } from 'drizzle-orm'
 import { useForm, type SubmissionResult } from '@conform-to/react'
 import { House, ImageUp, LoaderCircle } from 'lucide-react'
 import { parseWithZod } from '@conform-to/zod'
-import { Link, redirect, useActionData, useFetcher } from 'react-router'
+import {
+  Link,
+  redirect,
+  useActionData,
+  useFetcher,
+  useSubmit,
+} from 'react-router'
 
 import {
   Button,
@@ -31,6 +37,7 @@ import { usersTable } from '~/database/schema'
 
 import type { Route } from './+types/home'
 import {
+  deleteImage,
   getListFolderImages,
   getSignedImageUrl,
   uploadImage,
@@ -74,20 +81,30 @@ export async function loader({ request }: Route.LoaderArgs) {
     images[sc] = imgs
   }
 
-  return { images }
+  return { images, userId }
 }
 
 export default function Photo({ loaderData }: Route.ComponentProps) {
-  const { images } = loaderData
+  const { images, userId } = loaderData
   const lastResult = useActionData<typeof action>()
 
+  const submit = useSubmit()
   const [expanded, setExpanded] = useState('')
+
+  const isUser = expanded.includes(userId)
   const isDesktop = useMediaQuery('(min-width: 768px)')
 
   const getHeader = (section: string) => {
     if (section === 'hen') {
       return 'La despedida de la novia'
     }
+  }
+
+  const deleteImage = async () => {
+    const path = new URL(expanded).pathname.substring(1)
+
+    setExpanded('')
+    submit({ img: path }, { action: '/photo', method: 'delete' })
   }
 
   return (
@@ -105,9 +122,20 @@ export default function Photo({ loaderData }: Route.ComponentProps) {
           animate={{ width: isDesktop ? 'auto' : '90%' }}
           transition={{ duration: 1.2, ease: 'easeInOut' }}
         />
-        <Button className="mt-2 px-8" onClick={() => setExpanded('')}>
-          Cerrar
-        </Button>
+        <div className="mt-2 flex w-full flex-row justify-around px-8 md:w-1/3">
+          {isUser && (
+            <Button
+              variant={'destructive'}
+              className="w-4/10"
+              onClick={deleteImage}
+            >
+              Borrar
+            </Button>
+          )}
+          <Button className="w-4/10" onClick={() => setExpanded('')}>
+            Cerrar
+          </Button>
+        </div>
       </motion.div>
       {Object.entries(images).map(([key, images]) => (
         <div key={key}>
@@ -302,31 +330,38 @@ export const action = async ({ request }: Route.ActionArgs) => {
     return redirect('/auth/sign-in')
   }
 
-  const formData = await request.formData()
-  const submission = parseWithZod(formData, { schema })
+  if (request.method === 'POST') {
+    const formData = await request.formData()
+    const submission = parseWithZod(formData, { schema })
 
-  if (submission.status !== 'success') {
-    return submission.reply()
-  }
+    if (submission.status !== 'success') {
+      return submission.reply()
+    }
 
-  const userId = context.claims?.sub ?? ''
-  const db = database()
+    const userId = context.claims?.sub ?? ''
+    const db = database()
 
-  const user = await db.query.usersTable.findFirst({
-    where: eq(usersTable.id, userId),
-  })
+    const user = await db.query.usersTable.findFirst({
+      where: eq(usersTable.id, userId),
+    })
 
-  if (!user?.scope.includes(submission.value.section)) {
-    return {
-      status: 'error',
-      fields: ['scope'],
-      error: { scope: [''] },
-    } satisfies SubmissionResult
-  }
+    if (!user?.scope.includes(submission.value.section)) {
+      return {
+        status: 'error',
+        fields: ['scope'],
+        error: { scope: [''] },
+      } satisfies SubmissionResult
+    }
 
-  const path = `pictures/${submission.value.section}`
-  for (const file of submission.value.file) {
-    await uploadImage(path, file)
+    const path = `pictures/${submission.value.section}`
+    for (const file of submission.value.file) {
+      await uploadImage(path, userId, file)
+    }
+  } else if (request.method === 'DELETE') {
+    const form = await request.formData()
+    const img = form.get('img') as string
+
+    await deleteImage(img)
   }
 
   return redirect('/photo')

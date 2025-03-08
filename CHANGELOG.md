@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.11.1](https://github.com/presedo93/wedding/compare/v1.11.0...v1.11.1) (2025-03-08)
+
+
+### Bug Fixes
+
+* storage credentials for bucket ([80a0ded](https://github.com/presedo93/wedding/commit/80a0dedbb5520eaa9e2e4a70339ccbc5f97b1708))
+
 ## [1.11.0](https://github.com/presedo93/wedding/compare/v1.10.4...v1.11.0) (2025-03-08)
 
 

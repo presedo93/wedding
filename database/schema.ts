@@ -13,6 +13,7 @@ export const usersTable = t.pgTable('users', {
   id: t.varchar({ length: 12 }).primaryKey(),
   name: t.varchar().notNull(),
   email: t.varchar().notNull(),
+  scope: t.varchar().array().notNull().default([]),
   pictureUrl: t.varchar(),
   ...timestamps,
 })

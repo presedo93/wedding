@@ -154,7 +154,7 @@ export default function Photo({ loaderData }: Route.ComponentProps) {
                 src={img}
                 alt={img}
                 loading="lazy"
-                className="max-h-30 rounded-md"
+                className="max-h-24 rounded-md"
                 onClick={(e) => {
                   e.stopPropagation()
                   setExpanded(img)

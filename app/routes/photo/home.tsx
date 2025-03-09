@@ -109,37 +109,42 @@ export default function Photo({ loaderData }: Route.ComponentProps) {
 
   return (
     <div className="flex min-h-dvh w-full flex-col items-center bg-slate-200 px-8 py-4">
-      <motion.div
-        className={`${!expanded ? 'hidden' : 'absolute'} inset-0 z-10 flex flex-col items-center justify-center backdrop-blur-lg`}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-      >
-        <motion.img
-          key={expanded}
-          src={expanded}
-          className="rounded-2xl md:max-h-9/10 md:w-auto"
-          initial={{ width: isDesktop ? '20%' : '60%' }}
-          animate={{ width: isDesktop ? 'auto' : '90%' }}
-          transition={{ duration: 1.2, ease: 'easeInOut' }}
-        />
-        <div className="mt-2 flex w-full flex-row justify-around px-8 md:w-1/3">
-          {isUser && (
-            <Button
-              variant={'destructive'}
-              className="w-4/10"
-              onClick={deleteImage}
-            >
-              Borrar
+      {expanded && (
+        <motion.div
+          className={`${!expanded ? 'hidden' : 'absolute'} inset-0 z-10 flex flex-col items-center justify-center backdrop-blur-lg`}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <motion.img
+            key={expanded}
+            src={expanded}
+            className="rounded-2xl md:max-h-9/10 md:w-auto"
+            initial={{ width: isDesktop ? '20%' : '60%' }}
+            animate={{ width: isDesktop ? 'auto' : '90%' }}
+            transition={{ duration: 1.2, ease: 'easeInOut' }}
+          />
+          <div className="mt-2 flex w-full flex-row justify-around px-8 md:w-1/3">
+            {isUser && (
+              <Button
+                variant={'destructive'}
+                className="w-4/10"
+                onClick={deleteImage}
+              >
+                Borrar
+              </Button>
+            )}
+            <Button className="w-4/10" onClick={() => setExpanded('')}>
+              Cerrar
             </Button>
-          )}
-          <Button className="w-4/10" onClick={() => setExpanded('')}>
-            Cerrar
-          </Button>
-        </div>
-      </motion.div>
+          </div>
+        </motion.div>
+      )}
+      <h1 className="font-playwrite mt-4 text-2xl font-light underline decoration-1 underline-offset-4">
+        Las fotos de la boda
+      </h1>
       {Object.entries(images).map(([key, images]) => (
         <div key={key}>
-          <h3 className="font-playwrite my-4 text-xl font-extralight">
+          <h3 className="font-playwrite my-4 text-lg font-extralight">
             {getHeader(key)}
           </h3>
           <div className="flex flex-row flex-wrap justify-around gap-2">

@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.11.2](https://github.com/presedo93/wedding/compare/v1.11.1...v1.11.2) (2025-03-09)
+
+
+### Bug Fixes
+
+* image max height in photos section ([3d8a30a](https://github.com/presedo93/wedding/commit/3d8a30a727b3dbe54c7fa33fa9cf6ee31e2a5a52))
+* image rendering and photos section title ([69e7413](https://github.com/presedo93/wedding/commit/69e7413146e9a4707f9c0c5321459345cbe1038e))
+
 ## [1.11.1](https://github.com/presedo93/wedding/compare/v1.11.0...v1.11.1) (2025-03-08)
 
 

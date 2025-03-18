@@ -62,7 +62,8 @@ export function GuestCard({ guest }: Props) {
 
 function DeleteGuest({ id }: { id: number }) {
   return (
-    <Form action={`/profile/delete/${id}`} method="delete">
+    <Form action={`/profile/delete-guest`} method="delete">
+      <input type="hidden" name="id" value={id} />
       <button type="submit">
         <Trash2 className="size-5 stroke-red-700 stroke-[1.5px]" />
       </button>

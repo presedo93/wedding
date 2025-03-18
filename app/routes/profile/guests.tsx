@@ -50,12 +50,7 @@ const GuestsList = ({ guests }: { guests: Guest[] }) => {
 
   return (
     <div className="w-full">
-      <Reorder.Group
-        axis="y"
-        values={items}
-        onReorder={setItems}
-        className="w-full"
-      >
+      <Reorder.Group axis="y" values={items} onReorder={setItems}>
         {items.map((g) => (
           <GuestCardMotion guest={g} key={g.id} />
         ))}

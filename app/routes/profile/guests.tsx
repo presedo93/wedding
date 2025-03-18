@@ -19,14 +19,16 @@ export async function loader({ request }: Route.LoaderArgs) {
   }
 
   const db = database()
+  const userId = context.claims!.sub ?? ''
+
   const guests = await db.query.guestsTable.findMany({
-    where: eq(guestsTable.userId, context.claims!.sub),
+    where: eq(guestsTable.userId, userId),
   })
 
   return { guests }
 }
 
-export default function ProfileInfo({ loaderData }: Route.ComponentProps) {
+export default function GuestsInfo({ loaderData }: Route.ComponentProps) {
   const { guests } = loaderData
   const hasGuests = guests.length > 0
 

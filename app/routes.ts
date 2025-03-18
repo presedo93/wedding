@@ -17,4 +17,6 @@ export default [
     route('handle-message', 'routes/chat/handle-message.tsx'),
   ]),
   route('photo', 'routes/photo/home.tsx'),
+  route('admin', 'routes/admin/home.tsx'),
+  route('best-man', 'routes/special/best-man.tsx'),
 ] satisfies RouteConfig

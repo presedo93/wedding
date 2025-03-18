@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm'
 import { Reorder } from 'motion/react'
 import { useState } from 'react'
 
-import { GuestCard } from '~/components'
+import { GuestCardMotion } from '~/components'
 import { Button } from '~/components/ui'
 import { logto } from '~/auth.server'
 
@@ -28,7 +28,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 export default function ProfileInfo({ loaderData }: Route.ComponentProps) {
   const { guests } = loaderData
-  const [guestsList, setGuestsList] = useState(guests)
+  const hasGuests = guests.length > 0
 
   return (
     <>
@@ -36,11 +36,7 @@ export default function ProfileInfo({ loaderData }: Route.ComponentProps) {
         Miembros
       </h3>
       <div className="my-2 flex flex-col items-center justify-center">
-        {guests.length ? (
-          <GuestsList guests={guestsList} onReorder={setGuestsList} />
-        ) : (
-          <NoGuests />
-        )}
+        {hasGuests ? <GuestsList guests={guests} /> : <NoGuests />}
       </div>
       <Link className="flex w-full justify-center" to={'/profile/new-guest'}>
         <Button className="w-2/3 min-w-min md:w-1/3">Nuevo miembro</Button>
@@ -49,23 +45,19 @@ export default function ProfileInfo({ loaderData }: Route.ComponentProps) {
   )
 }
 
-const GuestsList = ({
-  guests,
-  onReorder,
-}: {
-  guests: Guest[]
-  onReorder: React.Dispatch<React.SetStateAction<Guest[]>>
-}) => {
+const GuestsList = ({ guests }: { guests: Guest[] }) => {
+  const [items, setItems] = useState(guests)
+
   return (
     <div className="w-full">
       <Reorder.Group
         axis="y"
-        values={guests}
-        onReorder={onReorder}
+        values={items}
+        onReorder={setItems}
         className="w-full"
       >
-        {guests.map((g) => (
-          <GuestCard guest={g} key={g.id} />
+        {items.map((g) => (
+          <GuestCardMotion guest={g} key={g.id} />
         ))}
       </Reorder.Group>
       <p className="text-center text-xs font-medium text-slate-500">

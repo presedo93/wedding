@@ -7,7 +7,7 @@ import type { Route } from './+types/home'
 
 import { database } from '~/database/context'
 import { type Task, tasksTable, type User, usersTable } from '~/database/schema'
-import { House } from 'lucide-react'
+import { Bolt, House } from 'lucide-react'
 
 interface LogtoUser {
   id: string
@@ -77,7 +77,7 @@ export default function Profile({ loaderData }: Route.ComponentProps) {
         {user && <ProfileCard user={user} />}
         <Outlet />
         <UserTasks tasks={tasks!} />
-        <UserButtons />
+        <UserButtons isAdmin={user?.scope.includes('admin')} />
       </div>
     </div>
   )
@@ -118,7 +118,7 @@ const UserTasks = ({ tasks }: { tasks: Task }) => {
   )
 }
 
-const UserButtons = () => (
+const UserButtons = ({ isAdmin }: { isAdmin?: boolean }) => (
   <>
     <div className="flex flex-col justify-around">
       <Link className="mt-8 flex w-full justify-center" to={'/'}>
@@ -127,6 +127,14 @@ const UserButtons = () => (
           Página principal
         </Button>
       </Link>
+      {isAdmin && (
+        <Link className="mt-4 flex w-full justify-center" to={'/admin'}>
+          <Button className="w-2/3 min-w-min md:w-1/3">
+            <Bolt />
+            Panel de Admin
+          </Button>
+        </Link>
+      )}
       <Link className="mt-4 flex w-full justify-center" to={'/auth/sign-out'}>
         <Button variant={'destructive'} className="w-2/3 min-w-min md:w-1/3">
           Cerrar sesión

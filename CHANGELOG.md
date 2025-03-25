@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.1](https://github.com/presedo93/wedding/compare/v1.12.0...v1.12.1) (2025-03-25)
+
+
+### Bug Fixes
+
+* update dependencies and resolve conflicts ([fa75910](https://github.com/presedo93/wedding/commit/fa75910d2b639d85e8b38efc68b95bbdf4e46d6b))
+
 ## [1.12.0](https://github.com/presedo93/wedding/compare/v1.11.1...v1.12.0) (2025-03-25)
 
 

@@ -6,7 +6,7 @@ export default [
   route('profile', 'routes/profile/home.tsx', [
     index('routes/profile/guests.tsx'),
     route('new-guest', 'routes/profile/new-guest.tsx'),
-    route('delete/:id', 'routes/profile/delete.tsx'),
+    route('delete-guest', 'routes/profile/delete.tsx'),
     route('edit-tasks', 'routes/profile/edit-tasks.tsx'),
   ]),
   route('music', 'routes/music/home.tsx', [
@@ -17,4 +17,6 @@ export default [
     route('handle-message', 'routes/chat/handle-message.tsx'),
   ]),
   route('photo', 'routes/photo/home.tsx'),
+  route('admin', 'routes/admin/home.tsx'),
+  route('best-man', 'routes/special/best-man.tsx'),
 ] satisfies RouteConfig

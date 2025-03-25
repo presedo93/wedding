@@ -1,10 +1,8 @@
 import { Link, redirect } from 'react-router'
 import { eq } from 'drizzle-orm'
-import { Reorder } from 'motion/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-import { GuestCard } from '~/components'
-import { Button } from '~/components/ui'
+import { Button, GuestCard } from '~/components'
 import { logto } from '~/auth.server'
 
 import type { Route } from './+types/guests'
@@ -19,16 +17,18 @@ export async function loader({ request }: Route.LoaderArgs) {
   }
 
   const db = database()
+  const userId = context.claims!.sub ?? ''
+
   const guests = await db.query.guestsTable.findMany({
-    where: eq(guestsTable.userId, context.claims!.sub),
+    where: eq(guestsTable.userId, userId),
   })
 
   return { guests }
 }
 
-export default function ProfileInfo({ loaderData }: Route.ComponentProps) {
+export default function GuestsInfo({ loaderData }: Route.ComponentProps) {
   const { guests } = loaderData
-  const [guestsList, setGuestsList] = useState(guests)
+  const hasGuests = guests.length > 0
 
   return (
     <>
@@ -36,11 +36,7 @@ export default function ProfileInfo({ loaderData }: Route.ComponentProps) {
         Miembros
       </h3>
       <div className="my-2 flex flex-col items-center justify-center">
-        {guests.length ? (
-          <GuestsList guests={guestsList} onReorder={setGuestsList} />
-        ) : (
-          <NoGuests />
-        )}
+        {hasGuests ? <GuestsList guests={guests} /> : <NoGuests />}
       </div>
       <Link className="flex w-full justify-center" to={'/profile/new-guest'}>
         <Button className="w-2/3 min-w-min md:w-1/3">Nuevo miembro</Button>
@@ -49,30 +45,23 @@ export default function ProfileInfo({ loaderData }: Route.ComponentProps) {
   )
 }
 
-const GuestsList = ({
-  guests,
-  onReorder,
-}: {
-  guests: Guest[]
-  onReorder: React.Dispatch<React.SetStateAction<Guest[]>>
-}) => {
+const GuestsList = ({ guests }: { guests: Guest[] }) => {
+  const [items, setItems] = useState(guests)
+
+  useEffect(() => {
+    setItems(guests)
+  }, [guests])
+
   return (
-    <div className="w-full">
-      <Reorder.Group
-        axis="y"
-        values={guests}
-        onReorder={onReorder}
-        className="w-full"
-      >
-        {guests.map((g) => (
-          <GuestCard guest={g} key={g.id} />
-        ))}
-      </Reorder.Group>
+    <>
+      {items.map((g) => (
+        <GuestCard guest={g} key={g.id} canDelete />
+      ))}
       <p className="text-center text-xs font-medium text-slate-500">
         <span className="font-semibold">P.D:</span> Recuerda estar también en la
         lista!
       </p>
-    </div>
+    </>
   )
 }
 

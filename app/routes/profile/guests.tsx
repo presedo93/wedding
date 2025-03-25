@@ -1,10 +1,8 @@
 import { Link, redirect } from 'react-router'
 import { eq } from 'drizzle-orm'
-import { Reorder } from 'motion/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-import { GuestCardMotion } from '~/components'
-import { Button } from '~/components/ui'
+import { Button, GuestCard } from '~/components'
 import { logto } from '~/auth.server'
 
 import type { Route } from './+types/guests'
@@ -50,18 +48,20 @@ export default function GuestsInfo({ loaderData }: Route.ComponentProps) {
 const GuestsList = ({ guests }: { guests: Guest[] }) => {
   const [items, setItems] = useState(guests)
 
+  useEffect(() => {
+    setItems(guests)
+  }, [guests])
+
   return (
-    <div className="w-full">
-      <Reorder.Group axis="y" values={items} onReorder={setItems}>
-        {items.map((g) => (
-          <GuestCardMotion guest={g} key={g.id} />
-        ))}
-      </Reorder.Group>
+    <>
+      {items.map((g) => (
+        <GuestCard guest={g} key={g.id} canDelete />
+      ))}
       <p className="text-center text-xs font-medium text-slate-500">
         <span className="font-semibold">P.D:</span> Recuerda estar también en la
         lista!
       </p>
-    </div>
+    </>
   )
 }
 

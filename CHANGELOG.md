@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.2](https://github.com/presedo93/wedding/compare/v1.12.1...v1.12.2) (2025-03-25)
+
+
+### Bug Fixes
+
+* replace alpine node image with slim one ([e47cc0f](https://github.com/presedo93/wedding/commit/e47cc0f080982e9ab67879cb8e418f21f964dc0f))
+
 ## [1.12.1](https://github.com/presedo93/wedding/compare/v1.12.0...v1.12.1) (2025-03-25)
 
 

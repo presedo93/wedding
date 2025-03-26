@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.12.3](https://github.com/presedo93/wedding/compare/v1.12.2...v1.12.3) (2025-03-26)
+
+
+### Bug Fixes
+
+* back to alpine image and add optionalDependencies ([1a51f79](https://github.com/presedo93/wedding/commit/1a51f7968ef1415aca4e15f513648a4223a6eee8))
+
 ## [1.12.2](https://github.com/presedo93/wedding/compare/v1.12.1...v1.12.2) (2025-03-25)
 
 

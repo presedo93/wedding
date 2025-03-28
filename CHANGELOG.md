@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.13.0](https://github.com/presedo93/wedding/compare/v1.12.3...v1.13.0) (2025-03-28)
+
+
+### Features
+
+* support videos in the Photos section ([450db2e](https://github.com/presedo93/wedding/commit/450db2ed9cfe1a1769f99a4207da0ea8d1cb5970))
+
 ## [1.12.3](https://github.com/presedo93/wedding/compare/v1.12.2...v1.12.3) (2025-03-26)
 
 

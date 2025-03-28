@@ -115,14 +115,28 @@ export default function Photo({ loaderData }: Route.ComponentProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
         >
-          <motion.img
-            key={expanded}
-            src={expanded}
-            className="rounded-2xl md:max-h-9/10 md:w-auto"
-            initial={{ width: isDesktop ? '20%' : '60%' }}
-            animate={{ width: isDesktop ? 'auto' : '90%' }}
-            transition={{ duration: 1.2, ease: 'easeInOut' }}
-          />
+          {getMedia(expanded) === 'photo' ? (
+            <motion.img
+              key={expanded}
+              src={expanded}
+              className="rounded-2xl md:max-h-9/10 md:w-auto"
+              initial={{ width: isDesktop ? '20%' : '60%' }}
+              animate={{ width: isDesktop ? 'auto' : '90%' }}
+              transition={{ duration: 1.2, ease: 'easeInOut' }}
+            />
+          ) : (
+            <motion.video
+              controls
+              key={expanded}
+              className="rounded-2xl md:max-h-9/10 md:w-auto"
+              initial={{ width: isDesktop ? '20%' : '60%' }}
+              animate={{ width: isDesktop ? 'auto' : '90%' }}
+              transition={{ duration: 1.2, ease: 'easeInOut' }}
+              onCanPlay={(e) => e.currentTarget.play()}
+            >
+              <motion.source src={expanded} />
+            </motion.video>
+          )}
           <div className="mt-2 flex w-full flex-row justify-around px-8 md:w-1/3">
             {isUser && (
               <Button
@@ -148,19 +162,32 @@ export default function Photo({ loaderData }: Route.ComponentProps) {
             {getHeader(key)}
           </h3>
           <div className="flex flex-row flex-wrap justify-around gap-2">
-            {images.map((img, idx) => (
-              <motion.img
-                key={idx}
-                src={img}
-                alt={img}
-                loading="lazy"
-                className="max-h-24 rounded-md"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setExpanded(img)
-                }}
-              />
-            ))}
+            {images.map((img, idx) =>
+              getMedia(img) === 'photo' ? (
+                <motion.img
+                  key={idx}
+                  src={img}
+                  alt={img}
+                  loading="lazy"
+                  className="max-h-24 rounded-md"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setExpanded(img)
+                  }}
+                />
+              ) : (
+                <motion.video
+                  key={idx}
+                  className="max-h-24 rounded-md"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setExpanded(img)
+                  }}
+                >
+                  <source src={img} />
+                </motion.video>
+              ),
+            )}
           </div>
         </div>
       ))}
@@ -327,6 +354,13 @@ const HomeButton = () => (
     </Button>
   </Link>
 )
+
+const getMedia = (signedUrl: string): 'photo' | 'video' => {
+  const videoExtensions = new Set(['mp4', 'mov', 'avi', 'mkv', 'webm'])
+  const extension = signedUrl.split('.').pop()?.toLowerCase()
+
+  return extension && videoExtensions.has(extension) ? 'video' : 'photo'
+}
 
 export const action = async ({ request }: Route.ActionArgs) => {
   const context = await logto.getContext({ getAccessToken: false })(request)

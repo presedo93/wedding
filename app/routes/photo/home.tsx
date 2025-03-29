@@ -107,7 +107,7 @@ export default function Photo({ loaderData }: Route.ComponentProps) {
     submit({ img: path }, { action: '/photo', method: 'delete' })
   }
 
-  const mediaProps = {
+  const expandedProps = {
     className: 'rounded-2xl md:max-h-9/10 md:w-auto',
     initial: { width: isDesktop ? '20%' : '60%' },
     animate: { width: isDesktop ? 'auto' : '90%' },
@@ -123,9 +123,9 @@ export default function Photo({ loaderData }: Route.ComponentProps) {
           animate={{ opacity: 1 }}
         >
           {getMedia(expanded) === 'photo' ? (
-            <motion.img src={expanded} {...mediaProps} />
+            <motion.img src={expanded} {...expandedProps} />
           ) : (
-            <motion.video src={expanded} controls autoPlay {...mediaProps} />
+            <motion.video src={expanded} controls autoPlay {...expandedProps} />
           )}
           <div className="mt-2 flex w-full flex-row justify-around px-8 md:w-1/3">
             {isUser && (
@@ -152,32 +152,22 @@ export default function Photo({ loaderData }: Route.ComponentProps) {
             {getHeader(key)}
           </h3>
           <div className="flex flex-row flex-wrap justify-around gap-2">
-            {images.map((img, idx) =>
-              getMedia(img) === 'photo' ? (
-                <motion.img
-                  key={idx}
-                  src={img}
-                  alt={img}
-                  loading="lazy"
-                  className="max-h-24 rounded-md"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    setExpanded(img)
-                  }}
-                />
+            {images.map((img, idx) => {
+              const props = {
+                src: img,
+                className: 'max-h-24 rounded-md',
+                onClick: (e: React.MouseEvent) => {
+                  e.stopPropagation()
+                  setExpanded(img)
+                },
+              }
+
+              return getMedia(img) === 'photo' ? (
+                <motion.img key={idx} loading="lazy" {...props} />
               ) : (
-                <motion.video
-                  key={idx}
-                  className="max-h-24 rounded-md"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    setExpanded(img)
-                  }}
-                >
-                  <source src={img} />
-                </motion.video>
-              ),
-            )}
+                <motion.video key={idx} {...props} />
+              )
+            })}
           </div>
         </div>
       ))}

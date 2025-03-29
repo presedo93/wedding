@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.13.1](https://github.com/presedo93/wedding/compare/v1.13.0...v1.13.1) (2025-03-29)
+
+
+### Bug Fixes
+
+* video playback in photos section ([cb60f8c](https://github.com/presedo93/wedding/commit/cb60f8c6958d563ac69a8a84251733f32dd3eb2e))
+
 ## [1.13.0](https://github.com/presedo93/wedding/compare/v1.12.3...v1.13.0) (2025-03-28)
 
 

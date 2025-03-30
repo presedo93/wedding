@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.13.3](https://github.com/presedo93/wedding/compare/v1.13.2...v1.13.3) (2025-03-30)
+
+
+### Bug Fixes
+
+* cache images and videos in the photos section ([2eb3e2e](https://github.com/presedo93/wedding/commit/2eb3e2eca1208e6d0c27cda92524317b56da0041))
+
 ## [1.13.2](https://github.com/presedo93/wedding/compare/v1.13.1...v1.13.2) (2025-03-29)
 
 

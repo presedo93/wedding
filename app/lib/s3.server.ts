@@ -39,6 +39,7 @@ export async function getSignedImageUrl(path: string) {
   const command = new GetObjectCommand({
     Bucket: bucketName,
     Key: `${path}`,
+    ResponseCacheControl: 'public, max-age=31536000',
   })
 
   return getSignedUrl(s3, command, { expiresIn: 3600 })

@@ -163,9 +163,10 @@ export default function Photo({ loaderData }: Route.ComponentProps) {
               }
 
               return getMedia(img) === 'photo' ? (
-                <motion.img key={idx} loading="lazy" {...props} />
+                <img key={idx} alt="" loading="lazy" {...props} />
               ) : (
-                <motion.video key={idx} {...props} />
+                // eslint-disable-next-line jsx-a11y/media-has-caption
+                <video key={idx} {...props} />
               )
             })}
           </div>

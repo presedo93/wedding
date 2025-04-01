@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.14.0](https://github.com/presedo93/wedding/compare/v1.13.3...v1.14.0) (2025-04-01)
+
+
+### Features
+
+* finish best-man page ([#38](https://github.com/presedo93/wedding/issues/38)) ([b9dd7e8](https://github.com/presedo93/wedding/commit/b9dd7e814b83971af2545fa4b1b8267fb6d89fc5))
+
+
+### Bug Fixes
+
+* replace image preview with fixed image to deal with iOS issue ([c03f9bb](https://github.com/presedo93/wedding/commit/c03f9bbe7f73e7b913658a676b20fbf02549f52f))
+
 ## [1.13.3](https://github.com/presedo93/wedding/compare/v1.13.2...v1.13.3) (2025-03-30)
 
 

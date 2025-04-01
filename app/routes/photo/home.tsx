@@ -1,7 +1,7 @@
 import * as zod from 'zod'
 import { eq } from 'drizzle-orm'
 import { useForm, type SubmissionResult } from '@conform-to/react'
-import { House, ImageUp, LoaderCircle } from 'lucide-react'
+import { CirclePlay, House, ImageUp, LoaderCircle } from 'lucide-react'
 import { parseWithZod } from '@conform-to/zod'
 import {
   Link,
@@ -153,20 +153,30 @@ export default function Photo({ loaderData }: Route.ComponentProps) {
           </h3>
           <div className="flex flex-row flex-wrap justify-around gap-2">
             {images.map((img, idx) => {
-              const props = {
-                src: img,
-                className: 'max-h-24 rounded-md',
-                onClick: (e: React.MouseEvent) => {
-                  e.stopPropagation()
-                  setExpanded(img)
-                },
-              }
-
               return getMedia(img) === 'photo' ? (
-                <img key={idx} alt="" loading="lazy" {...props} />
+                <img
+                  key={idx}
+                  src={img}
+                  alt=""
+                  loading="lazy"
+                  role="presentation"
+                  className="max-h-28 rounded-md"
+                  onClick={(e: React.MouseEvent) => {
+                    e.stopPropagation()
+                    setExpanded(img)
+                  }}
+                />
               ) : (
-                // eslint-disable-next-line jsx-a11y/media-has-caption
-                <video key={idx} {...props} />
+                <div
+                  role="presentation"
+                  className="flex aspect-3/5 h-28 items-center justify-center rounded-lg bg-linear-to-br from-slate-200 from-10% via-slate-300 via-50% to-slate-400 to-90% backdrop-blur-2xl"
+                  onClick={(e: React.MouseEvent) => {
+                    e.stopPropagation()
+                    setExpanded(img)
+                  }}
+                >
+                  <CirclePlay className="size-3/5 stroke-1 text-black" />
+                </div>
               )
             })}
           </div>

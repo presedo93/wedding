@@ -81,5 +81,5 @@
     "@rollup/rollup-linux-x64-musl": "4.37.0",
     "@tailwindcss/oxide-linux-arm64-musl": "4.0.16"
   },
-  "version": "1.14.0"
+  "version": "1.14.1"
 }

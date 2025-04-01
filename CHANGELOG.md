@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.14.1](https://github.com/presedo93/wedding/compare/v1.14.0...v1.14.1) (2025-04-01)
+
+
+### Bug Fixes
+
+* missing key prop in photos section ([edc403a](https://github.com/presedo93/wedding/commit/edc403af56ad2cf1bf673c0b27aa8e2329c9e848))
+* remove backdrop blur in best-man page ([3ed5ba8](https://github.com/presedo93/wedding/commit/3ed5ba85c3ef175157933d099ee91d0e56fc5b90))
+
 ## [1.14.0](https://github.com/presedo93/wedding/compare/v1.13.3...v1.14.0) (2025-04-01)
 
 

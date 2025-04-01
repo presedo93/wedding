@@ -168,6 +168,7 @@ export default function Photo({ loaderData }: Route.ComponentProps) {
                 />
               ) : (
                 <div
+                  key={idx}
                   role="presentation"
                   className="flex aspect-3/5 h-28 items-center justify-center rounded-lg bg-linear-to-br from-slate-200 from-10% via-slate-300 via-50% to-slate-400 to-90% backdrop-blur-2xl"
                   onClick={(e: React.MouseEvent) => {

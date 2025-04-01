@@ -48,7 +48,7 @@ export default function BestMan({ loaderData }: Route.ComponentProps) {
       </p>
       <div className="relative flex w-full max-w-md flex-col items-center justify-center">
         {shadow && (
-          <div className="absolute inset-0 flex h-full w-full items-center justify-center rounded-lg backdrop-blur-3xl">
+          <div className="absolute inset-0 flex h-full w-full items-center justify-center rounded-lg bg-slate-300">
             <Button
               className="px-8 py-4"
               variant={'secondary'}

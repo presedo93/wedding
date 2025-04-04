@@ -2,7 +2,17 @@ import { Link, redirect } from 'react-router'
 import { eq } from 'drizzle-orm'
 import { useEffect, useState } from 'react'
 
-import { Button, GuestCard } from '~/components'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  Button,
+  GuestCard,
+} from '~/components'
 import { logto } from '~/auth.server'
 
 import type { Route } from './+types/guests'
@@ -23,11 +33,12 @@ export async function loader({ request }: Route.LoaderArgs) {
     where: eq(guestsTable.userId, userId),
   })
 
-  return { guests }
+  const allConfirmed = guests.every((g) => g.isComing !== null)
+  return { guests, allConfirmed }
 }
 
 export default function GuestsInfo({ loaderData }: Route.ComponentProps) {
-  const { guests } = loaderData
+  const { guests, allConfirmed } = loaderData
   const hasGuests = guests.length > 0
 
   return (
@@ -41,6 +52,7 @@ export default function GuestsInfo({ loaderData }: Route.ComponentProps) {
       <Link className="flex w-full justify-center" to={'/profile/new-guest'}>
         <Button className="w-2/3 min-w-min md:w-1/3">Nuevo miembro</Button>
       </Link>
+      <ConfirmDialog showDialog={allConfirmed !== true} />
     </>
   )
 }
@@ -71,3 +83,39 @@ const NoGuests = () => (
     <p className="text-slate-500">(Recuerda añadirte a ti también)</p>
   </div>
 )
+
+const ConfirmDialog = ({ showDialog }: { showDialog: boolean }) => {
+  const [open, setOpen] = useState(showDialog)
+
+  useEffect(() => {
+    setOpen(showDialog)
+  }, [showDialog])
+
+  return (
+    <AlertDialog open={open}>
+      <AlertDialogContent className="w-9/10 rounded-lg border-black bg-slate-400">
+        <AlertDialogHeader>
+          <AlertDialogTitle className="text-2xl">
+            ¡Aviso importante!
+          </AlertDialogTitle>
+          <AlertDialogDescription className="text-lg">
+            <p>
+              ¡Recuerda <span className="font-bold">registrarte</span> como
+              miembro si aún no lo estás! Necesitamos saber si tu también tienes
+              alguna alergia o si quieres ir en bus.
+            </p>
+            <p className="my-4">
+              Y <span className="font-bold">confirma</span> tu asistencia y la
+              de tus acompañantes al evento!
+            </p>
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogAction onClick={() => setOpen(false)}>
+            Continue
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  )
+}

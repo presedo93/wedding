@@ -29,6 +29,7 @@ export const guestsTable = t.pgTable('guests', {
   allergies: t.varchar().array().notNull().default([]),
   isVegetarian: t.boolean().notNull(),
   needsTransport: t.boolean().notNull(),
+  isComing: t.boolean(),
   ...timestamps,
 })
 

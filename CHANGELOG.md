@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.15.0](https://github.com/presedo93/wedding/compare/v1.14.1...v1.15.0) (2025-04-09)
+
+
+### Features
+
+* add logic to confirm guests ([#43](https://github.com/presedo93/wedding/issues/43)) ([28582b1](https://github.com/presedo93/wedding/commit/28582b11245ba2b75f59a4d34d538fb208022da7))
+
 ## [1.14.1](https://github.com/presedo93/wedding/compare/v1.14.0...v1.14.1) (2025-04-01)
 
 

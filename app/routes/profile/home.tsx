@@ -7,7 +7,7 @@ import type { Route } from './+types/home'
 
 import { database } from '~/database/context'
 import { type Task, tasksTable, type User, usersTable } from '~/database/schema'
-import { Bolt, House } from 'lucide-react'
+import { Bolt, CircleX, House } from 'lucide-react'
 
 interface LogtoUser {
   id: string
@@ -137,6 +137,7 @@ const UserButtons = ({ isAdmin }: { isAdmin?: boolean }) => (
       )}
       <Link className="mt-4 flex w-full justify-center" to={'/auth/sign-out'}>
         <Button variant={'destructive'} className="w-2/3 min-w-min md:w-1/3">
+          <CircleX />
           Cerrar sesión
         </Button>
       </Link>

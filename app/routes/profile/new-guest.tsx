@@ -10,6 +10,7 @@ import { InputConform, CheckboxConform, Button, Label } from '~/components/ui'
 import { database } from '~/database/context'
 import { guestsTable } from '~/database/schema'
 import type { Route } from './+types/new-guest'
+import { CircleX, Save } from 'lucide-react'
 
 export const schema = zod.object({
   name: zod.string().min(1, 'El nombre es necesario'),
@@ -89,10 +90,12 @@ export default function EditGuest() {
         <div className="flex flex-row justify-center space-x-3">
           <Link className="w-1/2" to={'/profile'}>
             <Button variant={'destructive'} className="w-full min-w-min">
+              <CircleX />
               Cancelar
             </Button>
           </Link>
-          <Button type="submit" className="w-1/2 min-w-min">
+          <Button type="submit" className="w-1/2 min-w-min bg-green-600">
+            <Save />
             Guardar
           </Button>
         </div>

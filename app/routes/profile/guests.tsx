@@ -18,6 +18,7 @@ import { logto } from '~/auth.server'
 import type { Route } from './+types/guests'
 import { database } from '~/database/context'
 import { type Guest, guestsTable } from '~/database/schema'
+import { Reorder } from 'motion/react'
 
 export async function loader({ request }: Route.LoaderArgs) {
   const context = await logto.getContext({})(request)
@@ -49,9 +50,22 @@ export default function GuestsInfo({ loaderData }: Route.ComponentProps) {
       <div className="my-2 flex flex-col items-center justify-center">
         {hasGuests ? <GuestsList guests={guests} /> : <NoGuests />}
       </div>
-      <Link className="flex w-full justify-center" to={'/profile/new-guest'}>
-        <Button className="w-2/3 min-w-min md:w-1/3">Nuevo miembro</Button>
-      </Link>
+      <div className="flex w-full flex-col items-center justify-center gap-2">
+        <Link
+          className="flex w-2/3 justify-center md:w-1/3"
+          to={'/profile/new-guest'}
+        >
+          <Button className="w-full min-w-min">Nuevo miembro</Button>
+        </Link>
+        <Link
+          className="flex w-2/3 justify-center md:w-1/3"
+          to={'/profile/confirm-guests'}
+        >
+          <Button className="w-full min-w-min bg-green-600">
+            Confirmar asistencia
+          </Button>
+        </Link>
+      </div>
       <ConfirmDialog showDialog={allConfirmed !== true} />
     </>
   )
@@ -66,9 +80,18 @@ const GuestsList = ({ guests }: { guests: Guest[] }) => {
 
   return (
     <>
-      {items.map((g) => (
-        <GuestCard guest={g} key={g.id} canDelete />
-      ))}
+      <Reorder.Group
+        axis="y"
+        values={items}
+        onReorder={setItems}
+        className="w-full"
+      >
+        {items.map((g) => (
+          <Reorder.Item key={g.id} value={g}>
+            <GuestCard guest={g} key={g.id} showDelete />
+          </Reorder.Item>
+        ))}
+      </Reorder.Group>
       <p className="text-center text-xs font-medium text-slate-500">
         <span className="font-semibold">P.D:</span> Recuerda estar también en la
         lista!

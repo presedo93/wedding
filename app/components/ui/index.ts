@@ -1,4 +1,5 @@
 export * from './avatar'
+export * from './alert-dialog'
 export * from './button'
 export * from './drawer'
 export * from './label'

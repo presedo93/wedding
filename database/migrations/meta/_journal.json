@@ -29,6 +29,13 @@
       "when": 1740917560911,
       "tag": "0003_users_scopes",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1743793630622,
+      "tag": "0004_add_is_coming_column_to_guests",
+      "breakpoints": true
     }
   ]
 }

@@ -6,6 +6,7 @@ export default [
   route('profile', 'routes/profile/home.tsx', [
     index('routes/profile/guests.tsx'),
     route('new-guest', 'routes/profile/new-guest.tsx'),
+    route('confirm-guests', 'routes/profile/confirm-guests.tsx'),
     route('delete-guest', 'routes/profile/delete.tsx'),
     route('edit-tasks', 'routes/profile/edit-tasks.tsx'),
   ]),

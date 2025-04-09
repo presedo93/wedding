@@ -50,11 +50,18 @@ export async function loader({ request }: Route.LoaderArgs) {
       email: usersTable.email,
       pictureUrl: usersTable.pictureUrl,
       scope: usersTable.scope,
-      guests: sql<
-        Guest[]
-      >`COALESCE(json_agg(guests.*) FILTER (WHERE guests.id IS NOT NULL), '[]')`.as(
-        'guests',
-      ),
+      guests: sql<Guest[]>`COALESCE(json_agg(json_build_object(
+        'id', guests.id,
+        'userId', guests.user_id,
+        'name', guests.name,
+        'phone', guests.phone,
+        'allergies', guests.allergies,
+        'isVegetarian', guests.is_vegetarian,
+        'needsTransport', guests.needs_transport,
+        'updatedAt', guests.updated_at,
+        'createdAt', guests.created_at,
+        'isComing', guests.is_coming
+        )) FILTER (WHERE guests.id IS NOT NULL), '[]')`.as('guests'),
     })
     .from(usersTable)
     .leftJoin(guestsTable, eq(usersTable.id, guestsTable.userId))
@@ -119,8 +126,13 @@ const Stats = ({ users }: { users: UserWithGuests[] }) => {
 
   return (
     <div className="w-full rounded-lg border border-slate-400 p-4 shadow-lg">
-      <span>Numero de usuarios registrados: {users.length} </span>
-      <span>Numero de invitados anotados: {guests} </span>
+      <p>
+        Usuarios registrados:{' '}
+        <span className="font-bold">{users.length}</span>{' '}
+      </p>
+      <p>
+        Invitados anotados: <span className="font-bold">{guests}</span>{' '}
+      </p>
     </div>
   )
 }

@@ -81,11 +81,14 @@ export async function loader({ request }: Route.LoaderArgs) {
     images[sc] = imgs
   }
 
-  return { images, userId }
+  const list = await getListFolderImages(`pictures/proposal`)
+  const proposals = await Promise.all(list?.map(getSignedImageUrl))
+
+  return { images, userId, proposals }
 }
 
 export default function Photo({ loaderData }: Route.ComponentProps) {
-  const { images, userId } = loaderData
+  const { images, userId, proposals } = loaderData
   const lastResult = useActionData<typeof action>()
 
   const submit = useSubmit()
@@ -146,6 +149,21 @@ export default function Photo({ loaderData }: Route.ComponentProps) {
       <h1 className="font-playwrite mt-4 text-2xl font-light underline decoration-1 underline-offset-4">
         Las fotos de la boda
       </h1>
+      <h3 className="font-playwrite my-4 text-lg font-extralight">La pedida</h3>
+      {proposals.map((vid, idx) => (
+        <div
+          key={idx}
+          role="presentation"
+          className="flex aspect-3/5 h-28 items-center justify-center rounded-lg bg-linear-to-br from-slate-200 from-10% via-slate-300 via-50% to-slate-400 to-90% backdrop-blur-2xl"
+          onClick={(e: React.MouseEvent) => {
+            e.stopPropagation()
+            setExpanded(vid)
+          }}
+        >
+          <CirclePlay className="size-3/5 stroke-1 text-black" />
+        </div>
+      ))}
+      <div className="h-12" />
       {Object.entries(images).map(([key, images]) => (
         <div key={key}>
           <h3 className="font-playwrite my-4 text-lg font-extralight">

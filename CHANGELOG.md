@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.16.0](https://github.com/presedo93/wedding/compare/v1.15.0...v1.16.0) (2025-05-17)
+
+
+### Features
+
+* add proposal section ([f1fbaf7](https://github.com/presedo93/wedding/commit/f1fbaf76089783cfd36146b775c16cb4d7f19ace))
+
 ## [1.15.0](https://github.com/presedo93/wedding/compare/v1.14.1...v1.15.0) (2025-04-09)
 
 
